@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { services } from "@/lib/services-data";
+import { FaqSection } from "@/components/sections/faq-section";
+import { faqItems } from "@/lib/faq-data";
 
 export default function ServicesPage() {
   return (
@@ -75,6 +77,8 @@ export default function ServicesPage() {
           </Card>
         ))}
       </div>
+
+      <FaqSection items={faqItems} />
     </div>
   );
 }

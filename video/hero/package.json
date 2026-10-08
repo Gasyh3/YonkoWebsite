@@ -1,0 +1,14 @@
+{
+  "name": "hero",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync-ports": "node scripts/sync-ports.mjs",
+    "dev": "npm run sync-ports && npx --yes hyperframes@0.8.142 preview",
+    "check": "npm run sync-ports && npx --yes hyperframes@0.8.142 check",
+    "render": "npm run render:desktop && npm run render:mobile",
+    "render:desktop": "npm run sync-ports && npx --yes hyperframes@0.8.142 render -o renders/hero-desktop.mp4 --quality delivery",
+    "render:mobile": "npm run sync-ports && npx --yes hyperframes@0.8.142 render -c compositions/mobile.html -o renders/hero-mobile.mp4 --quality delivery",
+    "export": "node scripts/export-media.mjs"
+  }
+}

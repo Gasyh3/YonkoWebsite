@@ -137,29 +137,12 @@ body::after {
   will-change: transform, opacity;
 }
 
-@media (min-width: 768px) {
+/* Vidéo 16:9 (paysage dès 768px) : même règle que HERO_PORTRAIT_QUERY dans lib/hero-media.ts. */
+@media (min-width: 768px) and (orientation: landscape) {
   .hero-media {
-    --hero-focus: 66% 45%;
-    transform-origin: 68% 74%; /* port B desktop (lib/motion/hero-ports.json) */
+    --hero-focus: 68% 45%;
+    transform-origin: 70% 74%; /* port B desktop (lib/motion/hero-ports.json) */
   }
-}
-
-.hero-placeholder__screen {
-  fill: var(--surface);
-  stroke: var(--fiber-off);
-  stroke-width: 2;
-}
-
-.hero-placeholder__frame {
-  fill: var(--surface);
-  stroke: var(--fiber-off);
-  stroke-width: 2;
-}
-
-.hero-placeholder__port {
-  fill: var(--black);
-  stroke: var(--silver);
-  stroke-width: 2;
 }
 
 /* Intro : titre masqué jusqu'à la découpe en lignes (filet de sécurité si le JS échoue). */

@@ -1,0 +1,660 @@
+/* Boucle hero Yonko Tech — styles partagés desktop / mobile.
+   Palette strictement identique à la charte du site (CLAUDE.md à la racine du repo). */
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("fonts/instrument-serif-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("fonts/instrument-serif-latin-400-italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Inter Tight";
+  src: url("fonts/inter-tight-latin-300-normal.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Inter Tight";
+  src: url("fonts/inter-tight-latin-400-normal.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root {
+  --black: #0b0b0c;
+  --surface: #141416;
+  --gold-1: #8c6a2a;
+  --gold-2: #e8c77a;
+  --gold-3: #b8913e;
+  --gold-glint: #f6e3a8;
+  --silver: #a8adb4;
+  --silver-light: #e3e6ea;
+  --text: rgba(237, 234, 228, 0.72);
+  --fiber-off: rgba(168, 173, 180, 0.18);
+  --gold: linear-gradient(100deg, var(--gold-1) 0%, var(--gold-2) 52%, var(--gold-3) 100%);
+  --mono: "JetBrains Mono", monospace;
+  --serif: "Instrument Serif", serif;
+  --sans: "Inter Tight", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  overflow: hidden;
+  background: var(--black);
+}
+
+#root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--black);
+  color: var(--silver-light);
+  font-family: var(--sans);
+}
+
+.layer {
+  position: absolute;
+}
+
+/* ---------------------------------------------------------------- Ordinateur */
+
+.monitor {
+  border-radius: 16px;
+  padding: 2px;
+  /* liseré argent brossé, plus clair en haut (lumière de contour) */
+  background: linear-gradient(180deg, rgba(227, 230, 234, 0.4), rgba(168, 173, 180, 0.1) 18%, rgba(168, 173, 180, 0.08));
+}
+
+.monitor__body {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  padding: 12px;
+  background: var(--surface);
+}
+
+.monitor__rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  border-top: 1px solid var(--silver-light);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--black);
+}
+
+.screen__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 80% at 50% 55%, rgba(232, 199, 122, 0.16), transparent 70%);
+  opacity: 0;
+}
+
+.screen__glass {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(118deg, rgba(227, 230, 234, 0.07) 0%, rgba(227, 230, 234, 0.02) 28%, transparent 46%);
+  pointer-events: none;
+}
+
+/* Contenu de l'écran : conçu en 640 × 360, mis à l'échelle par le JS. */
+.screen__content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 640px;
+  height: 360px;
+  transform-origin: 0 0;
+}
+
+.neck {
+  background: linear-gradient(90deg, rgba(168, 173, 180, 0.1), rgba(227, 230, 234, 0.28) 50%, rgba(168, 173, 180, 0.1));
+  border-radius: 2px;
+}
+
+.foot {
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(227, 230, 234, 0.32), rgba(168, 173, 180, 0.08) 40%, var(--surface));
+  padding: 1px;
+}
+
+.foot__body {
+  width: 100%;
+  height: 100%;
+  border-radius: 9px;
+  background: var(--surface);
+}
+
+.pulse {
+  width: 8px;
+  height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-glint) 0 35%, rgba(232, 199, 122, 0.5) 55%, transparent 72%);
+  opacity: 0;
+}
+
+.pulse--silver {
+  background: radial-gradient(circle, var(--silver-light) 0 35%, rgba(168, 173, 180, 0.5) 55%, transparent 72%);
+}
+
+/* Ports : prise, halo statique (seule l'opacité varie), trait lumineux qui descend. */
+.port {
+  width: 0;
+  height: 0;
+}
+
+.port__socket {
+  position: absolute;
+  left: -7px;
+  top: -4px;
+  width: 14px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--black);
+  box-shadow: inset 0 0 0 1px rgba(168, 173, 180, 0.45);
+}
+
+.port__lit {
+  position: absolute;
+  left: -7px;
+  top: -4px;
+  width: 14px;
+  height: 8px;
+  border-radius: 3px;
+  background: var(--gold);
+  opacity: 0;
+}
+
+.port--C .port__lit {
+  background: linear-gradient(100deg, var(--silver), var(--silver-light) 50%, var(--silver));
+}
+
+.port__bloom {
+  position: absolute;
+  left: -30px;
+  top: -30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 199, 122, 0.55), rgba(184, 145, 62, 0.15) 45%, transparent 70%);
+  opacity: 0;
+}
+
+.port--C .port__bloom {
+  background: radial-gradient(circle, rgba(227, 230, 234, 0.45), rgba(168, 173, 180, 0.12) 45%, transparent 70%);
+}
+
+.port__streak {
+  position: absolute;
+  left: -1px;
+  top: 6px;
+  width: 2px;
+  height: 90px;
+  border-radius: 1px;
+  background: linear-gradient(180deg, transparent, var(--gold-2) 70%, var(--gold-glint));
+  opacity: 0;
+}
+
+.port--C .port__streak {
+  background: linear-gradient(180deg, transparent, var(--silver) 70%, var(--silver-light));
+}
+
+/* ---------------------------------------------------------------- HUD (repris de la référence) */
+
+.hud {
+  position: absolute;
+  inset: 0;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.hud__corner {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: rgba(168, 173, 180, 0.5);
+  border-style: solid;
+  border-width: 0;
+}
+
+.hud__corner--tl { top: 12px; left: 12px; border-top-width: 1px; border-left-width: 1px; }
+.hud__corner--tr { top: 12px; right: 12px; border-top-width: 1px; border-right-width: 1px; }
+.hud__corner--bl { bottom: 12px; left: 12px; border-bottom-width: 1px; border-left-width: 1px; }
+.hud__corner--br { bottom: 12px; right: 12px; border-bottom-width: 1px; border-right-width: 1px; }
+
+.hud__brand { position: absolute; top: 17px; left: 32px; color: var(--silver-light); }
+.hud__labels { position: absolute; top: 17px; right: 32px; width: 220px; height: 12px; }
+.hud__label { position: absolute; top: 0; right: 0; white-space: nowrap; opacity: 0; }
+.hud__time { position: absolute; bottom: 16px; left: 32px; }
+.hud__meta { position: absolute; bottom: 16px; right: 32px; display: flex; align-items: center; gap: 10px; }
+.hud__bars { display: flex; gap: 3px; }
+.hud__bar { width: 6px; height: 6px; border: 1px solid rgba(168, 173, 180, 0.6); }
+.hud__bar-fill { width: 100%; height: 100%; background: var(--silver-light); opacity: 0; }
+
+/* ---------------------------------------------------------------- Scènes */
+
+.scene {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.scene__title {
+  position: absolute;
+  top: 40px;
+  left: 32px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--silver-light);
+}
+
+.gold-text {
+  background-image: var(--gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* 01 — Identité */
+.emblem {
+  position: absolute;
+  left: 320px;
+  top: 182px;
+  width: 0;
+  height: 0;
+}
+
+.emblem svg {
+  position: absolute;
+  left: -120px;
+  top: -120px;
+  width: 240px;
+  height: 240px;
+  overflow: visible;
+}
+
+.emblem__ring-text {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.32em;
+  fill: var(--silver);
+}
+
+/* 02 — Être vu */
+.search {
+  position: absolute;
+  top: 84px;
+  left: 32px;
+  width: 576px;
+  height: 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(168, 173, 180, 0.35);
+}
+
+.search__icon {
+  position: absolute;
+  top: 6px;
+  left: 12px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--silver);
+}
+
+.search__line {
+  position: absolute;
+  top: 11px;
+  left: 32px;
+  width: 180px;
+  height: 2px;
+  background: rgba(168, 173, 180, 0.4);
+}
+
+.result {
+  position: absolute;
+  left: 32px;
+  width: 576px;
+  height: 30px;
+}
+
+.result__index {
+  position: absolute;
+  top: 2px;
+  left: 0;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  color: var(--silver);
+}
+
+.result__bar {
+  position: absolute;
+  top: 4px;
+  left: 28px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(168, 173, 180, 0.32);
+}
+
+.result__sub {
+  position: absolute;
+  top: 16px;
+  left: 28px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(168, 173, 180, 0.16);
+}
+
+.result--client .result__bar {
+  background: var(--gold);
+}
+
+.result__name {
+  position: absolute;
+  top: -3px;
+  left: 28px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1;
+}
+
+.result__index--new {
+  opacity: 0;
+}
+
+.result__tag {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  color: var(--silver-light);
+  opacity: 0;
+}
+
+/* 03 — Être trouvé */
+.map {
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 640px;
+  height: 260px;
+  perspective: 520px;
+  perspective-origin: 50% 0%;
+  overflow: hidden;
+}
+
+.map__plane {
+  position: absolute;
+  left: -230px;
+  top: -40px;
+  width: 1100px;
+  height: 760px;
+  transform-origin: 50% 0%;
+  background-image:
+    linear-gradient(90deg, transparent 0 calc(36% - 2px), rgba(168, 173, 180, 0.28) calc(36% - 2px) calc(36% + 2px), transparent calc(36% + 2px)),
+    linear-gradient(0deg, transparent 0 calc(38% - 2px), rgba(168, 173, 180, 0.24) calc(38% - 2px) calc(38% + 2px), transparent calc(38% + 2px)),
+    linear-gradient(90deg, rgba(168, 173, 180, 0.12) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(168, 173, 180, 0.12) 1px, transparent 1px),
+    radial-gradient(circle, rgba(168, 173, 180, 0.38) 1.2px, transparent 1.6px);
+  background-size: 100% 100%, 100% 100%, 66px 66px, 66px 66px, 22px 22px;
+}
+
+.pin {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.pin__head {
+  position: absolute;
+  left: -5px;
+  top: -18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid var(--silver);
+  background: var(--black);
+}
+
+.pin__stem {
+  position: absolute;
+  left: -0.5px;
+  top: -8px;
+  width: 1px;
+  height: 8px;
+  background: var(--silver);
+}
+
+.pin--gold .pin__head {
+  left: -9px;
+  top: -30px;
+  width: 18px;
+  height: 18px;
+  border: 0;
+  background: var(--gold);
+}
+
+.pin--gold .pin__stem {
+  left: -1px;
+  top: -13px;
+  width: 2px;
+  height: 13px;
+  background: var(--gold-2);
+}
+
+.radar {
+  position: absolute;
+  left: -20px;
+  top: -20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-2);
+  opacity: 0;
+}
+
+.place-card {
+  position: absolute;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--surface);
+  border: 1px solid rgba(168, 173, 180, 0.3);
+  opacity: 0;
+}
+
+.place-card__name {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--silver-light);
+}
+
+.place-card__stars {
+  margin-top: 6px;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+}
+
+.place-card__open {
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: 0.24em;
+  color: var(--silver);
+}
+
+/* 04 — Être efficace */
+.hub {
+  position: absolute;
+  left: 320px;
+  top: 206px;
+  width: 0;
+  height: 0;
+}
+
+.hub__node {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--silver-light);
+  background: var(--black);
+}
+
+.branch {
+  position: absolute;
+  background: rgba(168, 173, 180, 0.55);
+}
+
+.module {
+  position: absolute;
+  width: 132px;
+  height: 64px;
+  border-radius: 6px;
+  background: var(--surface);
+  border: 1px solid rgba(168, 173, 180, 0.35);
+  padding: 9px 10px;
+  opacity: 0;
+}
+
+.module__label {
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: 0.22em;
+  color: var(--silver-light);
+}
+
+.module__bars {
+  position: absolute;
+  left: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 22px;
+}
+
+.module__bar {
+  width: 6px;
+  border-radius: 1px;
+  background: rgba(168, 173, 180, 0.45);
+}
+
+.module__line {
+  position: absolute;
+  right: 10px;
+  bottom: 12px;
+  width: 54px;
+  height: 2px;
+  background: rgba(168, 173, 180, 0.3);
+}
+
+.sweep {
+  position: absolute;
+  top: 0;
+  width: 70px;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(227, 230, 234, 0.16) 50%, transparent);
+  opacity: 0;
+}
+
+.dash-label {
+  position: absolute;
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.26em;
+  opacity: 0;
+}
+
+/* 05 — Signature */
+.lockup {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 640px;
+  height: 360px;
+}
+
+.lockup__word {
+  position: absolute;
+  left: 206px;
+  top: 122px;
+  font-family: var(--serif);
+  font-size: 76px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+}
+
+.lockup__sub {
+  position: absolute;
+  left: 210px;
+  top: 202px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--silver-light);
+  white-space: nowrap;
+}
+
+.lockup__rule {
+  position: absolute;
+  left: 92px;
+  top: 252px;
+  width: 456px;
+  height: 1px;
+  background: rgba(168, 173, 180, 0.4);
+  transform-origin: 0 50%;
+}
+
+.lockup__services {
+  position: absolute;
+  left: 92px;
+  top: 264px;
+  width: 456px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 7.5px;
+  letter-spacing: 0.2em;
+  color: var(--silver);
+}

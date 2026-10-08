@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Yonko Tech — boucle hero (desktop)</title>
+    <link rel="stylesheet" href="assets/hero.css" />
+    <script src="assets/gsap.min.js"></script>
+    <script src="assets/ports.js"></script>
+    <script src="assets/hero.js"></script>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="hero-desktop"
+      data-layout="desktop"
+      data-start="0"
+      data-duration="12"
+      data-fps="30"
+      data-width="1920"
+      data-height="1080"
+    ></div>
+    <script>
+      window.__timelines["hero-desktop"] = window.buildHeroTimeline();
+    </script>
+  </body>
+</html>

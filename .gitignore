@@ -16,3 +16,4 @@ next-env.d.ts
 # hyperframes renders (sources are versioned, renders go to public/media)
 video/**/renders/
 video/**/.hyperframes/
+video/**/snapshots/

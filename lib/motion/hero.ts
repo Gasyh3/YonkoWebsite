@@ -1,7 +1,7 @@
 // Scène Hero (C2) : révélation du titre au premier chargement, reflet or synchronisé sur la boucle
 // vidéo, sortie au scroll (la vidéo recule, les fibres « décrochent »), indicateur de scroll.
 
-import { heroMedia } from "../hero-media";
+import { HERO_PORTRAIT_QUERY, heroMedia } from "../hero-media";
 import { isMobile, prefersReducedMotion } from "./env";
 import { gsap, ScrollTrigger, SplitText } from "./gsap";
 // Classe posée sur <html> par le script inline du layout quand l'intro doit jouer (1re visite de la session).
@@ -38,7 +38,9 @@ export function createHeroMotion(root: HTMLElement): MotionModule {
       const indicator = root.querySelector<HTMLElement>("[data-hero-indicator]");
       const dot = indicator?.querySelector<HTMLElement>("[data-hero-indicator-dot]");
 
-      if (video && mobile && video.dataset.posterMobile) video.poster = video.dataset.posterMobile;
+      if (video?.dataset.posterMobile && window.matchMedia(HERO_PORTRAIT_QUERY).matches) {
+        video.poster = video.dataset.posterMobile;
+      }
 
       // Reduced motion : poster fixe, titre lisible d'emblée, aucun mouvement.
       if (prefersReducedMotion()) {
@@ -57,7 +59,7 @@ export function createHeroMotion(root: HTMLElement): MotionModule {
           observer.observe(root);
         }
 
-        // 2. Reflet or : traverse les mots or une fois par boucle, quand la lumière descend vers les ports.
+        // 2. Reflet or : traverse les mots or une fois par boucle, quand la signature apparaît et que les 3 ports respirent.
         const words = [...root.querySelectorAll<HTMLElement>("[data-gold-word]")];
         const glint = () => {
           const tl = gsap.timeline();
@@ -85,7 +87,7 @@ export function createHeroMotion(root: HTMLElement): MotionModule {
           });
         };
 
-        if (video && heroMedia.ready) {
+        if (video) {
           let last = 0;
           tick = () => {
             const current = video.currentTime;
@@ -94,7 +96,7 @@ export function createHeroMotion(root: HTMLElement): MotionModule {
           };
           gsap.ticker.add(tick);
         } else {
-          // Sans vidéo : même rythme que la boucle prévue.
+          // Repli sans vidéo : même rythme que la boucle.
           gsap.timeline({ repeat: -1, delay: heroMedia.glintAt }).call(glint).to({}, { duration: heroMedia.loopDuration });
         }
 

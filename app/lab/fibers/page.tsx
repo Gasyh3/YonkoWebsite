@@ -45,10 +45,10 @@ export default async function FiberLabPage({ searchParams }: { searchParams: Pro
           <h1 className="section-heading mt-3 max-w-xl">Lab FiberSystem</h1>
           <div
             data-fiber-origin=""
-            className="relative mx-auto mt-10 aspect-[9/16] w-3/4 max-w-xs rounded-md border border-dashed border-border md:aspect-video md:w-full md:max-w-4xl"
+            className="relative mx-auto mt-10 aspect-[9/16] w-3/4 max-w-xs rounded-md border border-dashed border-border md:landscape:aspect-video md:landscape:w-full md:landscape:max-w-4xl"
           >
-            <Ports ports={heroPorts.desktop.ports} className="absolute inset-0 hidden md:block" />
-            <Ports ports={heroPorts.mobile.ports} className="absolute inset-0 md:hidden" />
+            <Ports ports={heroPorts.desktop.ports} className="absolute inset-0 hidden md:landscape:block" />
+            <Ports ports={heroPorts.mobile.ports} className="absolute inset-0 md:landscape:hidden" />
           </div>
           <div className="relative h-24">
             <span data-fiber-anchor="hero-out" data-fiber="all" className="absolute right-0 top-1/2 size-px" />

@@ -221,3 +221,102 @@ body::after {
 .motion-reduced .hero-indicator {
   display: none;
 }
+
+/* ---------------------------------------------------------------------------
+   Expertises 02 — Google Maps (C6) : components/sections/expertises/maps-scene.tsx */
+
+.maps-viz {
+  aspect-ratio: 7 / 5;
+}
+
+/* Rues : même grammaire que les fibres (dots ronds), plus larges sur les axes principaux. */
+.maps-street {
+  fill: none;
+  stroke: var(--silver);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 7;
+  opacity: .45;
+}
+
+.maps-street--main {
+  stroke-width: 3.4;
+  stroke-dasharray: 0 8;
+  opacity: .7;
+}
+
+.maps-street-mask {
+  fill: none;
+  stroke: #fff; /* luminance du masque, pas une couleur affichée */
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.maps-pin-head {
+  fill: var(--black);
+  stroke: var(--silver);
+  stroke-width: 1.5;
+}
+
+.maps-pin-stem {
+  stroke: var(--silver);
+  stroke-width: 1.5;
+}
+
+.maps-pin-stem--gold {
+  stroke: var(--gold-3);
+  stroke-width: 2;
+}
+
+.maps-pin-core {
+  fill: var(--black);
+}
+
+.maps-stop-1 { stop-color: var(--gold-1); }
+.maps-stop-2 { stop-color: var(--gold-2); }
+.maps-stop-3 { stop-color: var(--gold-3); }
+
+.maps-radar {
+  fill: none;
+  stroke: var(--gold-2);
+  stroke-width: 1;
+  opacity: 0;
+}
+
+.maps-card-anchor {
+  position: absolute;
+  left: var(--card-x-mobile);
+  top: var(--card-y-mobile);
+  transform: translateX(-50%);
+}
+
+@media (min-width: 768px) {
+  .maps-card-anchor {
+    left: var(--card-x);
+    top: var(--card-y);
+    transform: none;
+  }
+}
+
+.maps-card {
+  padding: .7rem .9rem;
+  border-radius: .5rem;
+  background: var(--surface);
+  border: 1px solid var(--fiber-off);
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .maps-card {
+    padding: .9rem 1.1rem;
+  }
+}
+
+/* Entrée de la fibre B : court passage horizontal juste avant l'avenue principale du plan. */
+.maps-fiber-in {
+  position: absolute;
+  top: 50%;
+  left: -44px;
+  width: 32px;
+  height: 1px;
+}

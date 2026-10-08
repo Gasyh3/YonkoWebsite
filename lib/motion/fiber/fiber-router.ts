@@ -333,7 +333,7 @@ function cornerRadii(polylines: Record<FiberId, Vec[][]>) {
 
 const fmt = (n: number) => Math.round(n * 100) / 100;
 
-function toPath(line: Vec[], radii: Map<Vec, number>) {
+function toPath(line: Vec[], radii: Map<Vec, number>, fallbackRadius: number = ROUTING.radius) {
   if (line.length < 2) return "";
   let d = `M${fmt(line[0].x)} ${fmt(line[0].y)}`;
   for (let i = 1; i < line.length - 1; i++) {
@@ -347,7 +347,7 @@ function toPath(line: Vec[], radii: Map<Vec, number>) {
     const tanHalf = Math.tan(theta / 2);
     const lenIn = length(sub(c, prev)) * (i - 1 === 0 ? 1 : 0.5);
     const lenOut = length(sub(next, c)) * (i + 1 === line.length - 1 ? 1 : 0.5);
-    const t = Math.min((radii.get(c) ?? ROUTING.radius) * tanHalf, lenIn, lenOut);
+    const t = Math.min((radii.get(c) ?? fallbackRadius) * tanHalf, lenIn, lenOut);
     const r = t / tanHalf;
     const a = sub(c, scale(u, t));
     const b = add(c, scale(v, t));
@@ -444,7 +444,7 @@ function routeMobile(input: RouteInput, obstacles: Rect[]): RouteResult {
   const funnel = (p: Vec): Vec[] => [p, { x: p.x, y: merge.y - Math.abs(p.x - merge.x) }, merge];
 
   const ends = input.anchors.filter((a) => a.mode === "end");
-  const end = ends[0];
+  const end = ends[ends.length - 1]; // terminus le plus bas : la composite traverse toute la page
   const regions = [...input.splitRegions].sort((a, b) => a.top - b.top);
   const firstStop = Math.min(
     regions[0]?.top ?? Infinity,
@@ -499,6 +499,12 @@ function routeMobile(input: RouteInput, obstacles: Rect[]): RouteResult {
   }
 
   return finish(polylines, markers, obstacles);
+}
+
+// Polyligne → chemin SVG aux coudes arrondis (même grammaire que les fibres), pour les scènes
+// qui dessinent leurs propres tracés (ex. le quadrillage de rues de la scène Maps).
+export function roundedPath(points: Vec[], radius: number = ROUTING.radius) {
+  return toPath(cleanPolyline(points), new Map(), radius);
 }
 
 export function routeFibers(input: RouteInput): RouteResult {

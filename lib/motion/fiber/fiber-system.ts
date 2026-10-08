@@ -25,7 +25,7 @@ import {
 
 export type { FiberId } from "./fiber-router";
 
-export type FiberArriveDetail = { fiber: FiberId; anchorId: string; mode: AnchorMode };
+export type FiberArriveDetail = { fiber: FiberId; anchorId: string; mode: AnchorMode; direction?: "ltr" | "rtl" };
 
 declare global {
   interface WindowEventMap {
@@ -348,7 +348,7 @@ function setHead(inst: Instance, state: FiberState, head: number) {
 function emitArrive(m: ArrivalMarker) {
   window.dispatchEvent(
     new CustomEvent<FiberArriveDetail>("fiber:arrive", {
-      detail: { fiber: m.fiber, anchorId: m.anchorId, mode: m.mode },
+      detail: { fiber: m.fiber, anchorId: m.anchorId, mode: m.mode, direction: m.direction },
     }),
   );
 }

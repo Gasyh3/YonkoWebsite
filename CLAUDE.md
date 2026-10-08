@@ -109,7 +109,7 @@ Attributs complémentaires (implémentés dans `lib/motion/fiber/`) :
 - Couloirs : laisser ~56px libres à côté des ancres de bord (les 3 fibres occupent ±14px + marge de 10px). Le routeur signale en console (dev) tout segment qui traverse un texte ; `/lab/fibers?debug=1` affiche obstacles, ancres et collisions.
 - `fiber:arrive` peut être émis plusieurs fois pour une même ancre (respiration) : les sections réagissent de façon idempotente.
 
-Le module `FiberSystem` émet `window` → `CustomEvent("fiber:arrive", { detail: { fiber, anchorId, mode } })` quand une impulsion atteint une ancre. Les sections écoutent cet événement pour réagir, elles ne pilotent pas les fibres elles-mêmes.
+Le module `FiberSystem` émet `window` → `CustomEvent("fiber:arrive", { detail: { fiber, anchorId, mode, direction? } })` (`direction` = `ltr` | `rtl` pour une ancre `data-fiber-axis="x"`) quand une impulsion atteint une ancre. Les sections écoutent cet événement pour réagir, elles ne pilotent pas les fibres elles-mêmes.
 
 API exposée : `FiberSystem.setLit(fiber, bool)`, `FiberSystem.pulse(fiber, fromAnchor, toAnchor, duration)`.
 

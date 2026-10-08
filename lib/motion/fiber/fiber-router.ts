@@ -36,6 +36,9 @@ export type ArrivalMarker = {
   anchorId: string;
   mode: AnchorMode;
   point: Vec;
+  // Sens de parcours d'une ancre horizontale (data-fiber-axis="x") : les sections s'en servent pour
+  // animer « dans le sens de la fibre ».
+  direction?: "ltr" | "rtl";
 };
 
 export type Collision = { fiber: FiberId; segment: [Vec, Vec]; obstacle: Rect };
@@ -170,6 +173,7 @@ function planNodes(input: RouteInput) {
       const o = grouped ? OFFSET[f] : 0;
       let entry: Vec;
       let exit: Vec | null = null;
+      let direction: ArrivalMarker["direction"];
 
       if (anchor.axis === "x") {
         // Passage horizontal sur toute la largeur de l'ancre, entré par le côté le plus proche.
@@ -179,6 +183,7 @@ function planNodes(input: RouteInput) {
         const xo = OFFSET[f];
         entry = { x: (rightward ? anchor.rect.left : anchor.rect.right) + xo, y: c.y + yo };
         exit = { x: (rightward ? anchor.rect.right : anchor.rect.left) + xo, y: c.y + yo };
+        direction = rightward ? "ltr" : "rtl";
       } else if (anchor.axis === "y") {
         entry = { x: c.x + o, y: anchor.rect.top };
         exit = { x: c.x + o, y: anchor.rect.bottom };
@@ -192,7 +197,7 @@ function planNodes(input: RouteInput) {
         plans[f].runs.set(key, [entry, exit]);
         plans[f].nodes.push({ point: exit, key: `${key}-exit` });
       }
-      markers.push({ fiber: f, carrier: f, anchorId: anchor.id, mode: anchor.mode, point: entry });
+      markers.push({ fiber: f, carrier: f, anchorId: anchor.id, mode: anchor.mode, point: entry, direction });
       if (anchor.mode === "end") plans[f].ended = true;
     }
   });

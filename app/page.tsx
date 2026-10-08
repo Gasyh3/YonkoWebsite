@@ -1,5 +1,6 @@
 import { FiberStage } from "@/components/motion/fiber-stage";
 import { Hero } from "@/components/sections/hero";
+import { Manifesto } from "@/components/sections/manifesto";
 import { QuickContact } from "@/components/sections/quick-contact";
 import { ServicesSection } from "@/components/sections/services-section";
 import { WhyUs } from "@/components/sections/why-us";
@@ -12,6 +13,7 @@ export default function Home() {
     <FiberStage>
       <div className="space-y-12">
         <Hero />
+        <Manifesto />
         <div data-ambient="">
           <ServicesSection />
         </div>

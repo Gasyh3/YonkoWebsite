@@ -378,3 +378,87 @@ body::after {
   width: 32px;
   height: 1px;
 }
+
+/* ---------------------------------------------------------------------------
+   Manifeste (C3) : components/sections/manifesto.tsx, lib/motion/manifesto.ts */
+
+.manifesto-phrase {
+  font-size: clamp(2.6rem, 11vw, 8.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.manifesto-line {
+  position: relative;
+  display: block;
+  padding-block: .08em;
+}
+
+.manifesto-line__anchor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 84%; /* juste sous la ligne de base : la fibre souligne la ligne au lieu de la barrer */
+  height: 1px;
+}
+
+.manifesto-line__text {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Éteinte : argent à 25 %. */
+.manifesto-line__base {
+  color: var(--silver);
+  opacity: .25;
+}
+
+/* Allumée : dégradé or (A, B) ou argent clair (C). Sans JS ou en reduced motion, la ligne est déjà allumée. */
+.manifesto-line__lit {
+  position: absolute;
+  inset: -.3em 0 0;
+  padding-top: .3em; /* la zone peinte couvre aussi les accents (Ê) qui dépassent de l'interligne serré */
+}
+
+.manifesto-line__lit--A,
+.manifesto-line__lit--B {
+  background-image: var(--gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.manifesto-line__lit--C {
+  color: var(--silver-light);
+}
+
+/* Découpée en lettres (JS) : le dégradé passe sur chaque lettre, recalé pour rester continu. */
+.manifesto.is-split .manifesto-line__lit--A,
+.manifesto.is-split .manifesto-line__lit--B {
+  background-image: none;
+}
+
+.manifesto-char {
+  /* SplitText pose inline-block ; en inline, la marge du haut n'influe pas sur la mise en page
+     (seule l'opacité est animée, aucune transformation). */
+  display: inline !important;
+  padding-top: .3em; /* idem, lettre par lettre : la zone peinte couvre l'accent */
+}
+
+.manifesto.is-split .manifesto-line__lit--A .manifesto-char,
+.manifesto.is-split .manifesto-line__lit--B .manifesto-char {
+  background-image: var(--gold);
+  background-repeat: no-repeat;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.manifesto-fiber-out {
+  position: absolute;
+  right: 1rem; /* dans le padding du conteneur, comme la sortie du hero */
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+}

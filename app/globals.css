@@ -2,27 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Charte motion — source de vérité (voir CLAUDE.md). Ne jamais coder une couleur en dur ailleurs. */
 :root {
-  --background: 0 0% 4%;
-  --foreground: 0 0% 96%;
-  --card: 0 0% 7%;
-  --card-foreground: 0 0% 96%;
-  --popover: 0 0% 7%;
-  --popover-foreground: 0 0% 96%;
-  --primary: 47 92% 64%;
-  --primary-foreground: 0 0% 8%;
-  --secondary: 0 0% 12%;
-  --secondary-foreground: 0 0% 96%;
-  --muted: 0 0% 16%;
-  --muted-foreground: 0 0% 70%;
-  --accent: 47 80% 55%;
-  --accent-foreground: 0 0% 8%;
-  --destructive: 0 65% 55%;
-  --destructive-foreground: 0 0% 96%;
-  --border: 0 0% 16%;
-  --input: 0 0% 20%;
-  --ring: 47 92% 64%;
-  --radius: 0.9rem;
+  --black: #0B0B0C;          /* fond global, jamais #000 */
+  --surface: #141416;        /* cartes, panneaux */
+  --gold-1: #8C6A2A;
+  --gold-2: #E8C77A;
+  --gold-3: #B8913E;         /* dégradé or : gold-1 → gold-2 → gold-3 */
+  --gold-glint: #F6E3A8;     /* tête d'impulsion uniquement */
+  --silver: #A8ADB4;
+  --silver-light: #E3E6EA;
+  --text: rgba(237, 234, 228, .72);
+  --fiber-off: rgba(168, 173, 180, .18);
+
+  --gold: linear-gradient(100deg, var(--gold-1) 0%, var(--gold-2) 52%, var(--gold-3) 100%);
+
+  --ease-in: expo.out;             /* GSAP : reveals */
+  --ease-transition: power3.inOut; /* GSAP : changements d'état */
+  --ease-breath: sine.inOut;       /* GSAP : boucles, pulsations */
+  --dur-micro: .3s;
+  --dur-reveal: .7s;
+  --dur-major: 1.2s;
+  --stagger: .06s;
+
+  /* Variables shadcn/ui (HSL) remappées sur la charte pour que les composants existants suivent. */
+  --background: 240 4% 4%;             /* --black */
+  --foreground: 214 14% 90%;           /* --silver-light */
+  --card: 240 5% 8%;                   /* --surface */
+  --card-foreground: 214 14% 90%;
+  --popover: 240 5% 8%;
+  --popover-foreground: 214 14% 90%;
+  --primary: 42 70% 69%;               /* --gold-2 */
+  --primary-foreground: 240 4% 4%;
+  --secondary: 240 5% 8%;              /* --surface */
+  --secondary-foreground: 214 14% 90%;
+  --muted: 240 5% 8%;
+  --muted-foreground: 40 4% 67%;       /* --text aplati sur --black */
+  --accent: 41 50% 48%;                /* --gold-3 */
+  --accent-foreground: 240 4% 4%;
+  --destructive: 39 54% 36%;           /* --gold-1 : pas de rouge hors charte */
+  --destructive-foreground: 214 14% 90%;
+  --border: 220 4% 16%;                /* --silver à 18 % aplati */
+  --input: 220 4% 16%;
+  --ring: 42 70% 69%;
+  --radius: 0.75rem;
 }
 
 @layer base {
@@ -30,8 +53,31 @@
     @apply border-border;
   }
 
+  html {
+    background-color: var(--black);
+  }
+
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background font-sans antialiased;
+    color: var(--text);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--silver-light);
+  }
+
+  ::selection {
+    background: var(--gold-2);
+    color: var(--black);
+  }
+
+  /* Focus clavier : contour or 2px, offset 3px (un outline ne peut pas être un dégradé : or le plus clair). */
+  :focus-visible {
+    outline: 2px solid var(--gold-2);
+    outline-offset: 3px;
   }
 }
 
@@ -41,15 +87,37 @@
   }
 
   .section-heading {
-    @apply text-3xl font-semibold tracking-tight text-secondary md:text-4xl;
+    @apply font-display text-4xl font-normal leading-[1.05] tracking-tight md:text-5xl;
+  }
+}
+
+@layer utilities {
+  /* L'or n'est jamais une couleur plate : toujours le dégradé. */
+  .text-gold {
+    background-image: var(--gold);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .bg-gold {
+    background-image: var(--gold);
   }
 }
 
 .grid-accent {
-  background-image: radial-gradient(rgba(249, 214, 72, 0.08) 1px, transparent 0);
+  background-image: radial-gradient(rgba(168, 173, 180, .06) 1px, transparent 0);
   background-size: 32px 32px;
 }
 
-.glow {
-  filter: drop-shadow(0 20px 50px rgba(249, 214, 72, 0.25));
+/* Grain : bruit statique 3,5 %, overlay CSS (jamais un canvas animé). */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: .035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
 }

@@ -18,12 +18,20 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "Georgia", "serif"],
+      },
       colors: {
-        yonko: {
-          black: "#0A0A0A",
-          white: "#FFFFFF",
-          yellow: "#F9D648",
+        // Charte motion (CLAUDE.md). L'or s'utilise via .text-gold / .bg-gold (dégradé), jamais en aplat.
+        black: "var(--black)",
+        surface: "var(--surface)",
+        silver: {
+          DEFAULT: "var(--silver)",
+          light: "var(--silver-light)",
         },
+        text: "var(--text)",
+        "fiber-off": "var(--fiber-off)",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

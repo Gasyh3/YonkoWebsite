@@ -1,0 +1,18 @@
+# deps
+node_modules/
+
+# next
+.next/
+out/
+next-env.d.ts
+
+# build / misc
+*.tsbuildinfo
+.DS_Store
+*.log
+.env*.local
+.vercel
+
+# hyperframes renders (sources are versioned, renders go to public/media)
+video/**/renders/
+video/**/.hyperframes/

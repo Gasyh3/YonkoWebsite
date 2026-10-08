@@ -1,0 +1,11 @@
+{
+  "$comment": "Position des 3 ports de l'ordinateur dans la vidéo hero, en % de l'image (x, y). Source unique partagée par la composition HyperFrames (video/hero) et le FiberSystem. Valeurs provisoires tant que la vidéo n'est pas rendue.",
+  "desktop": {
+    "media": { "width": 1920, "height": 1080 },
+    "ports": { "A": [47.6, 76.0], "B": [50.0, 76.0], "C": [52.4, 76.0] }
+  },
+  "mobile": {
+    "media": { "width": 1080, "height": 1920 },
+    "ports": { "A": [45.8, 41.0], "B": [50.0, 41.0], "C": [54.2, 41.0] }
+  }
+}

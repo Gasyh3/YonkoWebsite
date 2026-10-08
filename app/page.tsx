@@ -12,9 +12,13 @@ export default function Home() {
     <FiberStage>
       <div className="space-y-12">
         <Hero />
-        <ServicesSection />
-        <WhyUs />
-        <div className="space-y-6">
+        <div data-ambient="">
+          <ServicesSection />
+        </div>
+        <div data-ambient="">
+          <WhyUs />
+        </div>
+        <div data-ambient="" className="space-y-6">
           <FaqSection
             className="py-8"
             items={faqItems.slice(0, 5)}
@@ -30,7 +34,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <QuickContact />
+        <div data-ambient="">
+          <QuickContact />
+        </div>
       </div>
     </FiberStage>
   );

@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useRef } from "react";
 
+import { AmbientNetwork } from "@/lib/motion/fiber/ambient-network";
 import { FiberSystem } from "@/lib/motion/fiber/fiber-system";
 import "@/lib/motion/fiber/fiber.css";
 
@@ -14,6 +15,7 @@ type Props = {
 
 // Scène des fibres : enveloppe la page, porte le calque SVG sous le contenu.
 // Les sections posent leurs ancres [data-fiber-anchor] et écoutent "fiber:arrive".
+// Les sections [data-ambient] reçoivent en plus le réseau secondaire des marges (AmbientNetwork).
 export function FiberStage({ children, className, debug = false }: Props) {
   const stageRef = useRef<HTMLDivElement>(null);
   const layerRef = useRef<HTMLDivElement>(null);
@@ -23,7 +25,11 @@ export function FiberStage({ children, className, debug = false }: Props) {
     const layer = layerRef.current;
     if (!stage || !layer) return;
     FiberSystem.init(stage, layer);
-    return () => FiberSystem.destroy();
+    AmbientNetwork.init(stage, layer);
+    return () => {
+      AmbientNetwork.destroy();
+      FiberSystem.destroy();
+    };
   }, []);
 
   return (

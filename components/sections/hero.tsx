@@ -15,6 +15,7 @@ export function Hero() {
   return (
     <section
       ref={ref}
+      data-ambient=""
       className="hero relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden"
       aria-labelledby="hero-title"
     >
@@ -49,6 +50,7 @@ export function Hero() {
           <h1
             id="hero-title"
             data-hero-title=""
+            data-ambient-target=""
             className="hero-title font-display text-[2.6rem] leading-[1.04] md:text-5xl lg:text-[4.25rem]"
           >
             Votre <GoldWord>stratégie</GoldWord> digitale, du premier clic au premier{" "}
@@ -75,7 +77,7 @@ export function Hero() {
         {/* Vidéo HyperFrames de l'ordinateur (sans fibres : elles sont en SVG, sous la vidéo, mix-blend lighten).
             Le bord du moniteur est à 1,6 % du bord de la vidéo : la marge négative l'aligne sur le conteneur. */}
         <div className="hero-computer order-1 md:order-2">
-          <div data-hero-media="" data-fiber-origin="" className="hero-media">
+          <div data-hero-media="" data-fiber-origin="" data-ambient-target="" className="hero-media">
             <video
               data-hero-video=""
               className="h-full w-full object-cover"

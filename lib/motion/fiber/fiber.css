@@ -101,3 +101,36 @@
   fill: none;
   stroke: var(--gold-2);
 }
+
+/* Réseau secondaire des marges (ambient-network.ts) : même grammaire, plus discret, argent seulement. */
+.ambient-off {
+  fill: none;
+  stroke: var(--fiber-off);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 0 7;
+}
+
+.ambient-mask {
+  fill: none;
+  stroke: #fff; /* luminance du masque, pas une couleur affichée */
+  stroke-width: 8;
+}
+
+.ambient-pulse {
+  fill: none;
+  stroke: var(--silver-light);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.ambient-node {
+  fill: var(--black);
+  stroke: var(--silver);
+  stroke-width: 1;
+}
+
+.ambient-node--end {
+  stroke: var(--silver-light);
+}

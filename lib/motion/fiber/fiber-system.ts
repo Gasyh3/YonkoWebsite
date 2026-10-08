@@ -8,6 +8,7 @@
 import heroPorts from "../hero-ports.json";
 import { debounce, isMobile, onReducedMotionChange, prefersReducedMotion } from "../env";
 import { gsap } from "../gsap";
+import { measureAtRest } from "./measure";
 import { tokens } from "../tokens";
 import {
   type AnchorAxis,
@@ -37,6 +38,8 @@ const SVG_NS = "http://www.w3.org/2000/svg";
 const CONFIG = {
   revealAhead: 1.3, // la fibre est dessinée jusqu'à 130 % de la hauteur du viewport
   headAt: 0.62, // position de la tête d'impulsion liée au scroll, en fraction du viewport
+  headStagger: 0.05, // flux décalés : B puis C suivent A avec un léger retard (fraction du viewport)
+  breathStagger: 0.45, // s : décalage de départ des respirations A → B → C
   scrub: 0.6,
   sampleStep: 6, // px de tracé entre deux échantillons
   horizontalPace: 0.35, // px de scroll par px de tracé sur les passages horizontaux
@@ -357,9 +360,12 @@ function render(inst: Instance) {
     const state = inst.fibers[f];
     const reveal = revealLength(state, top + vh * CONFIG.revealAhead);
     state.maskPath.style.strokeDashoffset = String(state.length - reveal);
-    if (state.owner === "scroll") setHead(inst, state, headLength(state, top + vh * CONFIG.headAt));
+    if (state.owner === "scroll") setHead(inst, state, headLength(state, top + vh * headAt(f)));
   }
 }
+
+// Tête d'impulsion propre à chaque fibre : les trois flux ne se suivent pas en bloc.
+const headAt = (f: FiberId) => CONFIG.headAt - FIBERS.indexOf(f) * CONFIG.headStagger;
 
 const fadePulse = (state: FiberState, on: boolean, duration?: number) => {
   const t = tokens();
@@ -408,16 +414,18 @@ function breathe(inst: Instance) {
   const vh = window.innerHeight;
   let longest = 0;
 
-  for (const f of FIBERS) {
+  FIBERS.forEach((f, index) => {
     const state = inst.fibers[f];
-    if (state.owner) continue;
+    if (state.owner) return;
     const from = headLength(state, top);
     const to = headLength(state, top + vh);
-    if (to - from < 40) continue; // fibre absente de l'écran
+    if (to - from < 40) return; // fibre absente de l'écran
     state.owner = "breath";
-    setHead(inst, state, from);
     const proxy = { head: from };
+    // Départs décalés : A, puis B, puis C.
     const tl = gsap.timeline({
+      delay: index * CONFIG.breathStagger,
+      onStart: () => setHead(inst, state, from),
       onComplete: () => {
         if (state.owner === "breath") state.owner = null;
         state.pulseTween = null;
@@ -432,8 +440,8 @@ function breathe(inst: Instance) {
       }, 0)
       .to(state.pulseGroup, { opacity: 0, duration: t.dur.reveal, ease: t.ease.breath }, CONFIG.breathDuration - t.dur.reveal);
     state.pulseTween = tl;
-    longest = Math.max(longest, tl.duration());
-  }
+    longest = Math.max(longest, tl.delay() + tl.duration());
+  });
 
   inst.idleCall = gsap.delayedCall(longest + CONFIG.idleBeforeBreath, () => breathe(inst));
 }
@@ -474,17 +482,22 @@ function rebuild(inst: Instance) {
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   }
 
-  inst.anchors = readAnchors(inst.stage, origin);
-  const obstacles = readObstacles(inst.stage, inst.layer, origin);
-  const splitRegions = [...inst.stage.querySelectorAll<HTMLElement>("[data-fiber-split]")]
-    .filter(isRendered)
-    .map((el) => relRect(el, origin));
+  // Mesures sur la mise en page au repos (sans les transformations des animations en cours).
+  const { anchors, obstacles, splitRegions, origins } = measureAtRest(inst.stage, () => ({
+    anchors: readAnchors(inst.stage, origin),
+    obstacles: readObstacles(inst.stage, inst.layer, origin),
+    splitRegions: [...inst.stage.querySelectorAll<HTMLElement>("[data-fiber-split]")]
+      .filter(isRendered)
+      .map((el) => relRect(el, origin)),
+    origins: readOrigins(inst.stage, origin, width),
+  }));
+  inst.anchors = anchors;
 
   inst.route = routeFibers({
     width,
     height,
     mobile: inst.mobile,
-    origins: readOrigins(inst.stage, origin, width),
+    origins,
     anchors: [...inst.anchors.values()].map((a) => a.spec),
     obstacles,
     splitRegions,

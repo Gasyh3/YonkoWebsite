@@ -1,0 +1,102 @@
+/* FiberSystem — calque des fibres (voir lib/motion/fiber/fiber-system.ts). */
+
+.fiber-stage {
+  position: relative;
+  overflow-x: clip; /* le SVG ne provoque jamais de scroll horizontal */
+}
+
+.fiber-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fiber-stage__content {
+  position: relative;
+  z-index: 1;
+}
+
+.fiber-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fiber-svg path {
+  fill: none;
+}
+
+/* Éteinte : dots ronds de 2px, espacement 7px. */
+.fiber-off {
+  stroke: var(--fiber-off);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 7;
+}
+
+.fiber-mask-path {
+  stroke: #fff; /* luminance du masque, pas une couleur affichée */
+  stroke-width: 8;
+  stroke-linecap: butt;
+}
+
+/* Impulsion : traînée en paliers, de la queue (sombre) à la tête (reflet). */
+.fiber-pulse {
+  opacity: 0;
+}
+
+.fiber-pulse-seg {
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.fiber--A .fiber-pulse-seg--1,
+.fiber--B .fiber-pulse-seg--1 { stroke: var(--gold-1); opacity: .35; }
+.fiber--A .fiber-pulse-seg--2,
+.fiber--B .fiber-pulse-seg--2 { stroke: var(--gold-3); opacity: .6; }
+.fiber--A .fiber-pulse-seg--3,
+.fiber--B .fiber-pulse-seg--3 { stroke: var(--gold-2); }
+.fiber--A .fiber-pulse-seg--4,
+.fiber--B .fiber-pulse-seg--4 { stroke: var(--gold-glint); stroke-width: 2.5; }
+
+.fiber--C .fiber-pulse-seg--1 { stroke: var(--silver); opacity: .3; }
+.fiber--C .fiber-pulse-seg--2 { stroke: var(--silver); opacity: .6; }
+.fiber--C .fiber-pulse-seg--3 { stroke: var(--silver-light); opacity: .8; }
+.fiber--C .fiber-pulse-seg--4 { stroke: var(--silver-light); stroke-width: 2.5; }
+
+/* Glow : tracé flouté statique sous la fibre, seule son opacité varie. */
+.fiber-svg--glow {
+  visibility: hidden;
+}
+
+.fiber-glow {
+  stroke-width: 3;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.fiber-glow--A,
+.fiber-glow--B { stroke: var(--gold-3); }
+.fiber-glow--C { stroke: var(--silver); }
+
+/* Debug (data-fiber-debug sur le stage). */
+.fiber-debug-obstacle {
+  fill: none;
+  stroke: var(--silver);
+  stroke-opacity: .25;
+  stroke-dasharray: 2 4;
+}
+
+.fiber-debug-collision {
+  stroke: var(--gold-glint);
+  stroke-width: 4;
+}
+
+.fiber-debug-marker {
+  fill: none;
+  stroke: var(--gold-2);
+}

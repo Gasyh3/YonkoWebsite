@@ -12,7 +12,8 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: "1.5rem",
+      // 2.75rem en mobile : laisse le couloir de la fibre composite (x = 20px) libre de tout texte.
+      padding: { DEFAULT: "2.75rem", md: "2rem" },
       screens: {
         "2xl": "1200px",
       },

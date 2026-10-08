@@ -100,6 +100,14 @@ Les tracés ne sont **jamais codés en pixels** : ils sont calculés à partir d
 - `data-fiber` : `A`, `B`, `C` ou `all`
 - `data-fiber-mode` : `pass` (la fibre passe), `plug` (elle s'y branche puis repart), `end` (terminus)
 
+Attributs complémentaires (implémentés dans `lib/motion/fiber/`) :
+- `data-fiber-axis="x" | "y"` : la fibre parcourt l'ancre sur toute sa largeur (x) ou hauteur (y) au lieu d'un point ; en `x`, elle entre par le côté le plus proche de sa provenance.
+- `data-fiber-origin` : boîte de la vidéo hero ; les 3 départs sont calculés depuis `lib/motion/hero-ports.json` (object-fit: cover pris en compte).
+- `data-fiber-through` : bloc que la fibre a le droit de traverser (ex. lignes du manifeste). `data-fiber-avoid` : élément à éviter en plus des textes, images et contrôles. `data-fiber-ignore` : jamais un obstacle.
+- `data-fiber-split` : zone où la fibre composite mobile se divise en 3 (prévoir ≥ 64px de padding gauche en mobile).
+- Couloirs : laisser ~56px libres à côté des ancres de bord (les 3 fibres occupent ±14px + marge de 10px). Le routeur signale en console (dev) tout segment qui traverse un texte ; `/lab/fibers?debug=1` affiche obstacles, ancres et collisions.
+- `fiber:arrive` peut être émis plusieurs fois pour une même ancre (respiration) : les sections réagissent de façon idempotente.
+
 Le module `FiberSystem` émet `window` → `CustomEvent("fiber:arrive", { detail: { fiber, anchorId, mode } })` quand une impulsion atteint une ancre. Les sections écoutent cet événement pour réagir, elles ne pilotent pas les fibres elles-mêmes.
 
 API exposée : `FiberSystem.setLit(fiber, bool)`, `FiberSystem.pulse(fiber, fromAnchor, toAnchor, duration)`.

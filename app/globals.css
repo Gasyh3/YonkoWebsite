@@ -121,3 +121,120 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.4 -.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 160px 160px;
 }
+
+/* ---------------------------------------------------------------------------
+   Hero (C2) — voir components/sections/hero.tsx et lib/motion/hero.ts */
+
+.hero-media {
+  /* Le noir de la vidéo (#0B0B0C) disparaît, les fibres passent dessous et restent visibles. */
+  --hero-focus: 50% 40%;
+  mix-blend-mode: lighten;
+  /* Bords fondus dans le fond, quelle que soit la taille d'écran. */
+  -webkit-mask-image: radial-gradient(ellipse 80% 75% at var(--hero-focus, 50% 40%), #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 75% at var(--hero-focus, 50% 40%), #000 55%, transparent 100%);
+  /* Mise à l'échelle autour de la ligne des ports : les fibres « décrochent » sans glisser. */
+  transform-origin: 50% 41%; /* port B mobile */
+  will-change: transform, opacity;
+}
+
+@media (min-width: 768px) {
+  .hero-media {
+    --hero-focus: 66% 45%;
+    transform-origin: 68% 74%; /* port B desktop (lib/motion/hero-ports.json) */
+  }
+}
+
+.hero-placeholder__screen {
+  fill: var(--surface);
+  stroke: var(--fiber-off);
+  stroke-width: 2;
+}
+
+.hero-placeholder__frame {
+  fill: var(--surface);
+  stroke: var(--fiber-off);
+  stroke-width: 2;
+}
+
+.hero-placeholder__port {
+  fill: var(--black);
+  stroke: var(--silver);
+  stroke-width: 2;
+}
+
+/* Intro : titre masqué jusqu'à la découpe en lignes (filet de sécurité si le JS échoue). */
+.hero-intro [data-hero-title] {
+  visibility: hidden;
+  animation: hero-intro-failsafe 0s linear 2s forwards;
+}
+
+@keyframes hero-intro-failsafe {
+  to {
+    visibility: visible;
+  }
+}
+
+.hero-title {
+  color: var(--silver-light);
+}
+
+/* Mot or + reflet : la fenêtre du reflet glisse en transform, son texte reste calé sur le mot. */
+.gold-word {
+  position: relative;
+  display: inline-block;
+}
+
+.gold-word__glint {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 45%;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 50%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 50%, transparent);
+}
+
+.gold-word__glint-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  background-image: linear-gradient(100deg, var(--gold-2), var(--gold-glint) 50%, var(--gold-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Indicateur de scroll : ligne pointillée argent de 40px (grammaire des fibres), point or. */
+.hero-indicator {
+  position: relative;
+  width: 2px;
+  height: 40px;
+  background-image: radial-gradient(circle, var(--silver) 1px, transparent 1.2px);
+  background-size: 2px 7px;
+  opacity: .5;
+}
+
+.hero-indicator__dot {
+  position: absolute;
+  top: -3px;
+  left: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-image: var(--gold);
+  opacity: 0;
+}
+
+.hero-fiber-out {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1rem; /* dans le padding du conteneur : couloir libre de tout texte */
+  width: 1px;
+  height: 1px;
+}
+
+.motion-reduced .hero-indicator {
+  display: none;
+}

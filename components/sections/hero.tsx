@@ -1,120 +1,113 @@
-import Link from "next/link";
-import { ArrowRight, Sparkles } from "lucide-react";
-import Image from "next/image";
+"use client";
 
-import { Button } from "@/components/ui/button";
-import logoAlt from "@/public/assets/images/icon.png";
+import Link from "next/link";
+import { useRef } from "react";
+
+import { GoldWord } from "@/components/motion/gold-word";
+import { heroMedia } from "@/lib/hero-media";
+import { createHeroMotion } from "@/lib/motion/hero";
+import heroPorts from "@/lib/motion/hero-ports.json";
+import { useMotionModule } from "@/lib/motion/use-motion-module";
+
+// Repère statique (silhouette de l'ordinateur + ports) tant que la vidéo HyperFrames n'est pas rendue.
+// Même cadrage que la vidéo (cover), donc les fibres partent exactement des ports dessinés.
+function HeroPlaceholder() {
+  const sets = [
+    { key: "desktop", className: "hidden md:block", cfg: heroPorts.desktop, monitor: { w: 576, y: 210, h: 330 }, foot: { w: 220, h: 30 } },
+    { key: "mobile", className: "md:hidden", cfg: heroPorts.mobile, monitor: { w: 500, y: 300, h: 290 }, foot: { w: 220, h: 34 } },
+  ];
+  return (
+    <>
+      {sets.map(({ key, className, cfg, monitor, foot }) => {
+        const { width, height } = cfg.media;
+        const ports = Object.values(cfg.ports).map(([x, y]) => ({ x: (x / 100) * width, y: (y / 100) * height }));
+        const cx = ports[1].x; // l'ordinateur est centré sur le port B
+        const footY = ports[0].y - foot.h / 2;
+        return (
+          <svg
+            key={key}
+            className={`hero-placeholder absolute inset-0 h-full w-full ${className}`}
+            viewBox={`0 0 ${width} ${height}`}
+            preserveAspectRatio="xMidYMid slice"
+            aria-hidden="true"
+          >
+            <rect className="hero-placeholder__screen" x={cx - monitor.w / 2} y={monitor.y} width={monitor.w} height={monitor.h} rx="10" />
+            <line className="hero-placeholder__frame" x1={cx} y1={monitor.y + monitor.h} x2={cx} y2={footY} />
+            <rect className="hero-placeholder__frame" x={cx - foot.w / 2} y={footY} width={foot.w} height={foot.h} rx="6" />
+            {ports.map((p, i) => (
+              <circle key={i} className="hero-placeholder__port" cx={p.x} cy={p.y} r="5" />
+            ))}
+          </svg>
+        );
+      })}
+    </>
+  );
+}
 
 export function Hero() {
+  const ref = useRef<HTMLElement>(null);
+  useMotionModule(ref, createHeroMotion);
+
   return (
-    <section className="relative overflow-hidden bg-secondary text-foreground">
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-secondary to-black opacity-90" />
-      <div className="container relative grid gap-10 py-16 md:grid-cols-2 md:items-center md:py-24">
-        <div className="space-y-6">
-          <div className="inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-sm">
-            <Sparkles className="h-4 w-4" />
-            ERP PME & SaaS sur mesure
-          </div>
+    <section
+      ref={ref}
+      className="hero relative flex min-h-[calc(100svh-4rem)] flex-col justify-end overflow-hidden"
+      aria-labelledby="hero-title"
+    >
+      {/* Vidéo : sans fibres (elles sont en SVG, sous la vidéo, révélées par mix-blend lighten). */}
+      <div data-hero-media="" data-fiber-origin="" className="hero-media absolute inset-0">
+        {heroMedia.ready ? (
+          <video
+            data-hero-video=""
+            className="hero-media__video h-full w-full object-cover"
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={heroMedia.desktop.poster}
+            data-poster-mobile={heroMedia.mobile.poster}
+            aria-hidden="true"
+            tabIndex={-1}
+          >
+            <source src={heroMedia.mobile.webm} type="video/webm" media="(max-width: 767px)" />
+            <source src={heroMedia.mobile.mp4} type="video/mp4" media="(max-width: 767px)" />
+            <source src={heroMedia.desktop.webm} type="video/webm" />
+            <source src={heroMedia.desktop.mp4} type="video/mp4" />
+          </video>
+        ) : (
+          <HeroPlaceholder />
+        )}
+      </div>
 
-          <div className="space-y-4">
-            <h1 className="text-4xl font-bold leading-tight tracking-tight text-foreground md:text-5xl lg:text-6xl">
-              Yonko Tech Consulting
-              <br />
-              Solutions digitales B2B
-            </h1>
-
-            <p className="max-w-2xl text-lg text-muted-foreground">
-              Nous concevons des <strong>ERP modulaires pour PME</strong> et des
-              <strong> SaaS clé en main</strong> basés sur Next.js.
-              De la stratégie à la mise en production, nous livrons des
-              plateformes fiables, scalables et prêtes à générer de la valeur.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-4">
-            <Button asChild size="lg">
-              <Link href="/services" className="flex items-center gap-2">
-                Découvrir nos offres <ArrowRight className="h-4 w-4" />
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link href="/contact">Parler de votre projet</Link>
-            </Button>
-          </div>
-
-
-        </div>
-
-        <div className="glow relative overflow-hidden rounded-3xl border border-primary/40 bg-gradient-to-br from-secondary via-black to-secondary p-10 shadow-lg">
-          {/* Top content */}
-          <div className="flex flex-col gap-5 text-primary-foreground">
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary/80">
-              SaaS & ERP prêts à scaler
-            </p>
-
-            <p className="text-3xl font-bold leading-tight text-primary">
-              Produits digitaux robustes
-            </p>
-
-            <p className="max-w-md text-sm leading-relaxed text-muted-foreground">
-              ERP PME, SaaS Next.js, paiements Stripe, authentification sécurisée,
-              analytics, automatisations email et infrastructures cloud conçues
-              pour durer.
-            </p>
-          </div>
-
-          {/* Divider spacing */}
-          <div className="my-8 h-px w-full bg-primary/20" />
-
-          {/* Brand / identity */}
-          <div className="flex items-center gap-4 rounded-xl border border-primary/50 bg-secondary/60 p-4 shadow-sm">
-            <Image
-              src={logoAlt}
-              alt="Identité Yonko Tech Consulting"
-              width={160}
-              height={100}
-              className="h-10 w-auto object-contain"
-              priority
-            />
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              ERP, SaaS et plateformes B2B conçus pour la performance
-              et la croissance.
-            </p>
-          </div>
-
-          {/* Stats / proof points */}
-          <div className="mt-8 grid gap-4 text-sm text-muted-foreground sm:grid-cols-3">
-            <div className="rounded-lg border border-dashed border-primary/30 px-4 py-4">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground/80">
-                ERP PME
-              </p>
-              <p className="mt-1 text-base font-semibold text-foreground">
-                Modulaire & évolutif
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-dashed border-primary/30 px-4 py-4">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground/80">
-                SaaS Next.js
-              </p>
-              <p className="mt-1 text-base font-semibold text-foreground">
-                Stripe & Auth intégrés
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-dashed border-primary/30 px-4 py-4">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground/80">
-                Delivery
-              </p>
-              <p className="mt-1 text-base font-semibold text-foreground">
-                Time-to-market rapide
-              </p>
+      <div className="container relative pb-14 pt-[55svh] md:pb-16 md:pt-0">
+        <div data-hero-copy="" className="max-w-[min(40rem,46vw)] max-md:max-w-none">
+          <p className="mb-5 text-xs uppercase tracking-[0.24em] text-silver">
+            Agence web &amp; communication [à adapter]
+          </p>
+          <h1 id="hero-title" data-hero-title="" className="hero-title font-display text-[2.6rem] leading-[1.04] md:text-6xl lg:text-7xl">
+            Votre <GoldWord>stratégie</GoldWord> digitale, du premier clic au premier{" "}
+            <span className="whitespace-nowrap">
+              <GoldWord>client</GoldWord>.
+            </span>
+          </h1>
+          <p className="mt-6 max-w-md text-base md:text-lg">
+            [à adapter] Site vitrine, Google Maps et logiciel sur mesure, pilotés par une seule stratégie.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-6">
+            <Link
+              href="/contact"
+              className="inline-flex items-center rounded-full border border-silver px-6 py-3 text-sm text-silver-light transition-colors hover:border-silver-light"
+            >
+              Démarrer un projet
+            </Link>
+            <div data-hero-indicator="" className="hero-indicator" aria-hidden="true">
+              <span data-hero-indicator-dot="" className="hero-indicator__dot" />
             </div>
           </div>
         </div>
-
+        {/* Les 3 fibres quittent le hero par la marge droite du conteneur. */}
+        <span data-fiber-anchor="hero-out" data-fiber="all" className="hero-fiber-out" />
       </div>
     </section>
   );
 }
-

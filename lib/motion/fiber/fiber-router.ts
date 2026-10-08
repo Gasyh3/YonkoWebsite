@@ -197,6 +197,15 @@ function planNodes(input: RouteInput) {
     }
   });
 
+  // Sans terminus, une fibre poursuit sa descente jusqu'au bas de la scène (sections pas encore câblées).
+  for (const f of FIBERS) {
+    const plan = plans[f];
+    const last = plan.nodes[plan.nodes.length - 1];
+    if (!plan.ended && plan.nodes.length > 1 && last.point.y < input.height - 1) {
+      plan.nodes.push({ point: { x: last.point.x, y: input.height - 1 }, key: "tail" });
+    }
+  }
+
   return { plans, markers };
 }
 

@@ -13,9 +13,10 @@
   pointer-events: none;
 }
 
+/* Pas de z-index ici : le contenu passe au-dessus du calque sans créer de contexte d'empilement,
+   pour que la vidéo du hero puisse se fondre (mix-blend) avec les fibres situées dessous. */
 .fiber-stage__content {
   position: relative;
-  z-index: 1;
 }
 
 .fiber-svg {

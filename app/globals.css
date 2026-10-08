@@ -455,10 +455,80 @@ body::after {
   color: transparent;
 }
 
-.manifesto-fiber-out {
+/* ---------------------------------------------------------------------------
+   Stratégie (C4) : components/sections/strategy.tsx, lib/motion/strategy.ts */
+
+/* Grille de points du plan d'architecte : argent à 6 %, statique, fondue en haut et en bas. */
+.strategy-grid {
   position: absolute;
-  right: 1rem; /* dans le padding du conteneur, comme la sortie du hero */
-  bottom: 0;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--silver) 1px, transparent 1.4px);
+  background-size: 24px 24px;
+  background-position: center;
+  opacity: .06;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  pointer-events: none;
+}
+
+.strategy-step {
+  position: relative;
+}
+
+/* Rails : bande de 56px sous les étapes, les 3 fibres passent à -14 / 0 / +14px de son axe.
+   L'ancre déborde à droite jusqu'à la sortie (right: 1rem) pour que les fibres redescendent tout droit. */
+.strategy-rails {
+  position: relative;
+  height: 56px;
+  margin-top: 40px;
+}
+
+.strategy-rails__anchor {
+  position: absolute;
+  left: 0;
+  right: -1rem;
+  top: 50%;
+  height: 1px;
+}
+
+/* Nœud de 6px posé sur le rail central, à l'aplomb du début de l'étape. */
+.strategy-node {
+  position: absolute;
+  left: -3px;
+  top: calc(100% + 40px + 28px - 3px);
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--black);
+  outline: 1px solid var(--silver);
+  outline-offset: -1px;
+  opacity: 1;
+}
+
+.strategy-node__lit {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background-image: var(--gold);
+}
+
+.strategy-fiber-out {
+  position: absolute;
+  right: 1rem; /* même couloir que la fin des rails */
+  bottom: -5rem;
   width: 1px;
   height: 1px;
+}
+
+@media (max-width: 767px) {
+  /* Mobile : pas de rails, la fibre composite (x = 20px) relie les étapes empilées ; le nœud se pose dessus. */
+  .strategy-rails,
+  .strategy-fiber-out {
+    display: none;
+  }
+
+  .strategy-node {
+    left: calc(20px - 2.75rem - 3px);
+    top: 5px; /* à hauteur du numéro de l'étape */
+  }
 }

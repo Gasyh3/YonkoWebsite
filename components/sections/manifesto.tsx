@@ -55,8 +55,7 @@ export function Manifesto() {
           vous amène des clients, pas seulement des visiteurs.
         </p>
 
-        {/* Les 3 fibres rejoignent la marge droite pour la suite de la page. */}
-        <span data-fiber-anchor="manifesto-out" data-fiber="all" className="manifesto-fiber-out" />
+        {/* Les 3 fibres repartent par la gauche vers les rails de la Stratégie. */}
       </div>
     </section>
   );

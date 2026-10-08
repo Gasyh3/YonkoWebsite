@@ -3,6 +3,7 @@
 // - révélation au scroll (masque + stroke-dashoffset, scrub 0.6), ~30 % sous le bas du viewport
 // - impulsion lumineuse liée au scroll, respiration après 2s d'inactivité
 // - événement window "fiber:arrive" { fiber, anchorId, mode } quand une impulsion atteint une ancre
+//   ou un point de passage [data-fiber-checkpoint] (repère qui ne modifie pas le tracé)
 // API : FiberSystem.setLit(fiber, bool), FiberSystem.pulse(fiber, fromAnchor, toAnchor, duration)
 
 import heroPorts from "../hero-ports.json";
@@ -73,6 +74,9 @@ type FiberState = {
   lit: boolean;
 };
 
+// Point de passage : émet fiber:arrive quand l'impulsion passe au plus près de son centre.
+type Checkpoint = { el: HTMLElement; id: string; fibers: FiberId[]; point: Vec };
+
 type Instance = {
   stage: HTMLElement;
   layer: HTMLElement;
@@ -82,6 +86,7 @@ type Instance = {
   fibers: Record<FiberId, FiberState>;
   markers: (ArrivalMarker & { len: number })[];
   anchors: Map<string, { el: HTMLElement; spec: AnchorSpec }>;
+  checkpoints: Checkpoint[];
   route: RouteResult | null;
   reduced: boolean;
   mobile: boolean;
@@ -182,8 +187,7 @@ function readAnchors(stage: HTMLElement, origin: DOMRect) {
   stage.querySelectorAll<HTMLElement>("[data-fiber-anchor]").forEach((el) => {
     if (!isRendered(el)) return;
     const id = el.dataset.fiberAnchor || `anchor-${anchors.size}`;
-    const raw = (el.dataset.fiber || "all").toUpperCase();
-    const fibers = raw === "ALL" ? [...FIBERS] : FIBERS.filter((f) => raw.split(/[\s,]+/).includes(f));
+    const fibers = readFibers(el);
     const mode = (["pass", "plug", "end"].includes(el.dataset.fiberMode ?? "") ? el.dataset.fiberMode : "pass") as AnchorMode;
     const axis = (["x", "y"].includes(el.dataset.fiberAxis ?? "") ? el.dataset.fiberAxis : "point") as AnchorAxis;
     if (anchors.has(id) && process.env.NODE_ENV !== "production") {
@@ -193,6 +197,25 @@ function readAnchors(stage: HTMLElement, origin: DOMRect) {
   });
   return anchors;
 }
+
+const readFibers = (el: HTMLElement) => {
+  const raw = (el.dataset.fiber || "all").toUpperCase();
+  return raw === "ALL" ? [...FIBERS] : FIBERS.filter((f) => raw.split(/[\s,]+/).includes(f));
+};
+
+function readCheckpoints(stage: HTMLElement, origin: DOMRect): Checkpoint[] {
+  return [...stage.querySelectorAll<HTMLElement>("[data-fiber-checkpoint]")].filter(isRendered).map((el, i) => {
+    const r = relRect(el, origin);
+    return {
+      el,
+      id: el.dataset.fiberCheckpoint || `checkpoint-${i}`,
+      fibers: readFibers(el),
+      point: { x: (r.left + r.right) / 2, y: (r.top + r.bottom) / 2 },
+    };
+  });
+}
+
+const NEVER_OBSTACLE = "[data-fiber-ignore],[data-fiber-checkpoint]";
 
 const TEXT_BLOCKS = new Set(["H1", "H2", "H3", "H4", "H5", "H6", "P", "LI", "BLOCKQUOTE", "FIGCAPTION", "LABEL"]);
 
@@ -210,14 +233,30 @@ function readObstacles(stage: HTMLElement, layer: HTMLElement, origin: DOMRect) 
       bottom: r.bottom - origin.top,
     });
   };
+  // Bloc de texte contenant un élément jamais obstacle (ex. nœud d'un point de passage) : contenu
+  // mesuré enfant par enfant, sans cet élément.
+  const pushContents = (parent: Node) => {
+    parent.childNodes.forEach((child) => {
+      if (child instanceof Element) {
+        if (child.matches(NEVER_OBSTACLE)) return;
+        if (child.querySelector(NEVER_OBSTACLE)) return pushContents(child);
+      }
+      range.selectNode(child);
+      for (const r of range.getClientRects()) push(r);
+    });
+  };
   stage.querySelectorAll<HTMLElement>(OBSTACLE_SELECTOR).forEach((el) => {
     if (layer.contains(el)) return;
     if (el.closest("[data-fiber-through],[data-fiber-origin],[data-fiber-ignore],[data-fiber-anchor]")) return;
     if (el.querySelector("[data-fiber-anchor]")) return;
     if (el.parentElement?.closest(OBSTACLE_SELECTOR)) return; // le bloc parent suffit
     if (TEXT_BLOCKS.has(el.tagName)) {
-      range.selectNodeContents(el);
-      for (const r of range.getClientRects()) push(r);
+      if (el.querySelector(NEVER_OBSTACLE)) {
+        pushContents(el);
+      } else {
+        range.selectNodeContents(el);
+        for (const r of range.getClientRects()) push(r);
+      }
     } else {
       push(el.getBoundingClientRect());
     }
@@ -461,7 +500,7 @@ function drawDebug(inst: Instance, obstacles: Rect[]) {
     const [p, q] = c.segment;
     inst.debugGroup.append(svgEl("line", { class: "fiber-debug-collision", x1: p.x, y1: p.y, x2: q.x, y2: q.y }));
   }
-  for (const m of inst.route.markers) {
+  for (const m of [...inst.route.markers, ...inst.checkpoints]) {
     inst.debugGroup.append(svgEl("circle", { class: "fiber-debug-marker", cx: m.point.x, cy: m.point.y, r: 4 }));
   }
 }
@@ -483,8 +522,9 @@ function rebuild(inst: Instance) {
   }
 
   // Mesures sur la mise en page au repos (sans les transformations des animations en cours).
-  const { anchors, obstacles, splitRegions, origins } = measureAtRest(inst.stage, () => ({
+  const { anchors, checkpoints, obstacles, splitRegions, origins } = measureAtRest(inst.stage, () => ({
     anchors: readAnchors(inst.stage, origin),
+    checkpoints: readCheckpoints(inst.stage, origin),
     obstacles: readObstacles(inst.stage, inst.layer, origin),
     splitRegions: [...inst.stage.querySelectorAll<HTMLElement>("[data-fiber-split]")]
       .filter(isRendered)
@@ -492,6 +532,7 @@ function rebuild(inst: Instance) {
     origins: readOrigins(inst.stage, origin, width),
   }));
   inst.anchors = anchors;
+  inst.checkpoints = checkpoints;
 
   inst.route = routeFibers({
     width,
@@ -520,6 +561,20 @@ function rebuild(inst: Instance) {
     ...m,
     len: nearestLength(inst.fibers[m.carrier], m.point),
   }));
+  // Points de passage : en mobile, la fibre composite (portée par A) les annonce pour chaque fibre.
+  for (const c of checkpoints) {
+    for (const fiber of c.fibers) {
+      const carrier: FiberId = inst.mobile ? "A" : fiber;
+      inst.markers.push({
+        fiber,
+        carrier,
+        anchorId: c.id,
+        mode: "pass",
+        point: c.point,
+        len: nearestLength(inst.fibers[carrier], c.point),
+      });
+    }
+  }
 
   if (process.env.NODE_ENV !== "production" && inst.route.collisions.length) {
     console.warn(`[FiberSystem] ${inst.route.collisions.length} segment(s) de fibre traversent un bloc de texte`, inst.route.collisions);
@@ -548,11 +603,15 @@ function observeAnchors(inst: Instance) {
   const check = () => {
     frame = 0;
     const line = window.innerHeight * CONFIG.headAt;
-    inst.anchors.forEach(({ el, spec }) => {
-      if (emitted.has(spec.id) || el.getBoundingClientRect().top > line) return;
-      emitted.add(spec.id);
-      for (const fiber of spec.fibers) {
-        emitArrive({ fiber, carrier: fiber, anchorId: spec.id, mode: spec.mode, point: { x: 0, y: 0 } });
+    const targets = [
+      ...[...inst.anchors.values()].map(({ el, spec }) => ({ el, id: spec.id, fibers: spec.fibers, mode: spec.mode })),
+      ...inst.checkpoints.map(({ el, id, fibers }) => ({ el, id, fibers, mode: "pass" as AnchorMode })),
+    ];
+    targets.forEach(({ el, id, fibers, mode }) => {
+      if (emitted.has(id) || el.getBoundingClientRect().top > line) return;
+      emitted.add(id);
+      for (const fiber of fibers) {
+        emitArrive({ fiber, carrier: fiber, anchorId: id, mode, point: { x: 0, y: 0 } });
       }
     });
   };
@@ -578,6 +637,7 @@ function setup(stage: HTMLElement, layer: HTMLElement) {
     fibers,
     markers: [],
     anchors: new Map(),
+    checkpoints: [],
     route: null,
     reduced: prefersReducedMotion(),
     mobile: isMobile(),

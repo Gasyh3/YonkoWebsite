@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRef } from "react";
 
 import { GoldWord } from "@/components/motion/gold-word";
-import { HERO_PORTRAIT_QUERY, heroMedia } from "@/lib/hero-media";
+import { heroMedia } from "@/lib/hero-media";
 import { createHeroMotion } from "@/lib/motion/hero";
 import { useMotionModule } from "@/lib/motion/use-motion-module";
 
@@ -15,36 +15,42 @@ export function Hero() {
   return (
     <section
       ref={ref}
-      className="hero relative flex min-h-[calc(100svh-4rem)] flex-col justify-end overflow-hidden"
+      className="hero relative flex min-h-[calc(100svh-4rem)] items-center overflow-hidden"
       aria-labelledby="hero-title"
     >
-      {/* Vidéo HyperFrames (video/hero) : sans fibres, elles sont en SVG sous la vidéo (mix-blend lighten). */}
-      <div data-hero-media="" data-fiber-origin="" className="hero-media absolute inset-0">
+      {/* Intro (1re visite de la session) : la bande démo en plein écran, puis elle rentre dans l'écran
+          de l'ordinateur. Affichée dès le premier rendu via la classe .hero-intro posée par le layout. */}
+      <div data-hero-intro="" data-fiber-ignore="" className="hero-intro-overlay">
+        <div data-hero-intro-bg="" className="hero-intro-overlay__bg" />
         <video
-          data-hero-video=""
-          className="hero-media__video h-full w-full object-cover"
+          data-hero-intro-video=""
+          className="hero-intro-overlay__video"
           muted
-          loop
           playsInline
-          preload="auto"
-          poster={heroMedia.desktop.poster}
-          data-poster-mobile={heroMedia.mobile.poster}
+          preload="none"
+          poster={heroMedia.intro.poster}
           aria-hidden="true"
           tabIndex={-1}
         >
-          <source src={heroMedia.mobile.webm} type="video/webm" media={HERO_PORTRAIT_QUERY} />
-          <source src={heroMedia.mobile.mp4} type="video/mp4" media={HERO_PORTRAIT_QUERY} />
-          <source src={heroMedia.desktop.webm} type="video/webm" />
-          <source src={heroMedia.desktop.mp4} type="video/mp4" />
+          <source src={heroMedia.intro.webm} type="video/webm" />
+          <source src={heroMedia.intro.mp4} type="video/mp4" />
         </video>
+        <button type="button" data-hero-intro-skip="" className="hero-intro-overlay__skip">
+          Passer l&apos;intro
+        </button>
       </div>
 
-      <div className="container relative pb-14 pt-[55svh] md:pb-16 md:pt-0">
-        <div data-hero-copy="" className="max-w-[min(38rem,40vw)] max-md:max-w-none">
+      {/* Texte aligné sur le bord gauche du conteneur, ordinateur sur le bord droit, centrés verticalement. */}
+      <div className="container relative grid items-center gap-10 py-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:gap-12 md:py-16">
+        <div data-hero-copy="" className="order-2 md:order-1">
           <p className="mb-5 text-xs uppercase tracking-[0.24em] text-silver">
             Agence web &amp; communication [à adapter]
           </p>
-          <h1 id="hero-title" data-hero-title="" className="hero-title font-display text-[2.6rem] leading-[1.04] md:text-6xl lg:text-7xl">
+          <h1
+            id="hero-title"
+            data-hero-title=""
+            className="hero-title font-display text-[2.6rem] leading-[1.04] md:text-5xl lg:text-[4.25rem]"
+          >
             Votre <GoldWord>stratégie</GoldWord> digitale, du premier clic au premier{" "}
             <span className="whitespace-nowrap">
               <GoldWord>client</GoldWord>.
@@ -65,6 +71,28 @@ export function Hero() {
             </div>
           </div>
         </div>
+
+        {/* Vidéo HyperFrames de l'ordinateur (sans fibres : elles sont en SVG, sous la vidéo, mix-blend lighten).
+            Le bord du moniteur est à 1,6 % du bord de la vidéo : la marge négative l'aligne sur le conteneur. */}
+        <div className="hero-computer order-1 md:order-2">
+          <div data-hero-media="" data-fiber-origin="" className="hero-media">
+            <video
+              data-hero-video=""
+              className="h-full w-full object-cover"
+              muted
+              loop
+              playsInline
+              preload="auto"
+              poster={heroMedia.computer.poster}
+              aria-hidden="true"
+              tabIndex={-1}
+            >
+              <source src={heroMedia.computer.webm} type="video/webm" />
+              <source src={heroMedia.computer.mp4} type="video/mp4" />
+            </video>
+          </div>
+        </div>
+
         {/* Les 3 fibres quittent le hero par la marge droite du conteneur. */}
         <span data-fiber-anchor="hero-out" data-fiber="all" className="hero-fiber-out" />
       </div>

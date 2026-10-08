@@ -125,30 +125,88 @@ body::after {
 /* ---------------------------------------------------------------------------
    Hero (C2) — voir components/sections/hero.tsx et lib/motion/hero.ts */
 
-.hero-media {
-  /* Le noir de la vidéo (#0B0B0C) disparaît, les fibres passent dessous et restent visibles. */
-  --hero-focus: 50% 40%;
-  mix-blend-mode: lighten;
-  /* Bords fondus dans le fond, quelle que soit la taille d'écran. */
-  -webkit-mask-image: radial-gradient(ellipse 80% 75% at var(--hero-focus, 50% 40%), #000 55%, transparent 100%);
-  mask-image: radial-gradient(ellipse 80% 75% at var(--hero-focus, 50% 40%), #000 55%, transparent 100%);
-  /* Mise à l'échelle autour de la ligne des ports : les fibres « décrochent » sans glisser. */
-  transform-origin: 50% 41%; /* port B mobile */
-  will-change: transform, opacity;
+.hero-computer {
+  /* Le moniteur occupe 96,8 % de la vidéo (11/690 de marge de chaque côté) : les marges négatives
+     alignent ses bords sur ceux du texte (mobile : les deux bords, desktop : le bord droit). */
+  margin-inline: -1.65%;
 }
 
-/* Vidéo 16:9 (paysage dès 768px) : même règle que HERO_PORTRAIT_QUERY dans lib/hero-media.ts. */
-@media (min-width: 768px) and (orientation: landscape) {
-  .hero-media {
-    --hero-focus: 68% 45%;
-    transform-origin: 70% 74%; /* port B desktop (lib/motion/hero-ports.json) */
+@media (min-width: 768px) {
+  .hero-computer {
+    margin-inline: 0 -1.62%;
   }
 }
 
-/* Intro : titre masqué jusqu'à la découpe en lignes (filet de sécurité si le JS échoue). */
+.hero-media {
+  aspect-ratio: 6 / 5;
+  /* Le noir de la vidéo disparaît dans le fond, les fibres passent dessous et restent visibles. */
+  mix-blend-mode: lighten;
+  /* Mise à l'échelle autour de la ligne des ports : les fibres « décrochent » sans glisser. */
+  transform-origin: 50% 88%;
+  will-change: transform, opacity;
+}
+
+/* Intro plein écran (1re visite) : visible dès le premier rendu, retirée par lib/motion/hero.ts.
+   Filet de sécurité : si le JS ne s'exécute pas, l'overlay disparaît seul après 14s. */
+.hero-intro-overlay {
+  display: none;
+}
+
+.hero-intro .hero-intro-overlay {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  animation: hero-intro-failsafe-hide 0s linear 14s forwards;
+}
+
+@keyframes hero-intro-failsafe-hide {
+  to {
+    visibility: hidden;
+  }
+}
+
+.hero-intro-overlay__bg {
+  position: absolute;
+  inset: 0;
+  background: var(--black);
+}
+
+/* Centré sans transform (GSAP l'anime pour la faire rentrer dans l'écran de l'ordinateur). */
+.hero-intro-overlay__video {
+  --intro-w: min(100vw, calc(100svh * 16 / 9));
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--intro-w);
+  height: calc(var(--intro-w) * 9 / 16);
+  margin-top: calc(var(--intro-w) * 9 / -32);
+  margin-left: calc(var(--intro-w) / -2);
+  object-fit: cover;
+}
+
+.hero-intro-overlay__skip {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  padding: .55rem 1.1rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 9999px;
+  font-size: .75rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--silver);
+  background: var(--black);
+}
+
+.hero-intro-overlay__skip:hover {
+  color: var(--silver-light);
+}
+
+/* Intro : titre masqué jusqu'à la fin de l'intro et la découpe en lignes (filet de sécurité si le JS échoue). */
 .hero-intro [data-hero-title] {
   visibility: hidden;
-  animation: hero-intro-failsafe 0s linear 2s forwards;
+  animation: hero-intro-failsafe 0s linear 14s forwards;
 }
 
 @keyframes hero-intro-failsafe {

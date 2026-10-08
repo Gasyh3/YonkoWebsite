@@ -4,10 +4,10 @@ flow: automation
 storyboard: no
 message: "La stratégie est la source : elle rend l'entreprise visible, trouvable et efficace."
 destination: website-hero
-aspect: 16:9 + 9:16
+aspect: 6:5 (ordinateur) + 16:9 (intro)
 language: fr
 audience: PME, commerçants, artisans, professions libérales
-length: 12s (boucle parfaite)
+length: 12s (boucle parfaite) + intro 7,4s
 ---
 
 # Boucle vidéo du hero — Yonko Tech Consulting
@@ -37,5 +37,11 @@ Les fibres optiques ne sont pas dans la vidéo : elles partent de ces ports en S
 - Fond #0B0B0C partout (jonction invisible avec la page, `mix-blend-mode: lighten` côté site).
 - Positions des ports : `lib/motion/hero-ports.json` (copié par `npm run sync-ports`).
 - Polices embarquées : Instrument Serif, Inter Tight (assets/fonts), JetBrains Mono (bundle HyperFrames).
-- Deux sorties : `index.html` (1920×1080) et `mobile.html` (1080×1920). Pas d'audio.
+- Deux sorties, pas d'audio :
+  - `index.html` (1200×1000) : l'ordinateur seul, boucle de 12s, placé dans la colonne droite du hero ;
+  - `compositions/intro.html` (1920×1080) : la bande démo en plein écran, de l'allumage (1s) à la
+    signature (10,2s), un peu accélérée ; elle se termine sur l'image de relais (`timing.handoff`),
+    identique à l'écran de l'ordinateur au même instant : le site la fait rentrer dans l'écran puis
+    lance l'ordinateur à 10,2s.
 - Le reflet or des mots du titre du site est synchronisé sur 9,2s (apparition de la signature).
+- Révision (retour client) : ordinateur +10 %, aligné sur le texte du hero ; bande démo en intro.

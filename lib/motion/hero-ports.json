@@ -1,43 +1,37 @@
 {
-  "$comment": "Position des 3 ports de l'ordinateur dans la vidéo hero, en % de l'image (x, y). Source unique partagée par la composition HyperFrames (video/hero) et le FiberSystem. Desktop : ordinateur décalé à droite (colonne de titre à gauche). Valeurs provisoires tant que la vidéo n'est pas rendue.",
-  "desktop": {
-    "media": {
-      "width": 1920,
-      "height": 1080
-    },
-    "ports": {
-      "A": [
-        68.6,
-        74.0
-      ],
-      "B": [
-        70.0,
-        74.0
-      ],
-      "C": [
-        71.4,
-        74.0
-      ]
-    }
+  "$comment": "Vidéo hero (video/hero) : source unique partagée par la composition HyperFrames, le FiberSystem et le hero du site. media = cadre de la boucle « ordinateur » (6:5) ; design = repère de construction de la composition ; screen = écran de l'ordinateur et ports, en % du cadre ; timing en secondes dans la boucle.",
+  "media": {
+    "width": 1200,
+    "height": 1000
   },
-  "mobile": {
-    "media": {
-      "width": 1080,
-      "height": 1920
-    },
-    "ports": {
-      "A": [
-        47.6,
-        41.0
-      ],
-      "B": [
-        50.0,
-        41.0
-      ],
-      "C": [
-        52.4,
-        41.0
-      ]
-    }
+  "design": {
+    "width": 690,
+    "height": 575
+  },
+  "screen": {
+    "x": 3.6232,
+    "y": 4.5217,
+    "w": 92.7536,
+    "h": 62.6087
+  },
+  "ports": {
+    "A": [
+      46.087,
+      88.0
+    ],
+    "B": [
+      50.0,
+      88.0
+    ],
+    "C": [
+      53.913,
+      88.0
+    ]
+  },
+  "timing": {
+    "loop": 12,
+    "glint": 9.2,
+    "handoff": 10.2,
+    "intro": 7.4
   }
 }

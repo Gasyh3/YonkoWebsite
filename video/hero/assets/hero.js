@@ -1,33 +1,42 @@
-// Boucle hero Yonko Tech (12s) — construit l'ordinateur et sa mini-bande démo, puis enregistre
-// une timeline GSAP unique, en pause et déterministe (aucune horloge, aucun aléatoire).
-// Mise en page pilotée par #root[data-layout] (desktop | mobile) et window.HERO_PORTS.
+// Vidéo hero Yonko Tech — deux mises en page d'une même mini-bande démo, timeline GSAP unique,
+// en pause et déterministe (aucune horloge, aucun aléatoire). #root[data-layout] :
+//   computer : l'ordinateur seul (cadre 6:5), boucle de 12s ; l'écran joue la bande démo, les ports s'allument
+//   intro    : la bande démo en plein cadre 16:9, de l'allumage à la signature (image de relais = timing.handoff)
+// Géométrie et instants clés : window.HERO_PORTS (copie de lib/motion/hero-ports.json, partagée avec le site).
 // Usage : window.__timelines["<id>"] = window.buildHeroTimeline(); (enregistrement en ligne dans le HTML).
 window.buildHeroTimeline = function () {
   const root = document.getElementById("root");
   const layoutName = root.dataset.layout;
+  const isComputer = layoutName === "computer";
   const W = Number(root.dataset.width);
   const H = Number(root.dataset.height);
   const DURATION = Number(root.dataset.duration);
-  const portsCfg = window.HERO_PORTS[layoutName].ports;
+  const cfg = window.HERO_PORTS;
+  const LOOP = cfg.timing.loop;
+
+  // Repère de construction de l'ordinateur (mis à l'échelle du cadre par une transformation statique).
+  const D = cfg.design;
+  const k = W / D.width;
   const ports = {};
   for (const id of ["A", "B", "C"]) {
-    ports[id] = { x: (portsCfg[id][0] / 100) * W, y: (portsCfg[id][1] / 100) * H };
+    ports[id] = { x: (cfg.ports[id][0] / 100) * D.width, y: (cfg.ports[id][1] / 100) * D.height };
   }
-
-  // Gabarit de l'ordinateur, centré sur le port B (le pied porte les 3 ports).
-  const L =
-    layoutName === "desktop"
-      ? { screenW: 600, top: 250, footW: 240, footH: 30 }
-      : { screenW: 600, top: 290, footW: 236, footH: 30 };
-  const screenH = L.screenW * (9 / 16);
-  const bezel = 12;
-  const outerW = L.screenW + bezel * 2 + 4;
-  const outerH = screenH + bezel * 2 + 4;
+  const screen = {
+    x: (cfg.screen.x / 100) * D.width,
+    y: (cfg.screen.y / 100) * D.height,
+    w: (cfg.screen.w / 100) * D.width,
+  };
+  const L = { footW: 250, footH: 30 };
+  const frame = 14; // liseré (2px) + cadre (12px) autour de l'écran
+  const screenH = screen.w * (9 / 16);
+  const outerW = screen.w + frame * 2;
+  const outerH = screenH + frame * 2;
+  const monitorLeft = screen.x - frame;
+  const monitorTop = screen.y - frame;
   const cx = ports.B.x;
-  const monitorLeft = cx - outerW / 2;
-  const monitorBottom = L.top + outerH;
+  const monitorBottom = monitorTop + outerH;
   const footTop = ports.B.y - L.footH / 2;
-  const contentScale = L.screenW / 640;
+  const contentScale = isComputer ? screen.w / 640 : W / 640;
 
   const px = (n) => `${Math.round(n * 100) / 100}px`;
   const el = (cls, style = "", inner = "") => `<div class="${cls}" style="${style}">${inner}</div>`;
@@ -205,7 +214,7 @@ window.buildHeroTimeline = function () {
       el(
         `layer port port--${id}`,
         `left:${px(ports[id].x)};top:${px(ports[id].y)}`,
-        el("port__bloom") + el("port__streak") + el("port__socket") + el("port__lit"),
+        el("port__bloom") + `<div class="port__streak" data-layout-allow-overflow></div>` + el("port__socket") + el("port__lit"),
       ),
     )
     .join("");
@@ -214,11 +223,12 @@ window.buildHeroTimeline = function () {
   stage.className = "clip stage";
   stage.dataset.start = "0";
   stage.dataset.duration = String(DURATION);
-  stage.style.cssText = "position:absolute;inset:0";
-  stage.innerHTML = `
+  if (isComputer) {
+    stage.style.cssText = `position:absolute;left:0;top:0;width:${D.width}px;height:${D.height}px;transform:scale(${k});transform-origin:0 0`;
+    stage.innerHTML = `
     ${el("layer neck", `left:${px(cx - 9)};top:${px(monitorBottom - 2)};width:18px;height:${px(footTop - monitorBottom + 4)}`)}
     ${el("layer foot", `left:${px(cx - L.footW / 2)};top:${px(footTop)};width:${L.footW}px;height:${L.footH}px`, el("foot__body"))}
-    <div class="layer monitor" style="left:${px(monitorLeft)};top:${px(L.top)};width:${px(outerW)};height:${px(outerH)}">
+    <div class="layer monitor" style="left:${px(monitorLeft)};top:${px(monitorTop)};width:${px(outerW)};height:${px(outerH)}">
       <div class="monitor__body">
         <div class="screen">
           ${el("screen__glow")}
@@ -231,6 +241,15 @@ window.buildHeroTimeline = function () {
     ${portsHtml}
     ${el("layer pulse pulse--gold", `left:${px(cx)};top:${px(monitorBottom)}`)}
     ${el("layer pulse pulse--silver", `left:${px(cx)};top:${px(monitorBottom)}`)}`;
+  } else {
+    // Intro : l'écran occupe tout le cadre (même contenu, même timeline, à l'échelle du plein écran).
+    stage.style.cssText = "position:absolute;inset:0";
+    stage.innerHTML = `
+    <div class="screen screen--full">
+      ${el("screen__glow")}
+      <div class="screen__content" style="transform:scale(${contentScale})">${screenContent}</div>
+    </div>`;
+  }
   root.appendChild(stage);
 
   // ------------------------------------------------------------------ Timeline
@@ -248,8 +267,8 @@ window.buildHeroTimeline = function () {
     clock,
     { t: 0 },
     {
-      t: DURATION,
-      duration: DURATION,
+      t: LOOP,
+      duration: LOOP,
       ease: "none",
       onUpdate: () => {
         const frames = Math.floor(clock.t * 30 + 1e-6);
@@ -263,12 +282,13 @@ window.buildHeroTimeline = function () {
 
   // Réveil de l'écran et lumière de contour (1 → 1.8s), extinction (10.9 → 11.9s).
   tl.fromTo(q(".screen__glow"), { opacity: 0 }, { opacity: 1, duration: 0.8, ease: "sine.inOut" }, 1.0)
-    .fromTo(q(".monitor__rim"), { opacity: 0.25 }, { opacity: 0.7, duration: 0.8, ease: "sine.inOut" }, 1.0)
-    .fromTo(q(".hud"), { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "sine.inOut" }, 1.0)
-;
+    .fromTo(q(".hud"), { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "sine.inOut" }, 1.0);
   then(q(".screen__glow"), { opacity: 1 }, { opacity: 0, duration: 1.0, ease: "sine.inOut" }, 10.9);
-  then(q(".monitor__rim"), { opacity: 0.7 }, { opacity: 0.25, duration: 1.0, ease: "sine.inOut" }, 10.9);
   then(q(".hud"), { opacity: 1 }, { opacity: 0, duration: 0.8, ease: "sine.inOut" }, 10.9);
+  if (isComputer) {
+    tl.fromTo(q(".monitor__rim"), { opacity: 0.25 }, { opacity: 0.7, duration: 0.8, ease: "sine.inOut" }, 1.0);
+    then(q(".monitor__rim"), { opacity: 0.7 }, { opacity: 0.25, duration: 1.0, ease: "sine.inOut" }, 10.9);
+  }
 
   // Scènes : apparition / disparition et libellé HUD correspondant.
   const SCENES = [
@@ -282,9 +302,11 @@ window.buildHeroTimeline = function () {
     const scene = q(`.scene--${i + 1}`);
     const label = q(`.hud__label--${i}`);
     const bar = q(`.hud__bar-fill--${i}`);
-    const fadeOut = i === SCENES.length - 1 ? 0.9 : 0.25;
+    // La signature reste entière jusqu'après l'image de relais (timing.handoff), puis s'éteint.
+    const last = i === SCENES.length - 1;
+    const fadeOut = last ? 0.5 : 0.25;
     tl.fromTo(scene, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "sine.inOut" }, start);
-    then(scene, { opacity: 1 }, { opacity: 0, duration: fadeOut, ease: "sine.inOut" }, end - fadeOut + (i === SCENES.length - 1 ? 0 : 0.05));
+    then(scene, { opacity: 1 }, { opacity: 0, duration: fadeOut, ease: "sine.inOut" }, last ? 10.45 : end - fadeOut + 0.05);
     tl.fromTo(label, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" }, start);
     then(label, { opacity: 1 }, { opacity: 0, duration: 0.2, ease: "none" }, end - 0.15);
     tl.fromTo(bar, { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "none" }, start);
@@ -340,7 +362,7 @@ window.buildHeroTimeline = function () {
     .fromTo(q(".lockup__word"), { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "expo.out" }, 9.15)
     .fromTo(q(".lockup__sub"), { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 9.3)
     .fromTo(q(".lockup__rule"), { scaleX: 0 }, { scaleX: 1, duration: 0.7, ease: "power3.inOut" }, 9.4)
-    .fromTo(q(".lockup__services"), { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "sine.inOut" }, 9.7);
+    .fromTo(q(".lockup__services"), { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "sine.inOut" }, 9.55);
 
   // Ports : une impulsion descend le pied puis allume le port de la scène qui s'achève.
   const pulseTo = (id, at) => {
@@ -363,14 +385,21 @@ window.buildHeroTimeline = function () {
     tl.fromTo(streak, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: "none" }, at);
     then(streak, { opacity: 1 }, { opacity: 0, duration: 0.6, ease: "sine.inOut" }, at + 0.2);
   };
-  pulseTo("A", 4.95);
-  pulseTo("B", 6.95);
-  pulseTo("C", 8.95);
+  if (isComputer) {
+    pulseTo("A", 4.95);
+    pulseTo("B", 6.95);
+    pulseTo("C", 8.95);
 
-  // Signature : les 3 ports respirent ensemble, puis tout revient à l'état initial.
-  then(qa(".port__bloom"), { opacity: 0.35 }, { opacity: 0.75, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 9.3);
-  then(qa(".port__lit"), { opacity: 1 }, { opacity: 0, duration: 1.0, ease: "sine.inOut" }, 10.9);
-  then(qa(".port__bloom"), { opacity: 0.35 }, { opacity: 0, duration: 1.0, ease: "sine.inOut" }, 10.9);
+    // Signature : les 3 ports respirent ensemble, puis tout revient à l'état initial.
+    then(qa(".port__bloom"), { opacity: 0.35 }, { opacity: 0.75, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 9.3);
+    then(qa(".port__lit"), { opacity: 1 }, { opacity: 0, duration: 1.0, ease: "sine.inOut" }, 10.9);
+    then(qa(".port__bloom"), { opacity: 0.35 }, { opacity: 0, duration: 1.0, ease: "sine.inOut" }, 10.9);
+    return tl;
+  }
 
-  return tl;
+  // Intro : de l'allumage de l'écran (1s) à l'image de relais, un peu plus vif que la boucle,
+  // puis tenue sur l'image de relais jusqu'à la fin du cadre.
+  const master = gsap.timeline({ paused: true });
+  master.add(tl.tweenFromTo(1.0, cfg.timing.handoff, { duration: DURATION - 0.1, ease: "none" }), 0);
+  return master;
 };

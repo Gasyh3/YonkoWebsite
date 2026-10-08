@@ -1,43 +1,37 @@
 // Généré par scripts/sync-ports.mjs depuis lib/motion/hero-ports.json — ne pas modifier à la main.
 window.HERO_PORTS = {
-  "desktop": {
-    "media": {
-      "width": 1920,
-      "height": 1080
-    },
-    "ports": {
-      "A": [
-        68.6,
-        74
-      ],
-      "B": [
-        70,
-        74
-      ],
-      "C": [
-        71.4,
-        74
-      ]
-    }
+  "media": {
+    "width": 1200,
+    "height": 1000
   },
-  "mobile": {
-    "media": {
-      "width": 1080,
-      "height": 1920
-    },
-    "ports": {
-      "A": [
-        47.6,
-        41
-      ],
-      "B": [
-        50,
-        41
-      ],
-      "C": [
-        52.4,
-        41
-      ]
-    }
+  "design": {
+    "width": 690,
+    "height": 575
+  },
+  "screen": {
+    "x": 3.6232,
+    "y": 4.5217,
+    "w": 92.7536,
+    "h": 62.6087
+  },
+  "ports": {
+    "A": [
+      46.087,
+      88
+    ],
+    "B": [
+      50,
+      88
+    ],
+    "C": [
+      53.913,
+      88
+    ]
+  },
+  "timing": {
+    "loop": 12,
+    "glint": 9.2,
+    "handoff": 10.2,
+    "intro": 7.4
   }
 };

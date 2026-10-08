@@ -109,6 +109,12 @@ body {
   background: var(--black);
 }
 
+.screen--full {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+}
+
 .screen__glow {
   position: absolute;
   inset: 0;

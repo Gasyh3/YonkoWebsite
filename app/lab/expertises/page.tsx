@@ -22,7 +22,7 @@ export default async function ExpertisesLabPage({ searchParams }: { searchParams
         <p className="mt-4 max-w-md">Faites défiler : la fibre B rejoint le plan et le dessine.</p>
         <div
           data-fiber-origin=""
-          className="relative mx-auto mt-10 aspect-[9/16] w-1/2 max-w-[12rem] rounded-md border border-dashed border-border md:landscape:aspect-video md:landscape:w-full md:landscape:max-w-xl"
+          className="relative mx-auto mt-10 aspect-[6/5] w-full max-w-md rounded-md border border-dashed border-border"
         />
         <div className="relative h-24">
           {/* A et C s'arrêtent ici : seule la fibre B poursuit vers la scène. */}

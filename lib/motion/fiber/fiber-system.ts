@@ -5,7 +5,6 @@
 // - événement window "fiber:arrive" { fiber, anchorId, mode } quand une impulsion atteint une ancre
 // API : FiberSystem.setLit(fiber, bool), FiberSystem.pulse(fiber, fromAnchor, toAnchor, duration)
 
-import { HERO_PORTRAIT_QUERY } from "../../hero-media";
 import heroPorts from "../hero-ports.json";
 import { debounce, isMobile, onReducedMotionChange, prefersReducedMotion } from "../env";
 import { gsap } from "../gsap";
@@ -227,8 +226,8 @@ function readObstacles(stage: HTMLElement, layer: HTMLElement, origin: DOMRect) 
 // Points de départ : les 3 ports de l'ordinateur dans la vidéo (object-fit: cover pris en compte).
 function readOrigins(stage: HTMLElement, origin: DOMRect, width: number) {
   const el = stage.querySelector<HTMLElement>("[data-fiber-origin]");
-  // Même règle que le choix de la vidéo : version 9:16 dès que l'écran est en portrait.
-  const config = window.matchMedia(HERO_PORTRAIT_QUERY).matches ? heroPorts.mobile : heroPorts.desktop;
+  // Une seule vidéo d'ordinateur (cadre 6:5) pour tous les écrans.
+  const config = heroPorts;
   const origins = {} as Record<FiberId, Vec>;
   if (!el) {
     for (const f of FIBERS) origins[f] = { x: width / 2 + (f === "A" ? -14 : f === "C" ? 14 : 0), y: 0 };

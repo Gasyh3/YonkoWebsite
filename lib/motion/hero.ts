@@ -1,7 +1,10 @@
 // Scène Hero (C2).
 // 1. Intro (1re visite de la session) : la bande démo joue en plein écran, puis rentre dans l'écran de
 //    l'ordinateur (FLIP en transform) ; l'ordinateur reprend à la même image (heroMedia.handoffAt).
-//    Passable à tout moment (bouton, molette, toucher, clavier) ; abandonnée si elle ne démarre pas en 800ms.
+//    Avant de jouer, une préparation : la vidéo se met en mémoire tampon (canplaythrough) et la page finit
+//    son initialisation (load + une période calme), une fibre or indique l'avancement. Lecture fluide garantie ;
+//    au-delà de 8s sans vidéo jouable, l'intro est abandonnée. Passable à tout moment (bouton, molette, toucher,
+//    clavier), y compris pendant la préparation.
 // 2. Titre révélé par lignes masquées après l'intro, reflet or synchronisé sur la boucle de l'ordinateur.
 // 3. Sortie au scroll : l'ordinateur recule autour de la ligne des ports, les fibres « décrochent ».
 // 4. Indicateur de scroll, masqué au premier défilement.
@@ -14,7 +17,12 @@ import { HERO_INTRO_CLASS, HERO_INTRO_STORAGE_KEY } from "./hero-intro";
 import { tokens } from "./tokens";
 import type { MotionModule } from "./use-motion-module";
 
-const INTRO_START_TIMEOUT = 800; // ms : au-delà, pas d'intro (aucun préchargement visible)
+const PREPARE = {
+  min: 0.6, // s : la préparation reste visible au moins ce temps (pas de flash)
+  max: 8, // s : au-delà, on joue si la vidéo le peut, sinon on passe l'intro
+  idle: 500, // ms : délai max d'attente d'une période calme du thread principal après le chargement
+} as const;
+const INTRO_START_TIMEOUT = 2500; // ms : lecture qui ne démarre pas une fois la vidéo prête → abandon
 const SKIP_KEYS = new Set(["ArrowDown", "PageDown", "End", " ", "Enter", "Escape"]);
 
 export function createHeroMotion(root: HTMLElement): MotionModule {
@@ -49,6 +57,8 @@ export function createHeroMotion(root: HTMLElement): MotionModule {
       const introBg = intro?.querySelector<HTMLElement>("[data-hero-intro-bg]");
       const introVideo = intro?.querySelector<HTMLVideoElement>("[data-hero-intro-video]");
       const skip = intro?.querySelector<HTMLButtonElement>("[data-hero-intro-skip]");
+      const loader = intro?.querySelector<HTMLElement>("[data-hero-loader]");
+      const loaderBar = loader?.querySelector<HTMLElement>("[data-hero-loader-bar]");
 
       // L'ordinateur démarre toujours sur l'image de relais (signature) : même image que son poster
       // et que la dernière image de l'intro.
@@ -188,26 +198,89 @@ export function createHeroMotion(root: HTMLElement): MotionModule {
             tl.to(introVideo, { opacity: 0, duration: t.dur.micro, ease: t.ease.breath }, duration);
           };
 
-          // Sans démarrage rapide (réseau lent, lecture bloquée), on passe directement au hero.
+          // Le JS a la main : plus besoin du filet CSS qui masque l'overlay après 14s.
+          intro.style.animation = "none";
+
+          // Sans vidéo jouable (réseau lent, lecture bloquée), ou passée pendant la préparation : l'overlay
+          // s'efface et le hero apparaît directement.
+          let started = false;
           const giveUp = () => {
             if (landed) return;
             landed = true;
             cleanups.forEach((fn) => fn());
             cleanups.length = 0;
             introVideo.pause();
-            finish();
+            intro.style.pointerEvents = "none";
+            gsap.to(intro, { opacity: 0, duration: t.dur.micro, ease: t.ease.breath, onComplete: finish });
           };
-          const startTimer = window.setTimeout(giveUp, INTRO_START_TIMEOUT);
-          cleanups.push(() => window.clearTimeout(startTimer));
 
-          introVideo.preload = "auto";
-          introVideo.play().then(
-            () => window.clearTimeout(startTimer),
-            () => giveUp(),
-          );
+          // Préparation : tampon vidéo (70 %), page chargée (15 %), thread principal calme (15 %).
+          const state = { loaded: document.readyState === "complete", settled: false, shown: 0 };
+          const settle = () => {
+            const idle = window.requestIdleCallback ?? ((fn: () => void) => window.setTimeout(fn, 1));
+            idle(() => (state.settled = true), { timeout: PREPARE.idle });
+          };
+          if (state.loaded) settle();
+          const onLoad = () => {
+            state.loaded = true;
+            settle();
+          };
+          window.addEventListener("load", onLoad, { once: true });
+          cleanups.push(() => window.removeEventListener("load", onLoad));
+
+          const buffered = () => {
+            if (introVideo.readyState >= 4) return 1;
+            const d = introVideo.duration;
+            if (!d || !introVideo.buffered.length) return 0;
+            return Math.min(1, introVideo.buffered.end(introVideo.buffered.length - 1) / d);
+          };
+          const setBar = loaderBar ? gsap.quickTo(loaderBar, "scaleX", { duration: t.dur.micro, ease: t.ease.in }) : null;
+          const t0 = performance.now();
+
+          const start = () => {
+            if (landed || started) return;
+            started = true;
+            gsap.ticker.remove(prepare);
+            const startTimer = window.setTimeout(giveUp, INTRO_START_TIMEOUT);
+            cleanups.push(() => window.clearTimeout(startTimer));
+            setBar?.(1);
+            const play = () =>
+              introVideo.play().then(
+                () => window.clearTimeout(startTimer),
+                () => giveUp(),
+              );
+            if (loader) {
+              gsap.to(loader, { opacity: 0, duration: t.dur.micro, ease: t.ease.breath, delay: t.dur.micro, onStart: play });
+            } else {
+              play();
+            }
+          };
+          const prepare = () => {
+            const elapsed = (performance.now() - t0) / 1000;
+            const video = buffered();
+            const progress = video * 0.7 + (state.loaded ? 0.15 : 0) + (state.settled ? 0.15 : 0);
+            if (progress > state.shown) {
+              state.shown = progress;
+              setBar?.(progress);
+            }
+            const ready = video >= 1 && state.loaded && state.settled;
+            if (ready && elapsed >= PREPARE.min) start();
+            else if (elapsed >= PREPARE.max) {
+              if (introVideo.readyState >= 3) start();
+              else giveUp();
+            }
+          };
+          gsap.ticker.add(prepare);
+          cleanups.push(() => gsap.ticker.remove(prepare));
+
+          // Déjà lancée par le script inline du hero ; sinon (rendu client), on la lance ici.
+          if (introVideo.preload !== "auto") {
+            introVideo.preload = "auto";
+            introVideo.load();
+          }
 
           const onEnded = () => land(t.dur.major);
-          const onSkip = () => land(t.dur.reveal);
+          const onSkip = () => (started ? land(t.dur.reveal) : giveUp());
           const onKey = (event: KeyboardEvent) => {
             if (SKIP_KEYS.has(event.key) && document.activeElement !== skip) onSkip();
           };

@@ -33,7 +33,13 @@ export function Strategy() {
   useMotionModule(ref, createStrategyScene);
 
   return (
-    <section ref={ref} data-ambient="" className="strategy relative py-24 md:py-36" aria-labelledby="strategy-title">
+    <section
+      ref={ref}
+      id="methode"
+      data-ambient=""
+      className="strategy relative py-24 md:py-36"
+      aria-labelledby="strategy-title"
+    >
       <div className="strategy-grid" aria-hidden="true" />
 
       {/* Le texte est décalé de 56px (md) : les fibres descendent le long du bord gauche du conteneur. */}

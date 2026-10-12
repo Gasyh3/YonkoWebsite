@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
+import { SkeletonImage } from "@/components/ui/skeleton";
 import { getProject, projects } from "@/lib/results-data";
 
 // Page projet (C11) : son visuel d'en-tête reçoit l'image de la carte cliquée (View Transition « project-media »,
@@ -54,8 +54,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <p className="text-sm md:max-w-xs md:text-right">{project.result}</p>
       </header>
 
-      <div className="project-hero__media mt-12">
-        <Image
+      <div className="project-hero__media skeleton mt-12">
+        <SkeletonImage
           src={project.image.src}
           alt={project.image.alt}
           width={project.image.width}

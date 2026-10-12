@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 
+import { SkeletonImage } from "@/components/ui/skeleton";
 import { createResultsScene } from "@/lib/motion/results";
 import { useMotionModule } from "@/lib/motion/use-motion-module";
 import { formatStat, projects, resultStats } from "@/lib/results-data";
@@ -90,9 +90,9 @@ export function Results() {
                 </svg>
 
                 <Link href={`/projets/${project.slug}`} data-project-link="" className="results-card__link">
-                  <div data-results-media="" data-transition-media="" className="results-card__media">
+                  <div data-results-media="" data-transition-media="" className="results-card__media skeleton">
                     <div data-results-reveal="" className="results-card__reveal">
-                      <Image
+                      <SkeletonImage
                         data-results-image=""
                         src={project.image.src}
                         alt={project.image.alt}

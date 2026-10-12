@@ -190,6 +190,7 @@ body::after {
 
 .hero-intro-overlay__skip {
   position: absolute;
+  z-index: 2; /* au-dessus de la préparation : l'intro est passable dès le chargement */
   right: 1.5rem;
   bottom: 1.5rem;
   padding: .55rem 1.1rem;
@@ -1425,4 +1426,179 @@ body::after {
 .results-card__link {
   display: block;
   border-radius: 12px;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Header : components/site-header.tsx */
+
+/* Toujours collé en haut ; transparent en haut de page, voile flouté dès que le contenu passe dessous
+   (seule l'opacité du voile change). Le flou est statique. */
+.site-header__veil {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--black) 72%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--fiber-off);
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-transition-css);
+  pointer-events: none;
+}
+
+.site-header[data-scrolled] .site-header__veil {
+  opacity: 1;
+}
+
+.site-header__link {
+  color: var(--silver);
+}
+
+.site-header__link:hover,
+.site-header__link[data-active] {
+  color: var(--silver-light);
+}
+
+/* Section en vue : point or au-dessus du lien. */
+.site-header__link::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 4px;
+  height: 4px;
+  margin-left: -2px;
+  border-radius: 9999px;
+  background-image: var(--gold);
+  opacity: 0;
+  transition: opacity var(--dur-micro) var(--ease-transition-css);
+}
+
+.site-header__link[data-active]::before {
+  opacity: 1;
+}
+
+.site-header__link.link-dotted {
+  padding-top: 8px; /* place du point actif, dans le cadre du lien */
+}
+
+/* Menu mobile : en superposition sous le header, même voile translucide. */
+.site-header__menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  background: color-mix(in srgb, var(--black) 88%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--fiber-off);
+}
+
+/* Action principale : dégradé or, texte noir mat (l'or n'est jamais un aplat). */
+.site-header__cta {
+  background-image: var(--gold);
+  color: var(--black);
+}
+
+/* Ancres de l'accueil : le header (64px) ne recouvre pas le haut de la section. */
+#expertises,
+#projets,
+#methode,
+#contact {
+  scroll-margin-top: 4rem;
+}
+
+/* ---------------------------------------------------------------------------
+   Composants fantômes (squelettes) : components/ui/skeleton.tsx */
+
+/* Bloc --surface traversé par un reflet argent très léger (transform seul), retiré une fois le média chargé. */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(100deg, transparent 20%, color-mix(in srgb, var(--silver) 7%, transparent), transparent 80%);
+  transform: translateX(-100%);
+  animation: skeleton-sheen calc(var(--dur-major) + var(--dur-reveal)) var(--ease-transition-css) infinite;
+  pointer-events: none;
+}
+
+.skeleton[data-loaded]::after {
+  display: none;
+}
+
+/* Le média chargé apparaît en fondu au-dessus du squelette. */
+.skeleton > img,
+.skeleton [data-skeleton-media] {
+  opacity: 0;
+  transition: opacity var(--dur-reveal) var(--ease-transition-css);
+}
+
+.skeleton[data-loaded] > img,
+.skeleton[data-loaded] [data-skeleton-media] {
+  opacity: 1;
+}
+
+.skeleton-line {
+  display: block;
+  height: .9em;
+  border-radius: 9999px;
+}
+
+@keyframes skeleton-sheen {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton::after {
+    animation: none;
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Préparation de l'intro (1re visite) : components/sections/hero.tsx, lib/motion/hero.ts */
+
+.hero-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  background: var(--black);
+}
+
+.hero-loader__fiber {
+  position: relative;
+  width: 10rem;
+  height: 2px;
+}
+
+/* Fibre éteinte (pointillés argent) qui se remplit d'or au fil du chargement (scaleX). */
+.hero-loader__off,
+.hero-loader__on {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-loader__off {
+  background-image: radial-gradient(circle, var(--fiber-off) 1px, transparent 1.2px);
+  background-size: 7px 2px;
+}
+
+.hero-loader__on {
+  background-image: var(--gold);
+  border-radius: 9999px;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
 }

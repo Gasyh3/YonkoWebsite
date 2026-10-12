@@ -5,6 +5,13 @@ import logoPng from "@/public/assets/images/icon.png";
 import { BackToTop } from "@/components/motion/back-to-top";
 import { DottedLink } from "@/components/motion/dotted-link";
 
+// Liens secondaires (le header garde le parcours principal).
+const FOOTER_LINKS = [
+  { href: "/services", label: "Toutes nos offres" },
+  { href: "/faqs", label: "Questions fréquentes" },
+  { href: "/contact", label: "Contact" },
+];
+
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
@@ -35,6 +42,15 @@ export function SiteFooter() {
             <DottedLink href="#">Politique de confidentialité</DottedLink>
           </div>
         </div>
+        <nav aria-label="Liens utiles">
+          <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-silver">
+            {FOOTER_LINKS.map((link) => (
+              <li key={link.href}>
+                <DottedLink href={link.href}>{link.label}</DottedLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
         <div className="flex items-center gap-6 text-muted-foreground">
           <BackToTop />
           <Link href="#" aria-label="Lien LinkedIn" className="hover:text-primary">

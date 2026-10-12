@@ -19,10 +19,44 @@ const NAVIGATION_TIMEOUT = 2000; // ms : au-delà, la transition se termine sans
 
 export type PageTransitions = MotionModule & { navigated: () => void };
 
+const ANCHOR_SETTLE = [0, 300, 800, 1500]; // ms : recalages sur l'ancre pendant que la page se met en place
+
+// Défilement vers une ancre, sous le header collé (Lenis et le navigateur appliquent le scroll-margin-top).
+function scrollToAnchor(target: HTMLElement, immediate: boolean) {
+  const t = tokens();
+  const lenis = getLenis();
+  if (lenis) {
+    lenis.scrollTo(target, { immediate, force: immediate, duration: t.dur.major, easing: gsap.parseEase(t.ease.transition) });
+  } else {
+    target.scrollIntoView({ behavior: immediate ? "auto" : "smooth" });
+  }
+}
+
+// Arrivée sur une ancre d'une autre page : la hauteur finale (pin des Expertises, fibres, polices) n'existe
+// qu'après l'init des modules. On se recale tant que la section n'est pas en place, sauf si le visiteur a repris
+// la main (molette, toucher, clavier).
+function settleOnAnchor(id: string) {
+  let interrupted = false;
+  const stop = () => (interrupted = true);
+  const events = ["wheel", "touchstart", "keydown"] as const;
+  events.forEach((type) => window.addEventListener(type, stop, { once: true, passive: true }));
+  ANCHOR_SETTLE.forEach((delay, i) =>
+    window.setTimeout(() => {
+      const target = document.getElementById(id);
+      if (!interrupted && target) {
+        const margin = parseFloat(getComputedStyle(target).scrollMarginTop || "0");
+        if (Math.abs(target.getBoundingClientRect().top - margin) > 2) scrollToAnchor(target, true);
+      }
+      if (i === ANCHOR_SETTLE.length - 1) events.forEach((type) => window.removeEventListener(type, stop));
+    }, delay),
+  );
+}
+
 export function createPageTransitions(navigate: Navigate): PageTransitions {
   let onClick: ((e: MouseEvent) => void) | null = null;
   let busy = false;
   let pending = false; // une navigation interceptée attend son rendu (révélation par lignes à l'arrivée)
+  let first = true;
 
   // Impulsion or le long d'une fibre verticale, du haut vers le bas de l'écran.
   const pulse = () => {
@@ -77,7 +111,17 @@ export function createPageTransitions(navigate: Navigate): PageTransitions {
         const link = e.target instanceof Element ? e.target.closest<HTMLAnchorElement>("a[href]") : null;
         if (!link || (link.target && link.target !== "_self") || link.hasAttribute("download")) return;
         const url = new URL(link.href, location.href);
-        if (url.origin !== location.origin || url.pathname === location.pathname) return;
+        if (url.origin !== location.origin) return;
+        if (url.pathname === location.pathname) {
+          // Ancre de la même page : défilement fluide (Lenis), sans transition.
+          const target = url.hash ? document.getElementById(decodeURIComponent(url.hash.slice(1))) : null;
+          if (!target) return;
+          e.preventDefault();
+          e.stopPropagation();
+          scrollToAnchor(target, false);
+          history.pushState(null, "", url.hash);
+          return;
+        }
         // Le clic ne doit pas atteindre le routeur de next/link : la navigation passe par la transition.
         e.preventDefault();
         e.stopPropagation();
@@ -92,7 +136,13 @@ export function createPageTransitions(navigate: Navigate): PageTransitions {
 
     // Appelé quand la nouvelle page est rendue (changement de pathname).
     navigated() {
-      if (!pending) return;
+      if (!pending) {
+        // Premier affichage avec une ancre (lien partagé /#projets) : même recalage.
+        if (first && location.hash) settleOnAnchor(decodeURIComponent(location.hash.slice(1)));
+        first = false;
+        return;
+      }
+      first = false;
       pending = false;
       const lenis = getLenis();
       if (!location.hash) {
@@ -100,6 +150,9 @@ export function createPageTransitions(navigate: Navigate): PageTransitions {
         window.scrollTo(0, 0);
       }
       ScrollTrigger.refresh();
+      // Ancre d'une autre page : la mise en page finale (pin, fibres) n'existe qu'après l'init des modules ;
+      // on se recale sur la section une fois tout en place.
+      if (location.hash) settleOnAnchor(decodeURIComponent(location.hash.slice(1)));
       // La page entrante révèle son titre par lignes (le hero gère le sien).
       const title = document.querySelector<HTMLElement>("main h1:not([data-hero-title])");
       if (!title) return;

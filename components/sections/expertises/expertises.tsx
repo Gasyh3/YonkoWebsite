@@ -19,7 +19,7 @@ export function Expertises() {
   useMotionModule(ref, createExpertises);
 
   return (
-    <section ref={ref} className="expertises relative pt-16 md:pt-28" aria-label="Expertises">
+    <section ref={ref} id="expertises" className="expertises relative pt-16 md:pt-28" aria-label="Expertises">
       {/* Entrée des fibres : au-dessus de l'espace entre le texte et la visualisation (couloir des fibres). */}
       <div
         className="container hidden h-0 md:grid md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-20"

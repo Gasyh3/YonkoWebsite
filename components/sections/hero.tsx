@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { ButtonGlint } from "@/components/motion/dotted-link";
 import { GoldWord } from "@/components/motion/gold-word";
 import { heroMedia } from "@/lib/hero-media";
+import { HERO_INTRO_CLASS } from "@/lib/motion/hero-intro";
 import { createHeroMotion } from "@/lib/motion/hero";
 import { useMotionModule } from "@/lib/motion/use-motion-module";
 
@@ -24,6 +25,16 @@ export function Hero() {
           de l'ordinateur. Affichée dès le premier rendu via la classe .hero-intro posée par le layout. */}
       <div data-hero-intro="" data-fiber-ignore="" className="hero-intro-overlay">
         <div data-hero-intro-bg="" className="hero-intro-overlay__bg" />
+        {/* Préparation : la bande démo se met en mémoire tampon et la page finit de s'initialiser avant que
+            l'intro ne démarre (lecture fluide). Une fibre éteinte se remplit d'or au fil du chargement. */}
+        <div data-hero-loader="" className="hero-loader" role="status">
+          <p className="text-[0.65rem] uppercase tracking-[0.32em] text-silver">Yonko Tech Consulting</p>
+          <div className="hero-loader__fiber" aria-hidden="true">
+            <span className="hero-loader__off" />
+            <span data-hero-loader-bar="" className="hero-loader__on" />
+          </div>
+          <span className="sr-only">Préparation de la page</span>
+        </div>
         <video
           data-hero-intro-video=""
           className="hero-intro-overlay__video"
@@ -37,6 +48,12 @@ export function Hero() {
           <source src={heroMedia.intro.webm} type="video/webm" />
           <source src={heroMedia.intro.mp4} type="video/mp4" />
         </video>
+        {/* Mise en mémoire tampon dès la lecture du HTML (avant l'hydratation), uniquement si l'intro va jouer. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(!document.documentElement.classList.contains("${HERO_INTRO_CLASS}"))return;var v=document.querySelector("[data-hero-intro-video]");if(v){v.preload="auto";v.load()}}catch(e){}})()`,
+          }}
+        />
         <button type="button" data-hero-intro-skip="" className="hero-intro-overlay__skip">
           Passer l&apos;intro
         </button>

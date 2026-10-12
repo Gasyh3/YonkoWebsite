@@ -38,7 +38,10 @@ export default function RootLayout({
         <MotionRoot />
         <div className="flex min-h-screen flex-col bg-background">
           <SiteHeader />
-          <main className="flex-1">{children}</main>
+          {/* #top : cible du focus après « Retour en haut ». */}
+          <main id="top" tabIndex={-1} className="flex-1 outline-none">
+            {children}
+          </main>
           <SiteFooter />
         </div>
         <Toaster position="top-right" expand />

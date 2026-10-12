@@ -52,6 +52,8 @@ const CONFIG = {
   rebuildDebounce: 150,
   // Impulsion : traînée en paliers le long du trait (un dégradé SVG ne peut pas suivre un chemin).
   pulseSegments: [120, 72, 36, 12],
+  endSlide: 0.5, // fraction de viewport, en bas de page, où la ligne de tête rejoint le bas de l'écran
+  rewindLinger: 0.4, // s : marge du retour en haut avant extinction forcée de l'impulsion
   dotGap: 7, // espacement des points des fibres éteintes (stroke-dasharray: 0 7 dans fiber.css)
   dim: 0.5, // opacité des fibres dans une zone [data-fiber-dim]
   dimFade: 0.08, // part de la zone consacrée au fondu, en haut et en bas
@@ -213,7 +215,7 @@ function readAnchors(stage: HTMLElement, origin: DOMRect) {
     const fibers = readFibers(el);
     const mode = (["pass", "plug", "end"].includes(el.dataset.fiberMode ?? "") ? el.dataset.fiberMode : "pass") as AnchorMode;
     const axis = (["x", "y"].includes(el.dataset.fiberAxis ?? "") ? el.dataset.fiberAxis : "point") as AnchorAxis;
-    const merge = axis === "y" && "fiberMerge" in el.dataset;
+    const merge = axis !== "point" && "fiberMerge" in el.dataset;
     if (anchors.has(id) && process.env.NODE_ENV !== "production") {
       console.warn(`[FiberSystem] ancre en double : "${id}"`);
     }
@@ -393,7 +395,9 @@ function alignMergedDots(inst: Instance) {
   inst.anchors.forEach(({ spec }) => {
     if (!spec.merge || spec.fibers.length < 2) return;
     const cx = (spec.rect.left + spec.rect.right) / 2;
-    const start = { x: cx, y: spec.rect.top + ROUTING.gap * 2 }; // dans la portion commune
+    const cy = (spec.rect.top + spec.rect.bottom) / 2;
+    // Un point de la portion commune : sous le haut (verticale), au milieu de l'axe (horizontale).
+    const start = spec.axis === "y" ? { x: cx, y: spec.rect.top + ROUTING.gap * 2 } : { x: cx, y: cy };
     const reference = spec.fibers.includes("B") ? "B" : spec.fibers[0];
     const refLength = preciseLength(inst.fibers[reference], start);
     for (const f of spec.fibers) {
@@ -454,12 +458,22 @@ function emitArrive(m: ArrivalMarker) {
 function render(inst: Instance) {
   const vh = window.innerHeight;
   const top = inst.proxy.scroll - inst.stageTop;
+  const slide = endSlide(inst.proxy.scroll, vh);
   for (const f of FIBERS) {
     const state = inst.fibers[f];
     const reveal = revealLength(state, top + vh * CONFIG.revealAhead);
     state.maskPath.style.strokeDashoffset = String(state.length - reveal);
-    if (state.owner === "scroll") setHead(inst, state, headLength(state, top + vh * headAt(f)));
+    const line = headAt(f) + (1 - headAt(f)) * slide;
+    if (state.owner === "scroll") setHead(inst, state, headLength(state, top + vh * line));
   }
+}
+
+// En bas de page, la ligne de tête glisse jusqu'au bas du viewport (sur la dernière demi-hauteur de scroll) :
+// les impulsions atteignent toujours leur terminus, même placé trop bas pour croiser la ligne à 62 %.
+function endSlide(scroll: number, vh: number) {
+  const max = Math.max(0, document.documentElement.scrollHeight - vh);
+  const span = vh * CONFIG.endSlide;
+  return Math.min(1, Math.max(0, (scroll - (max - span)) / span));
 }
 
 // Tête d'impulsion propre à chaque fibre : les trois flux ne se suivent pas en bloc.
@@ -676,7 +690,8 @@ function observeAnchors(inst: Instance) {
   let frame = 0;
   const check = () => {
     frame = 0;
-    const line = window.innerHeight * CONFIG.headAt;
+    const vh = window.innerHeight;
+    const line = vh * (CONFIG.headAt + (1 - CONFIG.headAt) * endSlide(window.scrollY, vh));
     const targets = [
       ...[...inst.anchors.values()].map(({ el, spec }) => ({ el, id: spec.id, fibers: spec.fibers, mode: spec.mode })),
       ...inst.checkpoints.map(({ el, id, fibers }) => ({ el, id, fibers, mode: "pass" as AnchorMode })),
@@ -862,6 +877,52 @@ export const FiberSystem = {
         .to(state.pulseGroup, { opacity: 1, duration: t.dur.micro, ease: t.ease.breath }, 0)
         .to(proxy, { head: to.len, duration, ease: t.ease.transition, onUpdate: () => setHead(inst, state, proxy.head) }, 0)
         .to(state.pulseGroup, { opacity: 0, duration: t.dur.micro, ease: t.ease.breath }, duration);
+    });
+  },
+
+  // Retour en haut : pendant que la page remonte, une impulsion parcourt les fibres en sens inverse, calée sur la
+  // position réelle du scroll (de la ligne de tête jusqu'aux ports de l'ordinateur). Aucune arrivée n'est émise.
+  // `duration` borne le suivi (la remontée elle-même est pilotée par l'appelant). Résout à la fin.
+  rewind(duration: number) {
+    return new Promise<void>((resolve) => {
+      const inst = instance;
+      if (!inst || inst.reduced) return resolve();
+      const start = Math.max(1, window.scrollY);
+      const t = tokens();
+      inst.idleCall?.kill();
+      inst.lingerCall?.kill();
+      for (const f of FIBERS) {
+        const state = inst.fibers[f];
+        state.pulseTween?.kill();
+        state.pulseTween = null;
+        state.owner = "api";
+        fadePulse(state, true);
+      }
+      const follow = () => {
+        const y = window.scrollY;
+        const progress = Math.min(1, y / start); // 1 au départ, 0 en haut
+        for (const f of FIBERS) {
+          const line = window.innerHeight * headAt(f) * progress;
+          setHead(inst, inst.fibers[f], headLength(inst.fibers[f], y - inst.stageTop + line));
+        }
+        if (y <= 1) finish();
+      };
+      const failsafe = gsap.delayedCall(duration + CONFIG.rewindLinger, () => finish());
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        gsap.ticker.remove(follow);
+        failsafe.kill();
+        for (const f of FIBERS) {
+          const state = inst.fibers[f];
+          if (state.owner === "api") state.owner = null;
+          gsap.to(state.pulseGroup, { opacity: 0, duration: t.dur.reveal, ease: t.ease.breath, overwrite: "auto" });
+        }
+        scheduleBreath(inst);
+        resolve();
+      };
+      gsap.ticker.add(follow);
     });
   },
 

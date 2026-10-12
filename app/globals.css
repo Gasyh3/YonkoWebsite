@@ -1114,3 +1114,131 @@ body::after {
     display: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Contact (C10) : components/sections/contact.tsx, lib/motion/contact.ts */
+
+.contact-title {
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+.contact-cta {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Bouton : lien ordinaire, lisible et cliquable dès le premier rendu (contour argent, texte argent clair).
+   Allumé : contour or dessiné, fond en dégradé or clair, texte noir mat. */
+.contact-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 3.5rem;
+  padding-inline: 2.25rem;
+  border: 1px solid var(--silver);
+  border-radius: 9999px;
+  color: var(--silver-light);
+  font-size: .95rem;
+  letter-spacing: .04em;
+}
+
+.contact-button__fill {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background-image: linear-gradient(100deg, var(--gold-2), var(--gold-3));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.contact-button__outline {
+  position: absolute;
+  inset: -1px;
+  width: calc(100% + 2px);
+  height: calc(100% + 2px);
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Contour : trait normalisé (pathLength = 1), dessiné de 1 à 0. */
+.contact-button__outline-rect {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+}
+
+.contact-button__label {
+  position: relative;
+}
+
+.contact-button__label--lit {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--black);
+  opacity: 0;
+}
+
+/* Halo statique derrière le bouton : seule son opacité est animée (un flash). */
+.contact-halo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: -1;
+  width: 150%;
+  height: 300%;
+  transform: translate(-50%, -50%);
+  background-image: radial-gradient(closest-side, var(--gold-2), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Terminus des fibres. Desktop : couloir de convergence à droite du bouton. Mobile : son bord gauche. */
+.contact-fiber-in {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  width: 6rem;
+  height: 1px;
+}
+
+.contact-fiber-in-mobile {
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  width: 1px;
+  height: 1px;
+}
+
+@media (max-width: 767px) {
+  .contact-fiber-in {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .contact-fiber-in-mobile {
+    display: none;
+  }
+}
+
+/* Footer : « Retour en haut ». */
+.back-to-top {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .8rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.back-to-top:hover {
+  color: var(--silver-light);
+}

@@ -107,7 +107,7 @@ Attributs complémentaires (implémentés dans `lib/motion/fiber/`) :
 - `data-fiber-origin` : boîte de la vidéo hero ; les 3 départs sont calculés depuis `lib/motion/hero-ports.json` (object-fit: cover pris en compte).
 - `data-fiber-through` : bloc que la fibre a le droit de traverser (ex. lignes du manifeste). `data-fiber-avoid` : élément à éviter en plus des textes, images et contrôles. `data-fiber-ignore` : jamais un obstacle.
 - `data-fiber-checkpoint="id"` (+ `data-fiber`) : point de passage. Ne modifie pas le tracé ; émet `fiber:arrive` (`anchorId` = id, mode `pass`) quand l'impulsion passe au plus près de son centre (en mobile, via la composite). Jamais un obstacle (ex. nœuds des étapes de la Stratégie).
-- `data-fiber-merge` (avec `data-fiber-axis="y"`) : les fibres fusionnent sur l'ancre (A et C rejoignent B à 45°, une seule ligne pointillée, points calés sur B) puis se séparent à 45° en bas (ex. timeline du Process).
+- `data-fiber-merge` : fusion des fibres sur l'ancre, une seule ligne pointillée (points calés sur B). Avec `data-fiber-axis="y"` : A et C rejoignent B à 45° puis s'en séparent à 45° en bas (timeline du Process). Avec `data-fiber-axis="x"` : convergence à 45° vers un point unique, le bord de sortie (terminus du bouton Contact, `data-fiber-mode="end"` ; `fiber:arrive` y est émis au point de convergence).
 - `data-fiber-dim` : zone où les fibres passent à 50 % (voile couleur du fond dans le calque des fibres, fondu en entrée et en sortie ; jamais de masque à l'échelle de la page). Ex. Résultats.
 - `data-fiber-split` : zone où la fibre composite mobile se divise en 3 (prévoir ≥ 64px de padding gauche en mobile).
 - Couloirs : laisser ~56px libres à côté des ancres de bord (les 3 fibres occupent ±14px + marge de 10px). Le routeur signale en console (dev) tout segment qui traverse un texte ; `/lab/fibers?debug=1` affiche obstacles, ancres et collisions.
@@ -115,7 +115,9 @@ Attributs complémentaires (implémentés dans `lib/motion/fiber/`) :
 
 Le module `FiberSystem` émet `window` → `CustomEvent("fiber:arrive", { detail: { fiber, anchorId, mode, direction? } })` (`direction` = `ltr` | `rtl` pour une ancre `data-fiber-axis="x"`) quand une impulsion atteint une ancre. Les sections écoutent cet événement pour réagir, elles ne pilotent pas les fibres elles-mêmes.
 
-API exposée : `FiberSystem.setLit(fiber, bool)`, `FiberSystem.pulse(fiber, fromAnchor, toAnchor, duration)`.
+API exposée : `FiberSystem.setLit(fiber, bool)`, `FiberSystem.pulse(fiber, fromAnchor, toAnchor, duration)`, `FiberSystem.rewind(duration)` (impulsion inverse calée sur la remontée de la page, utilisée par « Retour en haut », `lib/motion/back-to-top.ts`).
+
+En bas de page, la ligne de tête des impulsions glisse jusqu'au bas du viewport : un terminus placé trop bas pour croiser la ligne à 62 % est quand même atteint.
 
 ## Règles non négociables
 

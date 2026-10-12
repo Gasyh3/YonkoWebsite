@@ -5,7 +5,7 @@ import { Expertises } from "@/components/sections/expertises/expertises";
 import { Strategy } from "@/components/sections/strategy";
 import { Results } from "@/components/sections/results";
 import { Process } from "@/components/sections/process";
-import { QuickContact } from "@/components/sections/quick-contact";
+import { Contact } from "@/components/sections/contact";
 import { ServicesSection } from "@/components/sections/services-section";
 import { WhyUs } from "@/components/sections/why-us";
 import { FaqSection } from "@/components/sections/faq-section";
@@ -44,9 +44,7 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <div data-ambient="">
-          <QuickContact />
-        </div>
+        <Contact />
       </div>
     </FiberStage>
   );

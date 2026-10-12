@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Github, Linkedin, Mail } from "lucide-react";
 import Image from "next/image";
 import logoPng from "@/public/assets/images/icon.png";
+import { BackToTop } from "@/components/motion/back-to-top";
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -37,7 +38,8 @@ export function SiteFooter() {
             </Link>
           </div>
         </div>
-        <div className="flex items-center gap-3 text-muted-foreground">
+        <div className="flex items-center gap-6 text-muted-foreground">
+          <BackToTop />
           <Link href="#" aria-label="Lien LinkedIn" className="hover:text-primary">
             <Linkedin className="h-5 w-5" />
           </Link>

@@ -30,16 +30,16 @@ export default function Home() {
         <div data-ambient="">
           <WhyUs />
         </div>
-        <div data-ambient="" className="space-y-6">
+        <div data-ambient="">
           <FaqSection
-            className="py-8"
+            className="md:pr-[calc(2.75rem+1.5rem)]"
             items={faqItems.slice(0, 5)}
             title="FAQ express"
             subtitle="Les réponses clés pour comprendre l’ERP PME et le SaaS Next.js clé en main."
           />
-          <div className="container flex items-center justify-end">
-            <DottedLink href="/faqs" className="text-sm font-semibold text-primary">
-              Consulter toutes les FAQ
+          <div className="container -mt-6 md:-mt-12">
+            <DottedLink href="/faqs" className="text-sm text-silver">
+              Consulter toutes les FAQ →
             </DottedLink>
           </div>
         </div>

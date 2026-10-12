@@ -1795,24 +1795,6 @@ html[data-navigating] [data-close-on-navigate] {
   }
 }
 
-.expertise-cta {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  padding: 2.5rem;
-  border: 1px solid var(--fiber-off);
-  border-radius: 16px;
-  background: var(--surface);
-}
-
-@media (min-width: 768px) {
-  .expertise-cta {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 3.5rem;
-  }
-}
 
 /* ---------------------------------------------------------------------------
    À propos (accueil) : components/sections/about-teaser.tsx, lib/motion/about.ts */
@@ -1891,4 +1873,339 @@ html[data-navigating] [data-close-on-navigate] {
   stroke: var(--gold-2);
   stroke-width: 1;
   opacity: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Pages intérieures : components/page/* (en-tête, boutons, bandeau d'action, listes) */
+
+.btn-primary {
+  background-image: var(--gold);
+  color: var(--black);
+}
+
+.page-lead > p + p {
+  margin-top: 1rem;
+}
+
+.page-lead strong,
+.dot-list strong {
+  color: var(--silver-light);
+  font-weight: 500;
+}
+
+/* Bandeau d'action (fin de page). */
+.cta-band {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.5rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+@media (min-width: 768px) {
+  .cta-band {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3.5rem;
+  }
+}
+
+/* Liste à puces : un point or (une jonction de fibres). */
+.dot-list {
+  display: grid;
+  gap: .85rem;
+}
+
+.dot-list > li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.dot-list > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .6em;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-image: var(--gold);
+}
+
+/* Carte --surface au fin contour. */
+.panel {
+  padding: 1.75rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+@media (min-width: 768px) {
+  .panel {
+    padding: 2.25rem;
+  }
+}
+
+/* Filet pointillé horizontal (grammaire des fibres). */
+.fiber-rule {
+  height: 2px;
+  background-image: radial-gradient(circle, var(--fiber-off) 1px, transparent 1.2px);
+  background-size: 7px 2px;
+}
+
+/* FAQ : components/sections/faq-section.tsx */
+.faq-item {
+  background-image: radial-gradient(circle, var(--fiber-off) 1px, transparent 1.2px);
+  background-size: 7px 2px;
+  background-repeat: repeat-x;
+  background-position: bottom left;
+}
+
+.faq-list {
+  background-image: radial-gradient(circle, var(--fiber-off) 1px, transparent 1.2px);
+  background-size: 7px 2px;
+  background-repeat: repeat-x;
+  background-position: top left;
+}
+
+.faq-item__button {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-block: 1.5rem;
+  text-align: left;
+}
+
+/* « + » argent, qui pivote en « × » or à l'ouverture (transform). */
+.faq-item__icon {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+  transition: transform var(--dur-micro) var(--ease-in-css);
+}
+
+.faq-item__icon::before,
+.faq-item__icon::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 14px;
+  height: 2px;
+  border-radius: 9999px;
+  background: var(--silver);
+}
+
+.faq-item__icon::after {
+  transform: rotate(90deg);
+}
+
+.faq-item[data-open] .faq-item__icon {
+  transform: rotate(45deg);
+}
+
+.faq-item[data-open] .faq-item__icon::before,
+.faq-item[data-open] .faq-item__icon::after {
+  background-image: var(--gold);
+}
+
+.faq-item__answer {
+  max-width: 48rem;
+  padding-bottom: 1.75rem;
+  animation: faq-reveal var(--dur-micro) var(--ease-in-css);
+}
+
+.faq-item__answer p + p,
+.faq-item__answer p + ul,
+.faq-item__answer ul + p {
+  margin-top: .75rem;
+}
+
+.faq-item__answer ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+
+.faq-item__answer strong {
+  color: var(--silver-light);
+  font-weight: 500;
+}
+
+@keyframes faq-reveal {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item__answer {
+    animation: none;
+  }
+}
+
+/* Page FAQ : les thèmes s'enchaînent plus serrés. */
+.faq-theme {
+  scroll-margin-top: 4rem;
+  padding-block: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .faq-theme {
+    padding-block: 3.5rem;
+  }
+}
+
+/* Valeurs (À propos) : un nœud or sur un filet pointillé. */
+.value-item {
+  position: relative;
+  padding-top: 1.75rem;
+  background-image: radial-gradient(circle, var(--fiber-off) 1px, transparent 1.2px);
+  background-size: 7px 2px;
+  background-repeat: repeat-x;
+  background-position: 0 4px;
+}
+
+.value-item__node {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-image: var(--gold);
+}
+
+/* Formulaires (Contact) : champs sur fond noir, fin contour, focus or (contour global). */
+.form-label {
+  display: block;
+  font-size: .7rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+
+.form-field {
+  display: block;
+  width: 100%;
+  padding: .85rem 1rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 10px;
+  background: var(--black);
+  color: var(--silver-light);
+  font-size: .95rem;
+}
+
+.form-field::placeholder {
+  color: var(--silver);
+  opacity: .55;
+}
+
+.form-field:hover {
+  border-color: color-mix(in srgb, var(--silver) 40%, transparent);
+}
+
+/* Étapes du Contact : toujours en colonne (fibre verticale). */
+@media (min-width: 768px) {
+  .contact-steps {
+    grid-template-columns: none;
+    padding-left: 1.75rem;
+    padding-top: 0;
+  }
+
+  .contact-steps::before {
+    left: 4px;
+    right: auto;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    height: auto;
+    background-size: 2px 7px;
+  }
+
+  .contact-steps .expertise-steps__node {
+    left: -1.75rem;
+    top: 3px;
+  }
+}
+
+/* Cartes d'offre : --surface, fin contour, flèche qui avance au survol (transform). */
+.offer-card {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  padding: 1.75rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+@media (min-width: 768px) {
+  .offer-card {
+    padding: 2.25rem;
+  }
+}
+
+.offer-card:hover {
+  border-color: color-mix(in srgb, var(--silver) 40%, transparent);
+}
+
+.offer-card__more {
+  margin-top: auto;
+  padding-top: 2rem;
+}
+
+.offer-card__more span {
+  display: inline-block;
+  transition: transform var(--dur-micro) var(--ease-in-css);
+}
+
+.offer-card:hover .offer-card__more span,
+.offer-card:focus-visible .offer-card__more span {
+  transform: translateX(6px);
+}
+
+/* Footer : components/site-footer.tsx */
+.site-footer {
+  background: var(--black);
+}
+
+.site-footer__social {
+  display: inline-flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--fiber-off);
+  border-radius: 9999px;
+}
+
+.site-footer__social:hover {
+  color: var(--silver-light);
+  border-color: color-mix(in srgb, var(--silver) 40%, transparent);
+}
+
+/* 404 : la fibre interrompue. */
+.not-found__fiber {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.not-found__line {
+  fill: none;
+  stroke: var(--silver);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 7;
+  opacity: .55;
+}
+
+.not-found__line--far {
+  opacity: .2;
 }

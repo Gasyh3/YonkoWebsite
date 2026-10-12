@@ -1,5 +1,10 @@
+import { DottedLink } from "@/components/motion/dotted-link";
+import { CtaBand } from "@/components/page/cta-band";
+import { PageHeader } from "@/components/page/page-header";
 import { FaqSection } from "@/components/sections/faq-section";
 import { faqItems, type FaqItem } from "@/lib/faq-data";
+
+export const metadata = { title: "Questions fréquentes · Yonko Tech Consulting" };
 
 const CATEGORY_ORDER = [
   "ERP PME",
@@ -42,26 +47,28 @@ function sortCategories(cats: string[]) {
 }
 
 export default function FaqsPage() {
-  const categories = sortCategories(
-    Array.from(new Set(faqItems.map((item) => item.category)))
-  );
+  const categories = sortCategories(Array.from(new Set(faqItems.map((item) => item.category))));
 
   return (
-    <div className="space-y-12 bg-background">
-      <div className="container space-y-4 pt-12">
-        <p className="text-sm font-semibold uppercase tracking-wide text-primary">
-          FAQ
-        </p>
+    <div>
+      <PageHeader
+        eyebrow="Questions fréquentes"
+        title="Toutes les questions"
+        lead="ERP PME modulaire, SaaS Next.js clé en main, sécurité, hébergement, propriété : trouvez des réponses rapides par thématique."
+      >
+        {/* Accès direct aux thèmes. */}
+        <nav aria-label="Thèmes" className="w-full">
+          <ul className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-silver">
+            {categories.map((category) => (
+              <li key={category}>
+                <DottedLink href={`#${slugify(category)}`}>{category}</DottedLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </PageHeader>
 
-        <h1 className="section-heading text-foreground">Toutes les questions</h1>
-
-        <p className="max-w-3xl text-lg text-muted-foreground">
-          ERP PME modulaire, SaaS Next.js clé en main, sécurité, hébergement,
-          propriété : trouvez des réponses rapides par thématique.
-        </p>
-      </div>
-
-      <div className="space-y-8 pb-16">
+      <div className="pb-16">
         {categories.map((category) => {
           const itemsByCategory: FaqItem[] = faqItems
             .filter((item) => item.category === category)
@@ -74,14 +81,18 @@ export default function FaqsPage() {
             <FaqSection
               key={category}
               id={slugify(category)}
+              eyebrow="Thème"
               title={category}
-              subtitle="Les points essentiels sur cette thématique."
+              subtitle=""
+              showCategory={false}
               items={itemsByCategory}
-              className="pt-0"
+              className="faq-theme"
             />
           );
         })}
       </div>
+
+      <CtaBand title="Vous ne trouvez pas votre réponse ?" text="Posez-nous la question directement : nous répondons sous 24h." />
     </div>
   );
 }

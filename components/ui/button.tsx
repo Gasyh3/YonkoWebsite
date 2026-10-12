@@ -9,15 +9,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-sm hover:brightness-95",
-        secondary:
-          "bg-secondary text-secondary-foreground shadow-sm hover:bg-black/90",
-        outline:
-          "border border-primary/80 text-foreground hover:bg-primary/10 hover:text-foreground",
-        ghost:
-          "text-foreground hover:bg-muted/80 hover:text-foreground",
-        link: "text-primary underline-offset-4 hover:underline",
+        // Charte : l'or n'est jamais un aplat (dégradé), argent pour le reste.
+        default: "rounded-full bg-gold text-black",
+        secondary: "rounded-full bg-surface text-silver-light hover:bg-black",
+        outline: "rounded-full border border-silver text-silver-light hover:border-silver-light",
+        ghost: "text-silver-light hover:bg-surface",
+        link: "text-silver-light underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2",

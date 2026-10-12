@@ -23,42 +23,32 @@ const reasons = [
   },
 ];
 
+// Accueil : pourquoi Yonko (contenu v1 inchangé). Quatre raisons sur un filet pointillé, chacune marquée d'un
+// nœud or ; icônes en argent (l'or reste réservé à ce qui compte).
 export function WhyUs() {
   return (
-    <section className="bg-secondary text-foreground py-16">
-      <div className="container space-y-6">
-        <div className="max-w-2xl space-y-3">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">
-            Pourquoi Yonko ?
-          </p>
-          <h2 className="section-heading text-foreground">
-            Des partenaires qui alignent stratégie produit et excellence tech
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            Nous travaillons main dans la main avec vos équipes pour apporter de
-            la clarté, accélérer les roadmaps et livrer des expériences fiables.
-          </p>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {reasons.map((reason) => (
-            <div
-              key={reason.title}
-              className="group rounded-xl border border-border/80 bg-black/60 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
-            >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                <reason.icon className="h-5 w-5" />
-              </div>
-              <h3 className="text-lg font-semibold text-foreground">
-                {reason.title}
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {reason.description}
-              </p>
-            </div>
-          ))}
-        </div>
+    <section className="container py-16 md:py-24 md:pr-[calc(2.75rem+1.5rem)]" aria-labelledby="why-title">
+      <div className="max-w-2xl">
+        <p className="text-xs uppercase tracking-[0.24em] text-silver">Pourquoi Yonko ?</p>
+        <h2 id="why-title" className="mt-4 font-display text-4xl leading-[1.04] md:text-6xl">
+          Des partenaires qui alignent stratégie produit et excellence tech
+        </h2>
+        <p className="mt-6 md:text-lg">
+          Nous travaillons main dans la main avec vos équipes pour apporter de la clarté, accélérer les roadmaps et
+          livrer des expériences fiables.
+        </p>
       </div>
+
+      <ul className="mt-12 grid gap-10 md:mt-16 md:grid-cols-2 lg:grid-cols-4">
+        {reasons.map((reason) => (
+          <li key={reason.title} className="value-item">
+            <span className="value-item__node" aria-hidden="true" />
+            <reason.icon className="h-5 w-5 text-silver" aria-hidden="true" />
+            <h3 className="mt-4 font-display text-2xl text-silver-light">{reason.title}</h3>
+            <p className="mt-3 text-sm">{reason.description}</p>
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }

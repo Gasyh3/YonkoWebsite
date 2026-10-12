@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
+import { CtaBand } from "@/components/page/cta-band";
 import { ExpertiseDemo } from "@/components/pages/expertise-demo";
 import { expertises, getExpertise, nextExpertise } from "@/lib/expertises-data";
 
@@ -100,24 +101,11 @@ export default async function ExpertisePage({ params }: { params: Promise<{ slug
         </ol>
       </section>
 
-      <section className="container pb-24 pt-8 md:pb-32" aria-label="Pour aller plus loin">
-        <div className="expertise-cta">
-          <p className="font-display text-3xl md:text-5xl">[à adapter] On en parle ?</p>
-          <div className="flex flex-wrap items-center gap-8">
-            <Link
-              href="/contact"
-              data-magnetic=""
-              className="site-header__cta relative inline-flex h-12 items-center rounded-full px-6 text-sm font-medium"
-            >
-              <ButtonGlint />
-              <span className="relative">Démarrer un projet</span>
-            </Link>
-            <DottedLink href={`/expertises/${next.slug}`} className="text-sm text-silver">
-              Expertise suivante : {next.title} →
-            </DottedLink>
-          </div>
-        </div>
-      </section>
+      <CtaBand title="[à adapter] On en parle ?">
+        <DottedLink href={`/expertises/${next.slug}`} className="text-sm text-silver">
+          Expertise suivante : {next.title} →
+        </DottedLink>
+      </CtaBand>
     </article>
   );
 }

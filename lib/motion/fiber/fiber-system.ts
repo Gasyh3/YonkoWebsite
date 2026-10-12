@@ -4,6 +4,7 @@
 // - impulsion lumineuse liée au scroll, respiration après 2s d'inactivité
 // - événement window "fiber:arrive" { fiber, anchorId, mode } quand une impulsion atteint une ancre
 //   ou un point de passage [data-fiber-checkpoint] (repère qui ne modifie pas le tracé)
+// - zones [data-fiber-dim] : les fibres y passent à 50 % d'opacité (fondu en entrée et en sortie)
 // API : FiberSystem.setLit(fiber, bool), FiberSystem.pulse(fiber, fromAnchor, toAnchor, duration)
 
 import heroPorts from "../hero-ports.json";
@@ -50,6 +51,8 @@ const CONFIG = {
   rebuildDebounce: 150,
   // Impulsion : traînée en paliers le long du trait (un dégradé SVG ne peut pas suivre un chemin).
   pulseSegments: [120, 72, 36, 12],
+  dim: 0.5, // opacité des fibres dans une zone [data-fiber-dim]
+  dimFade: 0.08, // part de la zone consacrée au fondu, en haut et en bas
 } as const;
 
 const OBSTACLE_SELECTOR =
@@ -83,6 +86,7 @@ type Instance = {
   svg: SVGSVGElement;
   glowSvg: SVGSVGElement;
   debugGroup: SVGGElement;
+  dimMask: SVGMaskElement;
   fibers: Record<FiberId, FiberState>;
   markers: (ArrivalMarker & { len: number })[];
   anchors: Map<string, { el: HTMLElement; spec: AnchorSpec }>;
@@ -126,6 +130,21 @@ function createLayer(layer: HTMLElement) {
   const defs = svgEl("defs");
   svg.append(defs);
 
+  // Zones atténuées : masque alpha (opaque partout, DIM dans les zones [data-fiber-dim], fondu aux bords).
+  const dimMask = svgEl("mask", { id: `${prefix}-dim`, maskUnits: "userSpaceOnUse", style: "mask-type: alpha" });
+  const fade = svgEl("linearGradient", { id: `${prefix}-dim-fade`, x1: 0, y1: 0, x2: 0, y2: 1 });
+  [
+    [0, 1],
+    [CONFIG.dimFade, CONFIG.dim],
+    [1 - CONFIG.dimFade, CONFIG.dim],
+    [1, 1],
+  ].forEach(([offset, opacity]) =>
+    fade.append(svgEl("stop", { offset, "stop-color": "#fff", "stop-opacity": opacity })),
+  );
+  defs.append(dimMask, fade);
+  const fibersGroup = svgEl("g", { class: "fiber-all" });
+  svg.append(fibersGroup);
+
   const fibers = {} as Record<FiberId, FiberState>;
   for (const id of FIBERS) {
     const mask = svgEl("mask", { id: `${prefix}-mask-${id}`, maskUnits: "userSpaceOnUse" });
@@ -141,7 +160,7 @@ function createLayer(layer: HTMLElement) {
     );
     pulseGroup.append(...pulsePaths);
     group.append(offPath, pulseGroup);
-    svg.append(group);
+    fibersGroup.append(group);
 
     const glowPath = svgEl("path", { class: `fiber-glow fiber-glow--${id}`, filter: `url(#${prefix}-blur)` });
     glowSvg.append(glowPath);
@@ -169,7 +188,7 @@ function createLayer(layer: HTMLElement) {
   const debugGroup = svgEl("g", { class: "fiber-debug" });
   svg.append(debugGroup);
   layer.append(glowSvg, svg);
-  return { svg, glowSvg, fibers, debugGroup };
+  return { svg, glowSvg, fibers, debugGroup, dimMask };
 }
 
 // ---------------------------------------------------------------------------
@@ -505,6 +524,26 @@ function drawDebug(inst: Instance, obstacles: Rect[]) {
   }
 }
 
+function drawDim(inst: Instance, width: number, height: number, regions: Rect[]) {
+  const mask = inst.dimMask;
+  const group = inst.svg.querySelector(".fiber-all");
+  // Sans zone, pas de masque : rien à composer à chaque image.
+  if (!regions.length) {
+    group?.removeAttribute("mask");
+    mask.replaceChildren();
+    return;
+  }
+  group?.setAttribute("mask", `url(#${mask.id})`);
+  for (const [k, v] of Object.entries({ x: 0, y: 0, width, height })) mask.setAttribute(k, String(v));
+  // Opaque partout sauf dans les zones (trous en evenodd), que chaque zone remplit de son dégradé.
+  const holes = regions.map((r) => `M0 ${r.top}H${width}V${r.bottom}H0Z`).join("");
+  const base = svgEl("path", { d: `M0 0H${width}V${height}H0Z${holes}`, fill: "#fff", "fill-rule": "evenodd" });
+  const zones = regions.map((r) =>
+    svgEl("rect", { x: 0, y: r.top, width, height: r.bottom - r.top, fill: `url(#${mask.id}-fade)` }),
+  );
+  mask.replaceChildren(base, ...zones);
+}
+
 // ---------------------------------------------------------------------------
 // Cycle de vie
 
@@ -522,7 +561,7 @@ function rebuild(inst: Instance) {
   }
 
   // Mesures sur la mise en page au repos (sans les transformations des animations en cours).
-  const { anchors, checkpoints, obstacles, splitRegions, origins } = measureAtRest(inst.stage, () => ({
+  const { anchors, checkpoints, obstacles, splitRegions, origins, dimRegions } = measureAtRest(inst.stage, () => ({
     anchors: readAnchors(inst.stage, origin),
     checkpoints: readCheckpoints(inst.stage, origin),
     obstacles: readObstacles(inst.stage, inst.layer, origin),
@@ -530,7 +569,11 @@ function rebuild(inst: Instance) {
       .filter(isRendered)
       .map((el) => relRect(el, origin)),
     origins: readOrigins(inst.stage, origin, width),
+    dimRegions: [...inst.stage.querySelectorAll<HTMLElement>("[data-fiber-dim]")]
+      .filter(isRendered)
+      .map((el) => relRect(el, origin)),
   }));
+  drawDim(inst, width, height, dimRegions);
   inst.anchors = anchors;
   inst.checkpoints = checkpoints;
 
@@ -627,13 +670,14 @@ function observeAnchors(inst: Instance) {
 }
 
 function setup(stage: HTMLElement, layer: HTMLElement) {
-  const { svg, glowSvg, fibers, debugGroup } = createLayer(layer);
+  const { svg, glowSvg, fibers, debugGroup, dimMask } = createLayer(layer);
   const inst: Instance = {
     stage,
     layer,
     svg,
     glowSvg,
     debugGroup,
+    dimMask,
     fibers,
     markers: [],
     anchors: new Map(),

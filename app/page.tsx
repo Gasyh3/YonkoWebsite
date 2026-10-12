@@ -3,6 +3,7 @@ import { Hero } from "@/components/sections/hero";
 import { Manifesto } from "@/components/sections/manifesto";
 import { Expertises } from "@/components/sections/expertises/expertises";
 import { Strategy } from "@/components/sections/strategy";
+import { Results } from "@/components/sections/results";
 import { QuickContact } from "@/components/sections/quick-contact";
 import { ServicesSection } from "@/components/sections/services-section";
 import { WhyUs } from "@/components/sections/why-us";
@@ -18,6 +19,7 @@ export default function Home() {
         <Manifesto />
         <Strategy />
         <Expertises />
+        <Results />
         <div data-ambient="">
           <ServicesSection />
         </div>

@@ -107,6 +107,7 @@ Attributs complémentaires (implémentés dans `lib/motion/fiber/`) :
 - `data-fiber-origin` : boîte de la vidéo hero ; les 3 départs sont calculés depuis `lib/motion/hero-ports.json` (object-fit: cover pris en compte).
 - `data-fiber-through` : bloc que la fibre a le droit de traverser (ex. lignes du manifeste). `data-fiber-avoid` : élément à éviter en plus des textes, images et contrôles. `data-fiber-ignore` : jamais un obstacle.
 - `data-fiber-checkpoint="id"` (+ `data-fiber`) : point de passage. Ne modifie pas le tracé ; émet `fiber:arrive` (`anchorId` = id, mode `pass`) quand l'impulsion passe au plus près de son centre (en mobile, via la composite). Jamais un obstacle (ex. nœuds des étapes de la Stratégie).
+- `data-fiber-dim` : zone où les fibres passent à 50 % d'opacité, avec un fondu en entrée et en sortie (ex. Résultats : le travail parle).
 - `data-fiber-split` : zone où la fibre composite mobile se divise en 3 (prévoir ≥ 64px de padding gauche en mobile).
 - Couloirs : laisser ~56px libres à côté des ancres de bord (les 3 fibres occupent ±14px + marge de 10px). Le routeur signale en console (dev) tout segment qui traverse un texte ; `/lab/fibers?debug=1` affiche obstacles, ancres et collisions.
 - `fiber:arrive` peut être émis plusieurs fois pour une même ancre (respiration) : les sections réagissent de façon idempotente.

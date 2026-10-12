@@ -1,29 +1,29 @@
-import { BarChart3, Clock3, ShieldCheck, Users } from "lucide-react";
+import { KeyRound, MessageCircle, Search, UserRound } from "lucide-react";
 
 const reasons = [
   {
-    title: "Expertise senior",
-    description: "Architectes et engineers expérimentés, habitués aux enjeux critiques.",
-    icon: ShieldCheck,
+    title: "Un seul interlocuteur",
+    description: "Du premier échange au suivi, la même personne connaît votre projet : rien ne se perd en route.",
+    icon: UserRound,
   },
   {
-    title: "Accompagnement sur-mesure",
-    description: "Coaching, co-delivery ou squad dédiée selon votre contexte.",
-    icon: Users,
+    title: "Sans jargon",
+    description: "Chaque choix est expliqué simplement, et vous validez avant que l'on construise.",
+    icon: MessageCircle,
   },
   {
-    title: "Agilité pragmatique",
-    description: "Sprints cadrés, décisions data-driven, priorisation business.",
-    icon: Clock3,
+    title: "Pensé pour être trouvé",
+    description: "Site, fiche Google et contenus sont conçus ensemble, autour des recherches de vos clients.",
+    icon: Search,
   },
   {
-    title: "Qualité et impact",
-    description: "Design system, performances, sécurité et mesure ROI intégrées.",
-    icon: BarChart3,
+    title: "Vous restez propriétaire",
+    description: "Nom de domaine, site, code et données vous appartiennent, avec tous les accès.",
+    icon: KeyRound,
   },
 ];
 
-// Accueil : pourquoi Yonko (contenu v1 inchangé). Quatre raisons sur un filet pointillé, chacune marquée d'un
+// Accueil : pourquoi Yonko. Quatre raisons sur un filet pointillé, chacune marquée d'un
 // nœud or ; icônes en argent (l'or reste réservé à ce qui compte).
 export function WhyUs() {
   return (
@@ -31,11 +31,10 @@ export function WhyUs() {
       <div className="max-w-2xl">
         <p className="text-xs uppercase tracking-[0.24em] text-silver">Pourquoi Yonko ?</p>
         <h2 id="why-title" className="mt-4 font-display text-4xl leading-[1.04] md:text-6xl">
-          Des partenaires qui alignent stratégie produit et excellence tech
+          Ce que vous pouvez attendre de nous.
         </h2>
         <p className="mt-6 md:text-lg">
-          Nous travaillons main dans la main avec vos équipes pour apporter de la clarté, accélérer les roadmaps et
-          livrer des expériences fiables.
+          Pas de promesse intenable : un travail soigné, des étapes claires et un suivi après la mise en ligne.
         </p>
       </div>
 

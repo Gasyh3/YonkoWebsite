@@ -1,7 +1,8 @@
 // Pages Expertises (/expertises, /expertises/[slug]) : une page par service du concept (voir CLAUDE.md).
-// Contenus fictifs, tous [à adapter] : ils posent la structure en attendant les textes définitifs.
-// Les pages v1 (/services, lib/services-data.ts) restent inchangées.
+// Elles reprennent et remplacent les offres v1 (ERP, SaaS, SEO & rebranding, réseaux sociaux), redirigées
+// dans next.config.ts. Processus décrits sans engagement de délai ni de résultat chiffré.
 
+import { FAQ_CATEGORIES } from "./faq-data";
 import type { SceneId } from "./motion/expertises/geometry";
 
 export type Expertise = {
@@ -14,7 +15,10 @@ export type Expertise = {
   scene: SceneId | null; // visualisation animée réutilisée depuis l'accueil
   includes: { title: string; text: string }[];
   audiences: { title: string; text: string }[];
-  steps: { title: string; duration: string; text: string }[];
+  steps: { title: string; moment: string; text: string }[];
+  deliverables: string[]; // « Ce que vous recevez »
+  faqCategory: string; // questions fréquentes affichées en bas de page (lib/faq-data.tsx)
+  seo: { title: string; description: string };
 };
 
 export const expertises: Expertise[] = [
@@ -23,100 +27,148 @@ export const expertises: Expertise[] = [
     index: "00",
     title: "Stratégie de communication",
     promise: "Le pilier qui pilote tout.",
-    summary: "[à adapter] Un plan clair avant d'investir dans le moindre outil.",
-    lead: "[à adapter] Avant de construire un site ou un logiciel, on pose le plan : qui sont vos clients, où vous cherchent-ils, et quel message les fait venir. Tout le reste en découle.",
+    summary: "Un plan clair avant d'investir : message, canaux et priorités.",
+    lead: "Avant de construire un site ou un logiciel, on pose le plan : à qui vous parlez, où ces personnes vous cherchent, et ce qui doit les décider. Votre site, votre fiche Google, vos réseaux et vos outils suivent ensuite la même direction.",
     scene: null,
     includes: [
-      { title: "Audit de présence", text: "[à adapter] Site, fiche Google, réseaux, concurrents : ce qui marche et ce qui freine." },
-      { title: "Positionnement et message", text: "[à adapter] Ce que vous dites, à qui, et pourquoi on doit vous choisir." },
-      { title: "Plan d'action priorisé", text: "[à adapter] Les chantiers dans l'ordre, avec le résultat attendu pour chacun." },
-      { title: "Pilotage mensuel", text: "[à adapter] Un point régulier, des chiffres simples, des ajustements concrets." },
+      { title: "Audit de présence", text: "Site, fiche Google, réseaux, concurrents : un état des lieux de ce qui marche et de ce qui freine." },
+      { title: "Positionnement et message", text: "Ce que vous dites, à qui, et pourquoi on doit vous choisir, en mots simples." },
+      { title: "Ligne éditoriale", text: "Les sujets, le ton et un rythme de publication que vous pouvez tenir dans la durée." },
+      { title: "Plan d'action priorisé", text: "Les chantiers dans l'ordre, chacun relié à l'objectif qu'il doit servir." },
     ],
     audiences: [
-      { title: "Commerçants", text: "[à adapter] Vous voulez plus de passage en boutique, sans multiplier les dépenses." },
-      { title: "Artisans", text: "[à adapter] Vous êtes débordés de travail ou de devis non signés : il faut mieux choisir." },
-      { title: "Professions libérales", text: "[à adapter] Votre réputation se joue en ligne avant le premier rendez-vous." },
+      { title: "Commerçants", text: "Faire venir plus de monde en boutique, sans multiplier les dépenses de communication." },
+      { title: "Artisans", text: "Être contacté pour les chantiers qui vous intéressent, pas seulement pour des devis." },
+      { title: "Professions libérales", text: "Inspirer confiance en ligne avant le premier rendez-vous, dans le respect de votre profession." },
     ],
     steps: [
-      { title: "Audit", duration: "[à adapter] 1 semaine", text: "[à adapter] Entretien, état des lieux, premiers constats." },
-      { title: "Plan", duration: "[à adapter] 1 semaine", text: "[à adapter] Feuille de route chiffrée et priorisée." },
-      { title: "Pilotage", duration: "[à adapter] Mensuel", text: "[à adapter] Mesure, ajustements, compte rendu." },
+      { title: "Écoute", moment: "Au démarrage", text: "Un échange pour comprendre votre activité, vos clients et vos objectifs." },
+      { title: "Plan", moment: "Ensuite", text: "Une feuille de route écrite et priorisée, que vous gardez." },
+      { title: "Suivi", moment: "Dans la durée", text: "Des points réguliers pour mesurer, ajuster et décider de la suite." },
     ],
+    deliverables: [
+      "Un état des lieux de votre présence en ligne",
+      "Votre message et votre positionnement formulés noir sur blanc",
+      "Une ligne éditoriale et un calendrier de publication",
+      "Une feuille de route priorisée pour les mois à venir",
+    ],
+    faqCategory: FAQ_CATEGORIES.start,
+    seo: {
+      title: "Stratégie de communication à Madagascar",
+      description:
+        "Positionnement, message, ligne éditoriale et plan d'action : une stratégie de communication claire pour les PME, commerçants et artisans à Madagascar.",
+    },
   },
   {
     slug: "site-vitrine-et-seo",
     index: "01",
     title: "Site vitrine et SEO",
     promise: "Être vu.",
-    summary: "[à adapter] Un site rapide et bien référencé, en haut des résultats.",
-    lead: "[à adapter] Un site clair, rapide et pensé pour Google : quand un client cherche votre métier dans votre ville, c'est vous qu'il trouve en premier, et il sait tout de suite comment vous contacter.",
+    summary: "Un site clair et rapide, pensé pour être trouvé sur Google.",
+    lead: "Un site vitrine qui dit ce que vous faites, où, et comment vous joindre, sans détour. Il est pensé pour Google dès le départ : structure, contenus et performance travaillent ensemble pour que les bons clients arrivent jusqu'à vous.",
     scene: "seo",
     includes: [
-      { title: "Site sur mesure", text: "[à adapter] Design soigné, textes qui parlent à vos clients, mobile d'abord." },
-      { title: "Référencement local", text: "[à adapter] Pages optimisées pour vos services et votre zone." },
-      { title: "Performance", text: "[à adapter] Chargement rapide, scores Google au vert." },
-      { title: "Suivi des contacts", text: "[à adapter] Appels, formulaires, itinéraires : on mesure ce qui compte." },
+      { title: "Site sur mesure", text: "Un design à votre image, des textes qui parlent à vos clients, pensé d'abord pour le mobile." },
+      { title: "Référencement naturel", text: "Structure, contenus et balisage travaillés pour les recherches qui comptent dans votre métier." },
+      { title: "Performance", text: "Des pages légères et rapides, sur tous les écrans et toutes les connexions." },
+      { title: "Contact facilité", text: "Appel, e-mail, formulaire, itinéraire : chaque page mène à une prise de contact." },
     ],
     audiences: [
-      { title: "Commerçants", text: "[à adapter] Horaires, produits, accès : l'essentiel visible en un coup d'œil." },
-      { title: "Artisans", text: "[à adapter] Vos réalisations mises en valeur, des demandes de devis qualifiées." },
-      { title: "Professions libérales", text: "[à adapter] Une présence sérieuse, conforme, rassurante." },
+      { title: "Commerçants", text: "Horaires, produits, accès : l'essentiel visible en un coup d'œil." },
+      { title: "Artisans", text: "Vos réalisations mises en valeur, des demandes de devis plus précises." },
+      { title: "Professions libérales", text: "Une présence sobre et rassurante, qui explique votre pratique." },
     ],
     steps: [
-      { title: "Maquette", duration: "[à adapter] 2 semaines", text: "[à adapter] Structure, textes, design validés ensemble." },
-      { title: "Construction", duration: "[à adapter] 3 semaines", text: "[à adapter] Développement, référencement, tests." },
-      { title: "Mise en ligne", duration: "[à adapter] 1 semaine", text: "[à adapter] Lancement, suivi des premières positions." },
+      { title: "Maquette", moment: "Au démarrage", text: "Structure, textes et design validés ensemble avant de construire." },
+      { title: "Construction", moment: "En cours de projet", text: "Le site prend forme ; vous suivez et validez chaque étape." },
+      { title: "Mise en ligne", moment: "À la livraison", text: "Lancement, vérifications et premiers réglages pour Google." },
     ],
+    deliverables: [
+      "Un site responsive, rapide et sécurisé (HTTPS)",
+      "Des pages optimisées pour vos services et votre zone",
+      "Le site déclaré à Google et ses outils de suivi en place",
+      "Les accès complets : le site et le nom de domaine sont à vous",
+    ],
+    faqCategory: FAQ_CATEGORIES.site,
+    seo: {
+      title: "Création de site vitrine et SEO à Madagascar",
+      description:
+        "Création de site vitrine rapide et bien référencé, à Antananarivo et partout à Madagascar : design sur mesure, référencement naturel, pensé pour le mobile.",
+    },
   },
   {
     slug: "google-maps-et-visibilite-locale",
     index: "02",
     title: "Google Maps et visibilité locale",
     promise: "Être trouvé.",
-    summary: "[à adapter] Votre établissement en tête de la carte, près de chez vos clients.",
-    lead: "[à adapter] Quand un client cherche « près de moi », la carte décide. On soigne votre fiche Google, vos avis et vos informations pour que votre établissement ressorte en premier.",
+    summary: "Une fiche Google complète et soignée, pour être trouvé près de chez vous.",
+    lead: "Quand un client cherche « près de moi », la carte décide souvent avant le site. On soigne votre fiche d'établissement, vos informations et vos avis pour que vous apparaissiez avec une présentation complète et digne de confiance.",
     scene: "maps",
     includes: [
-      { title: "Fiche Google optimisée", text: "[à adapter] Catégories, photos, horaires, services : complets et à jour." },
-      { title: "Avis clients", text: "[à adapter] Une méthode simple pour en obtenir plus, et y répondre." },
-      { title: "Annuaires locaux", text: "[à adapter] Des informations cohérentes partout où l'on vous cherche." },
-      { title: "Suivi des appels et itinéraires", text: "[à adapter] Les demandes générées par la carte, chaque mois." },
+      { title: "Fiche d'établissement", text: "Catégories, photos, horaires, services et zone desservie : complets et à jour." },
+      { title: "Avis clients", text: "Une méthode simple pour en recevoir davantage, et pour y répondre avec soin." },
+      { title: "Informations cohérentes", text: "Les mêmes nom, coordonnées et horaires partout où l'on vous cherche." },
+      { title: "Suivi", text: "Les appels, visites du site et demandes d'itinéraire générés par la fiche." },
     ],
     audiences: [
-      { title: "Commerçants", text: "[à adapter] Boulangerie, fleuriste, restaurant : être le premier choix du quartier." },
-      { title: "Artisans", text: "[à adapter] Plombier, électricien, garage : être appelé en priorité." },
-      { title: "Professions libérales", text: "[à adapter] Cabinet, étude, agence : être trouvé et bien noté." },
+      { title: "Commerçants", text: "Restaurant, boutique, salon : être visible quand on cherche autour de soi." },
+      { title: "Artisans", text: "Même sans local ouvert au public, une zone desservie suffit pour exister sur la carte." },
+      { title: "Professions libérales", text: "Cabinet, étude : des informations exactes et des avis qui rassurent." },
     ],
     steps: [
-      { title: "Diagnostic", duration: "[à adapter] 3 jours", text: "[à adapter] Position actuelle, concurrents, mots recherchés." },
-      { title: "Optimisation", duration: "[à adapter] 2 semaines", text: "[à adapter] Fiche, photos, avis, annuaires." },
-      { title: "Suivi", duration: "[à adapter] Mensuel", text: "[à adapter] Positions, appels, itinéraires." },
+      { title: "Diagnostic", moment: "Au démarrage", text: "Votre fiche actuelle, vos concurrents proches et les recherches de vos clients." },
+      { title: "Optimisation", moment: "En cours de projet", text: "Fiche complétée, photos, informations harmonisées, méthode pour les avis." },
+      { title: "Suivi", moment: "Dans la durée", text: "Mises à jour, réponses aux avis et lecture des statistiques de la fiche." },
     ],
+    deliverables: [
+      "Une fiche Google créée ou reprise, puis complétée",
+      "Des photos et des descriptions cohérentes avec votre site",
+      "Des modèles de demande d'avis et de réponse",
+      "Un point régulier sur les statistiques de la fiche",
+    ],
+    faqCategory: FAQ_CATEGORIES.maps,
+    seo: {
+      title: "Google Maps et visibilité locale à Madagascar",
+      description:
+        "Fiche Google complète, avis clients et informations cohérentes : soyez trouvé sur Google Maps par les clients qui vous cherchent, à Madagascar et ailleurs.",
+    },
   },
   {
     slug: "logiciel-sur-mesure",
     index: "03",
     title: "Logiciel interne sur mesure",
     promise: "Être efficace.",
-    summary: "[à adapter] Un outil taillé pour votre activité, qui fait gagner des heures.",
-    lead: "[à adapter] Devis, planning, clients, facturation, stock : un seul outil, simple, conçu autour de votre façon de travailler. Moins de ressaisies, moins d'oublis, plus de temps pour votre métier.",
+    summary: "Un outil simple, taillé pour votre activité, qui réduit les ressaisies.",
+    lead: "Devis, planning, clients, facturation, stock : un seul outil, conçu autour de votre façon de travailler. On commence par l'essentiel, puis il évolue avec vous, module par module.",
     scene: "software",
     includes: [
-      { title: "Modules à la carte", text: "[à adapter] Planning, clients, facturation, stock : seulement ce qui vous sert." },
-      { title: "Accès partout", text: "[à adapter] Sur ordinateur, tablette et téléphone, au bureau ou sur le chantier." },
-      { title: "Reprise de vos données", text: "[à adapter] Vos fichiers existants importés, sans repartir de zéro." },
-      { title: "Accompagnement", text: "[à adapter] Prise en main, formation, évolutions au fil du temps." },
+      { title: "Modules à la carte", text: "Clients, devis et factures, paiements, stock, achats, planning : seulement ce qui vous sert." },
+      { title: "Accès partout", text: "Sur ordinateur, tablette et téléphone, au bureau comme sur le terrain." },
+      { title: "Reprise de vos données", text: "Vos fichiers existants importés, pour ne pas repartir de zéro." },
+      { title: "Rôles et historique", text: "Chacun voit ce qui le concerne ; les actions importantes sont conservées." },
     ],
     audiences: [
-      { title: "Commerçants", text: "[à adapter] Stock et ventes suivis sans tableur." },
-      { title: "Artisans", text: "[à adapter] Devis et factures faits en quelques minutes, même sur le chantier." },
-      { title: "Professions libérales", text: "[à adapter] Rendez-vous, dossiers et facturation au même endroit." },
+      { title: "Commerçants", text: "Stock, ventes et commandes suivis sans tableur." },
+      { title: "Artisans", text: "Devis et factures préparés rapidement, même en déplacement." },
+      { title: "Professions libérales", text: "Rendez-vous, dossiers et facturation au même endroit." },
     ],
     steps: [
-      { title: "Cadrage", duration: "[à adapter] 1 semaine", text: "[à adapter] Vos tâches du quotidien, ce qui fait perdre du temps." },
-      { title: "Prototype", duration: "[à adapter] 3 semaines", text: "[à adapter] Une première version utilisable, testée avec vous." },
-      { title: "Déploiement", duration: "[à adapter] 2 semaines", text: "[à adapter] Mise en service, formation, ajustements." },
+      { title: "Cadrage", moment: "Au démarrage", text: "Vos tâches du quotidien, et ce qui vous fait perdre du temps." },
+      { title: "Première version", moment: "En cours de projet", text: "Un premier outil utilisable, testé avec vous sur des cas réels." },
+      { title: "Mise en service", moment: "Dans la durée", text: "Prise en main, ajustements, puis de nouveaux modules si besoin." },
     ],
+    deliverables: [
+      "Un atelier de cadrage et la carte de vos façons de travailler",
+      "Les modules choisis, réglés pour votre activité",
+      "Des tableaux de bord pour suivre l'essentiel",
+      "Une prise en main accompagnée",
+    ],
+    faqCategory: FAQ_CATEGORIES.software,
+    seo: {
+      title: "Logiciel de gestion sur mesure pour PME",
+      description:
+        "Devis, factures, stock, planning, clients : un logiciel de gestion sur mesure pour PME à Madagascar, utilisable sur mobile et conçu autour de votre activité.",
+    },
   },
 ];
 

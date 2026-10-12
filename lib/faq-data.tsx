@@ -1,5 +1,8 @@
 import { type ReactNode } from "react";
 
+// Questions fréquentes : page /faqs (par thème), FAQ express de l'accueil (FAQ_HOME) et bas de chaque page
+// expertise (Expertise.faqCategory). Réponses volontairement générales : aucune garantie de position, aucun chiffre.
+
 export type FaqItem = {
   id: string;
   question: string;
@@ -7,280 +10,259 @@ export type FaqItem = {
   category: string;
 };
 
+export const FAQ_CATEGORIES = {
+  start: "Démarrer un projet",
+  site: "Site et référencement",
+  maps: "Google Maps",
+  software: "Logiciel sur mesure",
+  ownership: "Propriété et suivi",
+} as const;
+
+const C = FAQ_CATEGORIES;
+
 export const faqItems: FaqItem[] = [
+  // Démarrer un projet
   {
-    id: "what-is-erp",
-    category: "ERP PME",
-    question: "Qu’est-ce qu’un ERP ?",
+    id: "how-to-make-a-website",
+    category: C.start,
+    question: "Comment faire un site web pour mon entreprise ?",
     answer: (
       <p>
-        Un ERP centralise vos opérations (ventes, facturation, paiements, achats, stocks, reporting) dans un
-        seul outil. Résultat : moins de doubles saisies, moins d’erreurs, une donnée fiable, et une vision
-        claire de l’activité.
+        Tout part de trois questions : à qui s&apos;adresse le site, ce qu&apos;il doit inciter le visiteur à faire, et
+        comment vous joindre. Viennent ensuite la structure des pages, les textes et le design, puis la construction
+        et la mise en ligne. Nous vous accompagnons à chaque étape, sans jargon : vous validez, nous construisons.
       </p>
     ),
   },
   {
-    id: "erp-for-who",
-    category: "ERP PME",
-    question: "À qui s’adresse votre ERP pour PME ?",
+    id: "where",
+    category: C.start,
+    question: "Vous êtes à Antananarivo : travaillez-vous ailleurs ?",
     answer: (
       <p>
-        Aux PME qui veulent structurer leur gestion et gagner du temps : quand Excel devient fragile,
-        que les outils ne communiquent pas, ou que le suivi (factures, stocks, paiements) est trop manuel.
+        Oui. Nous sommes basés à Antananarivo et travaillons à distance avec des entreprises partout à Madagascar et
+        au-delà. Les échanges se font en visio, par téléphone ou par e-mail, et chaque étape se valide en ligne.
       </p>
     ),
   },
   {
-    id: "erp-standard-modules",
-    category: "ERP PME",
-    question: "Quels modules l’ERP inclut en standard ?",
-    answer: (
-      <ul className="list-disc space-y-1 pl-5">
-        <li>Clients : CRM léger, devis, factures, avoirs, paiements.</li>
-        <li>Produits/Services : catalogue, tarifs, TVA, statuts.</li>
-        <li>Achats : fournisseurs, commandes, réception (selon besoin).</li>
-        <li>Stocks : entrées/sorties, alertes, mouvements, inventaire (option si nécessaire).</li>
-        <li>Pilotage : tableaux de bord, exports (PDF/CSV/Excel selon ton implémentation).</li>
-        <li>Gouvernance : rôles/permissions et traçabilité (audit log).</li>
-      </ul>
-    ),
-  },
-  {
-    id: "erp-customization",
-    category: "ERP PME",
-    question: "Peut-on personnaliser l’ERP et le faire évoluer ?",
+    id: "where-to-start",
+    category: C.start,
+    question: "Par où commencer si je ne sais pas de quoi j'ai besoin ?",
     answer: (
       <p>
-        Oui. L’ERP est modulaire : nous adaptons les champs, statuts, workflows, rôles, rapports et
-        automatisations. Vous pouvez démarrer “simple” (facturation + suivi) puis ajouter des modules au fil
-        de la croissance.
+        Par un échange. On regarde ensemble votre activité, vos clients et vos objectifs, et on vous dit honnêtement
+        ce qui sera utile en premier, même si c&apos;est peu.
       </p>
     ),
   },
   {
-    id: "erp-automation",
-    category: "ERP PME",
-    question: "Pouvez-vous automatiser des tâches (relances, validations, alertes) ?",
+    id: "price",
+    category: C.start,
+    question: "Combien coûte un site vitrine ?",
     answer: (
       <p>
-        Oui : relances de factures, alertes de seuil de stock, notifications internes, validation de devis,
-        conversion devis → facture, exports comptables, etc. On automatise ce qui fait gagner du temps et
-        réduit les erreurs.
-      </p>
-    ),
-  },
-  {
-    id: "erp-migration",
-    category: "ERP PME",
-    question: "Gérez-vous la migration depuis Excel ou des outils existants ?",
-    answer: (
-      <p>
-        Oui. Nous préparons des gabarits d’import, nettoyons les données, alignons les référentiels (clients,
-        produits, stocks) et validons un test complet (dry-run) avant la bascule.
-      </p>
-    ),
-  },
-  {
-    id: "erp-multi-users",
-    category: "ERP PME",
-    question: "Peut-on gérer plusieurs rôles et accès (admin, manager, employé) ?",
-    answer: (
-      <p>
-        Oui. Nous mettons en place une gestion des permissions (RBAC) pour contrôler qui peut voir, créer,
-        modifier ou supprimer certaines informations (factures, stocks, utilisateurs, etc.).
-      </p>
-    ),
-  },
-  {
-    id: "erp-mobile",
-    category: "ERP PME",
-    question: "L’ERP est-il accessible sur mobile ?",
-    answer: (
-      <p>
-        Oui, l’interface peut être responsive. Si vous avez des usages terrain (consultation rapide,
-        saisie simplifiée), nous pouvons prévoir des vues adaptées.
-      </p>
-    ),
-  },
-
-  {
-    id: "what-is-saas",
-    category: "SaaS Next.js",
-    question: "Qu’est-ce qu’un SaaS clé en main ?",
-    answer: (
-      <p>
-        Un SaaS est un logiciel accessible en ligne (souvent par abonnement). Notre “SaaS clé en main”
-        fournit une base produit prête à lancer : auth, paiements, base de données, analytics et les pages
-        marketing essentielles.
-      </p>
-    ),
-  },
-  {
-    id: "saas-package",
-    category: "SaaS Next.js",
-    question: "Que comprend l’offre SaaS clé en main ?",
-    answer: (
-      <ul className="list-disc space-y-1 pl-5">
-        <li>Next.js full stack (architecture prête à scaler).</li>
-        <li>Authentification Better Auth + rôles/permissions.</li>
-        <li>Stripe : paiements, abonnements, portail client, webhooks.</li>
-        <li>Base de données + modèle propre à votre produit.</li>
-        <li>Analytics : suivi de l’usage, KPI, événements (selon stack).</li>
-        <li>Landing page, blog, documentation.</li>
-        <li>Emails automatisés (onboarding, notifications, paiement, etc.).</li>
-      </ul>
-    ),
-  },
-  {
-    id: "saas-stripe",
-    category: "SaaS Next.js",
-    question: "Gérez-vous les abonnements Stripe et la logique d’accès par plan ?",
-    answer: (
-      <p>
-        Oui. Nous intégrons Stripe (plans, upgrades/downgrades, annulations, webhooks) et mettons en place la
-        logique d’accès côté app (features verrouillées, quotas, permissions, etc.).
-      </p>
-    ),
-  },
-  {
-    id: "saas-auth",
-    category: "SaaS Next.js",
-    question: "Pourquoi Better Auth pour l’authentification ?",
-    answer: (
-      <p>
-        Better Auth permet de construire une authentification moderne et sécurisée. Nous configurons aussi
-        les permissions et la protection des routes/API en fonction de votre produit (admin, user, etc.).
-      </p>
-    ),
-  },
-  {
-    id: "saas-emails",
-    category: "SaaS Next.js",
-    question: "Quels emails automatisés mettez-vous en place ?",
-    answer: (
-      <p>
-        Typiquement : bienvenue, confirmation, reset password, notifications d’abonnement/paiement,
-        onboarding, relances, alertes produit. Les triggers et contenus sont adaptés à votre parcours.
-      </p>
-    ),
-  },
-  {
-    id: "saas-marketing-pages",
-    category: "SaaS Next.js",
-    question: "Pourquoi inclure landing page, blog et documentation ?",
-    answer: (
-      <p>
-        Parce qu’un SaaS doit aussi convertir et être adopté. La landing clarifie la proposition de valeur,
-        le blog aide le SEO, et la documentation réduit le support et accélère l’onboarding.
-      </p>
-    ),
-  },
-
-  {
-    id: "erp-vs-saas",
-    category: "Positionnement",
-    question: "ERP vs SaaS : quelle différence ?",
-    answer: (
-      <p>
-        L’ERP structure votre gestion interne (process, opérations, reporting). Le SaaS est un produit
-        destiné à vos utilisateurs finaux, généralement monétisé par abonnement. Les deux peuvent coexister :
-        ERP interne + SaaS client.
-      </p>
-    ),
-  },
-  {
-    id: "which-to-choose",
-    category: "Positionnement",
-    question: "Comment choisir entre ERP et SaaS ?",
-    answer: (
-      <p>
-        Si votre objectif est d’optimiser l’exécution interne (facturation, suivi, stocks, achats), partez
-        sur l’ERP. Si vous voulez lancer une plateforme vendue à des clients/utilisateurs, partez sur le SaaS.
-        On valide le choix lors du cadrage.
-      </p>
-    ),
-  },
-
-  {
-    id: "seo-branding-social",
-    category: "Acquisition",
-    question: "Proposez-vous aussi SEO, rebranding et réseaux sociaux ?",
-    answer: (
-      <p>
-        Oui. Nous pouvons accompagner votre visibilité digitale : audit SEO, optimisation des pages,
-        rebranding (positionnement + messages), et stratégie/gestion de réseaux sociaux (calendrier, contenus,
-        suivi KPI).
-      </p>
-    ),
-  },
-
-  {
-    id: "ownership",
-    category: "Gouvernance",
-    question: "Qui possède le code et les données ?",
-    answer: (
-      <p>
-        Vous êtes propriétaire du code et des données. Le dépôt peut être sur votre organisation, et la base
-        peut être hébergée sur votre compte (ou opérée par nous avec export possible à tout moment).
-      </p>
-    ),
-  },
-  {
-    id: "hosting",
-    category: "Ops & sécurité",
-    question: "Qui gère l’hébergement ?",
-    answer: (
-      <p>
-        Au choix : nous opérons l’hébergement (sur un compte au nom du client) ou nous vous accompagnons pour
-        héberger vous-même. Déploiements, logs, sauvegardes et supervision sont documentés.
-      </p>
-    ),
-  },
-  {
-    id: "security",
-    category: "Ops & sécurité",
-    question: "Sécurité : auth, permissions, sauvegardes, audit log ?",
-    answer: (
-      <p>
-        Authentification sécurisée, rôles/permissions, audit log des actions clés, sauvegardes planifiées,
-        chiffrement en transit, et bonnes pratiques OWASP. L’objectif : une base saine, maintenable, et
-        adaptée à vos risques.
+        Cela dépend du nombre de pages, des contenus à produire et des fonctions attendues (prise de rendez-vous,
+        catalogue, formulaire…). Après un premier échange, vous recevez une proposition écrite et détaillée, sans
+        surprise.
       </p>
     ),
   },
   {
     id: "timeline",
-    category: "Pilotage",
+    category: C.start,
     question: "Combien de temps dure un projet ?",
     answer: (
       <p>
-        Cela dépend du périmètre. En pratique, un MVP SaaS se fait souvent en quelques semaines, et un ERP
-        peut aller de quelques semaines à quelques mois selon modules, migration et intégrations. Les jalons
-        sont définis lors du cadrage (ateliers + backlog priorisé).
+        Cela dépend du périmètre. Un calendrier est fixé avec vous dès le départ, avec des étapes de validation, et
+        tenu à jour pendant tout le projet.
+      </p>
+    ),
+  },
+
+  // Site et référencement
+  {
+    id: "first-place",
+    category: C.site,
+    question: "Pouvez-vous garantir la première place sur Google ?",
+    answer: (
+      <p>
+        Non, et méfiez-vous de ceux qui le promettent : personne ne contrôle le classement de Google. Nous mettons en
+        place ce qui compte (technique, contenus, présence locale) et suivons l&apos;évolution dans la durée.
       </p>
     ),
   },
   {
-    id: "maintenance",
-    category: "Pilotage",
-    question: "Comment fonctionnent maintenance et support ?",
+    id: "indexing-delay",
+    category: C.site,
+    question: "Combien de temps faut-il pour apparaître sur Google ?",
     answer: (
       <p>
-        Contrat de run optionnel : correctifs, mises à jour, surveillance, sauvegardes, assistance
-        produit/technique, et évolutions planifiées. Le niveau de service (SLA) est adapté à vos enjeux.
+        Un site peut être indexé peu après sa mise en ligne, mais sa position se construit avec le temps : elle dépend
+        de la concurrence, de la qualité des contenus et de leur régularité.
+      </p>
+    ),
+  },
+  {
+    id: "redesign",
+    category: C.site,
+    question: "Pouvez-vous refaire mon site actuel ?",
+    answer: (
+      <p>
+        Oui. On part de l&apos;existant : ce qui fonctionne est conservé, et les anciennes adresses sont redirigées vers
+        les nouvelles pour ne pas perdre le référencement déjà acquis.
+      </p>
+    ),
+  },
+  {
+    id: "mobile-site",
+    category: C.site,
+    question: "Mon site sera-t-il adapté aux téléphones ?",
+    answer: (
+      <p>
+        Oui. Il est pensé d&apos;abord pour le mobile, où se font une grande partie des recherches, puis adapté aux
+        écrans plus grands. Les pages restent légères pour se charger vite, même avec une connexion modeste.
+      </p>
+    ),
+  },
+
+  // Google Maps
+  {
+    id: "maps-without-premises",
+    category: C.maps,
+    question: "Je n'ai pas de local : puis-je apparaître sur Google Maps ?",
+    answer: (
+      <p>
+        Oui. Google permet de déclarer une zone desservie sans afficher d&apos;adresse : c&apos;est le cas de nombreux
+        artisans et prestataires qui se déplacent chez leurs clients.
+      </p>
+    ),
+  },
+  {
+    id: "site-vs-listing",
+    category: C.maps,
+    question: "Quelle différence entre un site et une fiche Google ?",
+    answer: (
+      <p>
+        La fiche Google répond vite : où, quand, comment vous joindre. Le site explique en détail ce que vous faites et
+        pourquoi vous choisir. Les deux se renforcent : la fiche renvoie vers le site, le site confirme la fiche.
+      </p>
+    ),
+  },
+  {
+    id: "negative-reviews",
+    category: C.maps,
+    question: "Pouvez-vous supprimer les avis négatifs ?",
+    answer: (
+      <p>
+        Non : un avis ne peut être retiré que s&apos;il enfreint les règles de Google. En revanche, une réponse calme et
+        précise rassure souvent davantage qu&apos;une note parfaite, et nous vous aidons à la formuler.
+      </p>
+    ),
+  },
+
+  // Logiciel sur mesure
+  {
+    id: "excel-import",
+    category: C.software,
+    question: "Pouvez-vous reprendre nos fichiers Excel ?",
+    answer: (
+      <p>
+        Oui. On analyse vos fichiers, on nettoie ce qui doit l&apos;être, puis on les importe dans l&apos;outil : vous ne
+        repartez pas de zéro et vous gardez une copie de l&apos;existant.
+      </p>
+    ),
+  },
+  {
+    id: "automation",
+    category: C.software,
+    question: "Peut-on automatiser des relances ou des alertes ?",
+    answer: (
+      <p>
+        Oui : relances de factures, alertes de stock bas, rappels de rendez-vous… Elles se règlent selon vos propres
+        règles, et vous pouvez les ajuster.
+      </p>
+    ),
+  },
+  {
+    id: "roles",
+    category: C.software,
+    question: "Peut-on gérer plusieurs rôles et accès ?",
+    answer: (
+      <p>
+        Oui : responsable, employé, comptable… Chacun accède à ce qui le concerne, et les actions importantes sont
+        conservées dans un historique.
+      </p>
+    ),
+  },
+  {
+    id: "software-mobile",
+    category: C.software,
+    question: "L'outil fonctionne-t-il sur téléphone ?",
+    answer: (
+      <p>
+        Oui. Il s&apos;utilise dans le navigateur, sur ordinateur, tablette ou téléphone, sans installation.
       </p>
     ),
   },
   {
     id: "integrations",
-    category: "Intégrations",
-    question: "Pouvez-vous intégrer des outils tiers (CRM, compta, paiement, email) ?",
+    category: C.software,
+    question: "Pouvez-vous le connecter à d'autres outils ?",
     answer: (
       <p>
-        Oui. Nous intégrons des outils via API (CRM, compta, emailing, analytics, paiements, webhooks).
-        Nous priorisons les intégrations utiles, stables et maintenables pendant le cadrage.
+        Souvent, oui : paiement, e-mail, comptabilité… selon ce que ces outils permettent. La faisabilité est vérifiée
+        au moment du cadrage, avant tout engagement.
       </p>
     ),
   },
+
+  // Propriété et suivi
+  {
+    id: "ownership",
+    category: C.ownership,
+    question: "Qui possède le site, le code et les données ?",
+    answer: (
+      <p>
+        Vous. Le nom de domaine, le site, le code et les données vous appartiennent, et vous pouvez les récupérer à
+        tout moment.
+      </p>
+    ),
+  },
+  {
+    id: "hosting",
+    category: C.ownership,
+    question: "Qui s'occupe de l'hébergement ?",
+    answer: (
+      <p>
+        Au choix : nous gérons l&apos;hébergement sur un compte à votre nom, ou nous vous accompagnons pour
+        l&apos;héberger vous-même. Dans les deux cas, les accès et les sauvegardes sont documentés.
+      </p>
+    ),
+  },
+  {
+    id: "after-launch",
+    category: C.ownership,
+    question: "Que se passe-t-il après la mise en ligne ?",
+    answer: (
+      <p>
+        Nous restons disponibles : corrections, mises à jour, évolutions et conseils. La forme du suivi, ponctuel ou
+        régulier, est définie avec vous.
+      </p>
+    ),
+  },
+  {
+    id: "response-time",
+    category: C.ownership,
+    question: "En combien de temps répondez-vous ?",
+    answer: <p>Sous 24h, à chaque demande, par e-mail ou par le formulaire de contact.</p>,
+  },
 ];
+
+// FAQ express de l'accueil : les questions qu'on pose avant de prendre contact.
+const HOME_IDS = ["how-to-make-a-website", "where", "first-place", "maps-without-premises", "ownership"];
+export const faqHome = HOME_IDS.map((id) => faqItems.find((item) => item.id === id)).filter(
+  (item): item is FaqItem => Boolean(item),
+);
+
+export const faqByCategory = (category: string) => faqItems.filter((item) => item.category === category);

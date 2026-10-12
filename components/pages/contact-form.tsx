@@ -30,7 +30,7 @@ const FIELDS: {
   { name: "name", label: "Nom", placeholder: "Votre nom", autoComplete: "name", required: true },
   { name: "company", label: "Société", placeholder: "Votre entreprise", autoComplete: "organization", required: false },
   { name: "email", label: "Email", placeholder: "vous@entreprise.com", type: "email", autoComplete: "email", required: true },
-  { name: "subject", label: "Sujet", placeholder: "Refonte app, audit tech...", required: true },
+  { name: "subject", label: "Sujet", placeholder: "Site vitrine, fiche Google, logiciel…", required: true },
   {
     name: "message",
     label: "Message",

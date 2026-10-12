@@ -117,8 +117,8 @@ export function SeoScene({ embedded = false, vizOnly = false }: { embedded?: boo
         </div>
       }
     >
-      [à adapter] Un site rapide, clair et bien référencé : quand un client cherche votre métier dans votre ville,
-      c&apos;est vous qu&apos;il trouve en haut de la page.
+      Un site rapide, clair et pensé pour Google : quand un client cherche votre métier, il arrive sur une page qui
+      lui répond et lui donne envie d&apos;appeler.
     </SceneShell>
   );
 }

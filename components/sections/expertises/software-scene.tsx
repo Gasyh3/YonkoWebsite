@@ -154,8 +154,8 @@ export function SoftwareScene({ embedded = false, vizOnly = false }: { embedded?
         </div>
       }
     >
-      [à adapter] Devis, planning, stock, facturation : un outil taillé pour votre activité, qui vous fait gagner
-      des heures chaque semaine.
+      Devis, planning, stock, facturation : un outil taillé pour votre activité, qui réduit les ressaisies et vous
+      rend du temps.
     </SceneShell>
   );
 }

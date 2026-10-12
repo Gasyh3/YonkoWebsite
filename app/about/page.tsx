@@ -6,90 +6,50 @@ import { DottedLink } from "@/components/motion/dotted-link";
 import { CtaBand } from "@/components/page/cta-band";
 import { PageHeader, SectionTitle } from "@/components/page/page-header";
 import { AboutMarkAnimated } from "@/components/sections/about-mark";
+import { expertises } from "@/lib/expertises-data";
 
 export const metadata: Metadata = pageMetadata({
   title: "À propos",
   description:
-    "L'agence Yonko Tech Consulting : une seule équipe pour la stratégie, le site, la visibilité locale et le logiciel sur mesure des PME.",
+    "Yonko Tech Consulting, agence web basée à Antananarivo depuis 2025 : stratégie, site vitrine, Google Maps et logiciel sur mesure, avec un seul interlocuteur.",
   path: "/about",
 });
 
 const values = [
   {
-    title: "Transparence",
-    description:
-      "Communication claire, jalons visibles et décisions partagées — sans jargon inutile.",
+    title: "Clarté",
+    description: "Des mots simples, des choix expliqués, des étapes validées avec vous. Pas de jargon pour impressionner.",
   },
   {
-    title: "Exigence",
-    description:
-      "Qualité, sécurité, performance et UX intégrées dès le départ (pas en “phase 2”).",
+    title: "Honnêteté",
+    description: "On ne promet que ce qui peut être tenu : ni première place garantie, ni résultat magique.",
   },
   {
-    title: "Impact",
-    description:
-      "Chaque livraison est reliée à un indicateur métier : temps gagné, erreurs réduites, meilleure conversion.",
+    title: "Utilité",
+    description: "Chaque page, chaque fonction doit servir votre activité : être vu, être trouvé, être efficace.",
   },
 ];
 
 const approach = [
   {
-    title: "Découverte",
-    description:
-      "Comprendre vos opérations, vos objectifs business et vos contraintes terrain (process, équipes, outils).",
+    title: "Comprendre",
+    description: "Votre métier, vos clients, ce qui vous fait perdre du temps ou des opportunités.",
   },
   {
-    title: "Conception",
-    description:
-      "Cadrage clair, architecture, UX, choix techniques et plan d’exécution pragmatique.",
+    title: "Construire",
+    description: "Un plan priorisé, puis le site, la fiche Google ou l'outil, validés étape par étape.",
   },
   {
-    title: "Livraison & suivi",
-    description:
-      "Delivery incrémental, mesure des gains et amélioration continue (qualité, performance, adoption).",
+    title: "Accompagner",
+    description: "Après la mise en ligne : mesures, ajustements et évolutions, à votre rythme.",
   },
 ];
 
-// Expertises v1 (contenu inchangé), présentées en liste à points or.
-const expertiseItems = [
-  {
-    title: "ERP PME",
-    text: "clients, devis, facturation, paiements, produits & stocks, achats, reporting, rôles & traçabilité.",
-  },
-  {
-    title: "SaaS Next.js clé en main",
-    text: "Stripe (paiements & abonnements), Better Auth, base de données, analytics, emails automatisés, landing, blog et documentation.",
-  },
-  {
-    title: "SEO & rebranding",
-    text: "audit, repositionnement, optimisation du contenu et des pages pour gagner en visibilité et conversion.",
-  },
-  {
-    title: "Réseaux sociaux",
-    text: "stratégie éditoriale, calendrier, création de contenus et suivi des performances.",
-  },
-];
+// Les quatre expertises (lib/expertises-data.ts), en liste à points or.
+const expertiseItems = expertises.map((item) => ({ title: item.title, text: item.summary, slug: item.slug }));
 
-const stats = [
-  {
-    label: "Productivité",
-    value: "+18%",
-    text: "Gains observés sur l’efficacité opérationnelle avec des outils type ERP et workflows standardisés.",
-  },
-  {
-    label: "Coûts & pertes",
-    value: "-10 à -30%",
-    text: "Réduction des coûts opérationnels via automatisation, centralisation et meilleure traçabilité.",
-  },
-  {
-    label: "Reporting",
-    value: "x1.6",
-    text: "Production de rapports et suivi d’activité accélérés grâce à une donnée fiable et accessible.",
-  },
-];
-
-// À propos : l'agence, ses valeurs, son approche et ses ordres de grandeur. La marque en Y (trois fibres, une
-// seule équipe) ouvre la page, comme sur l'accueil.
+// À propos : l'agence, ses valeurs, ses expertises et son approche. La marque en Y (trois fibres, un seul
+// interlocuteur) ouvre la page, comme sur l'accueil.
 export default function AboutPage() {
   return (
     <div>
@@ -99,15 +59,13 @@ export default function AboutPage() {
         lead={
           <>
             <p>
-              Fondé en <strong>2025</strong>, Yonko accompagne les entreprises dans la création de{" "}
-              <strong>solutions digitales B2B</strong> : ERP modulaires, SaaS clé en main (Next.js), et outils internes
-              orientés productivité.
+              Fondée en <strong>2025</strong> à Antananarivo, Yonko Tech Consulting aide les PME, commerçants, artisans et
+              professions libérales à <strong>être vus, être trouvés et gagner du temps</strong> grâce au digital.
             </p>
             <p className="text-sm md:text-base">
-              Notre point de départ : un constat très concret à Madagascar — beaucoup d’entreprises perdent du temps et
-              de la marge à cause de processus manuels, d’outils non connectés et d’un manque de visibilité sur
-              l’activité. Notre mission : <strong>améliorer la production</strong> en digitalisant ce qui compte
-              vraiment (opérations, vente, facturation, pilotage).
+              Notre point de départ : beaucoup d&apos;entreprises font du très bon travail mais restent invisibles en
+              ligne, ou perdent un temps précieux dans des outils qui ne se parlent pas. Nous partons de votre
+              activité, et construisons seulement ce qui vous sert.
             </p>
           </>
         }
@@ -116,7 +74,7 @@ export default function AboutPage() {
 
       <section className="container py-16 md:py-24" aria-labelledby="values-title">
         <SectionTitle id="values-title" eyebrow="Ce qui nous guide">
-          Mission, vision, valeurs
+          Ce qui nous guide au quotidien
         </SectionTitle>
         <ul className="mt-10 grid gap-10 md:mt-14 md:grid-cols-3">
           {values.map((value) => (
@@ -142,7 +100,10 @@ export default function AboutPage() {
           <ul className="dot-list">
             {expertiseItems.map((item) => (
               <li key={item.title}>
-                <strong>{item.title}</strong> : {item.text}
+                <DottedLink href={`/expertises/${item.slug}`}>
+                  <strong>{item.title}</strong>
+                </DottedLink>{" "}
+                : {item.text}
               </li>
             ))}
           </ul>
@@ -165,38 +126,21 @@ export default function AboutPage() {
         </ol>
       </section>
 
-      <section className="container py-16 md:py-24" aria-labelledby="gains-title">
+      <section className="container py-16 md:py-24" aria-labelledby="remote-title">
         <div className="panel">
-          <SectionTitle id="gains-title" eyebrow="Ordres de grandeur">
-            Des gains mesurables grâce au digital
+          <SectionTitle id="remote-title" eyebrow="Où nous travaillons">
+            Basés à Antananarivo, disponibles partout
           </SectionTitle>
           <p className="mt-4 max-w-2xl">
-            En digitalisant les processus clés (vente, facturation, pilotage, opérations), on réduit les frictions, on
-            fiabilise la donnée, et on libère du temps pour la production. Notre approche : livrer vite, mesurer, itérer.
-          </p>
-          <dl className="mt-10 grid gap-10 md:grid-cols-3">
-            {stats.map((stat) => (
-              <div key={stat.label}>
-                <dt className="text-xs uppercase tracking-[0.2em] text-silver">{stat.label}</dt>
-                <dd>
-                  <span className="mt-2 block font-display text-5xl leading-none">
-                    <span className="text-gold">{stat.value}</span>
-                  </span>
-                  <span className="mt-3 block text-sm">{stat.text}</span>
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <p className="mt-10 max-w-2xl text-sm text-silver">
-            Ces chiffres varient selon le secteur et l’existant, mais ils donnent un ordre de grandeur. Notre objectif :
-            obtenir des résultats comparables dans votre contexte (PME, contraintes terrain, équipes).
+            Nous travaillons à distance avec des entreprises à Madagascar et ailleurs : échanges en visio, par téléphone
+            ou par e-mail, validations en ligne, et une réponse sous 24h à chaque demande.
           </p>
         </div>
       </section>
 
       <CtaBand title="Parlons de votre activité." text="Un premier échange pour comprendre votre contexte et vos priorités.">
         <DottedLink href="/projets" className="text-sm text-silver">
-          Voir nos réalisations →
+          Voir les cas d&apos;usage →
         </DottedLink>
       </CtaBand>
     </div>

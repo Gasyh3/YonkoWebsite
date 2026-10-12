@@ -14,12 +14,11 @@ export function JsonLd({ data }: { data: Json | Json[] }) {
   );
 }
 
-const filled = (values: Record<string, string>) => Object.values(values).filter((v) => v !== "" && v !== "FR").length > 0;
-
-// L'entreprise : Organization tant que l'adresse n'est pas connue, ProfessionalService (établissement local,
-// utile au référencement Maps) dès qu'elle est renseignée dans lib/site.ts.
+// L'entreprise : Organization (ville et pays seulement, pas de local ouvert au public), ProfessionalService
+// (établissement local, utile au référencement Maps) dès qu'une rue est renseignée dans lib/site.ts.
 export function organizationJsonLd(): Json {
-  const local = filled(SITE.address);
+  const local = SITE.address.streetAddress !== "";
+  const address = Object.fromEntries(Object.entries(SITE.address).filter(([, v]) => v !== ""));
   return {
     "@context": "https://schema.org",
     "@type": local ? "ProfessionalService" : "Organization",
@@ -31,7 +30,8 @@ export function organizationJsonLd(): Json {
     email: SITE.email,
     description: SITE.description,
     ...(SITE.telephone ? { telephone: SITE.telephone } : {}),
-    ...(local ? { address: { "@type": "PostalAddress", ...SITE.address } } : {}),
+    foundingDate: SITE.foundingDate,
+    address: { "@type": "PostalAddress", ...address },
     ...(SITE.areaServed.length ? { areaServed: SITE.areaServed } : {}),
     ...(SITE.sameAs.length ? { sameAs: SITE.sameAs } : {}),
   };

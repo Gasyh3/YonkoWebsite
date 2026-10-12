@@ -137,8 +137,8 @@ export function MapsScene({ embedded = false, vizOnly = false }: { embedded?: bo
         </div>
       }
     >
-      [à adapter] Quand un client cherche « boulangerie près de moi », c&apos;est votre établissement qu&apos;il voit
-      en premier : fiche Google soignée, avis, horaires et itinéraire à jour.
+      Quand un client cherche « près de moi », votre fiche Google doit le convaincre : photos, avis, horaires et
+      itinéraire, complets et à jour.
     </SceneShell>
   );
 }

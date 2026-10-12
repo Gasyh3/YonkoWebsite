@@ -1,0 +1,55 @@
+YONKO TECH CONSULTING : À FAIRE À LA MISE EN LIGNE (en dernier)
+================================================================
+
+Rien de ceci n'est nécessaire pour travailler en local. Tout se règle à la fin, dans cet ordre.
+
+1. Nom de domaine
+   - Réserver ou confirmer le domaine (supposé : yonkotech.com).
+   - Le déclarer au site : variable NEXT_PUBLIC_SITE_URL (voir .env.example). Il sert aux URL
+     canoniques, au sitemap, au robots.txt et aux données structurées.
+
+2. Hébergement
+   - Un hébergeur compatible Next.js : Vercel (offre Pro pour un usage commercial, l'offre gratuite
+     l'interdit), Netlify, ou un serveur Node.
+   - Brancher le domaine, vérifier que le HTTPS est actif.
+   - Reporter le nom, l'adresse et le contact de l'hébergeur dans /mentions-legales.
+
+3. Adresse e-mail publique
+   - Créer la boîte contact@<domaine> affichée sur le site (chez le registraire du domaine,
+     Zoho Mail, Google Workspace…), ou en choisir une autre et la changer dans lib/site.ts.
+
+4. Formulaire de contact (choix retenu : webhook)
+   - Créer un scénario dans Make, Zapier ou n8n : « Webhook personnalisé » → « Envoyer un e-mail »
+     vers votre adresse Gmail (celle indiquée dans le questionnaire), et éventuellement une ligne
+     dans Google Sheets pour garder un historique.
+   - Copier l'URL du webhook dans la variable CONTACT_WEBHOOK_URL de l'hébergeur.
+   - Faire un envoi test depuis le site en ligne. Sans cette variable, le formulaire affiche
+     « envoi indisponible » et propose l'adresse e-mail.
+   - Nommer ces services dans /confidentialite (rubrique « Destinataires »).
+
+5. Pages légales (/mentions-legales)
+   - Forme juridique, NIF, STAT, RCS, directeur de la publication, hébergeur.
+   - Faire relire les deux pages légales par une personne compétente.
+
+6. Google Search Console
+   - Ajouter le domaine, le vérifier (enregistrement DNS), soumettre https://<domaine>/sitemap.xml.
+   - Vérifier ensuite la couverture des pages et les données structurées.
+
+7. Fiche Google Business Profile de Yonko
+   - Créer la fiche comme « entreprise de services » avec une zone desservie (Antananarivo,
+     Madagascar), sans afficher d'adresse puisqu'il n'y a pas de local ouvert au public.
+   - Mettre le lien du site, les catégories (agence web, conception de sites web…), les horaires.
+
+8. Réseaux sociaux (facultatif)
+   - Si des profils sont créés (LinkedIn, Facebook, Instagram…), les ajouter dans lib/site.ts
+     (sameAs) et dans le pied de page.
+
+9. Mesure d'audience (facultatif)
+   - Aucune aujourd'hui. Si besoin : un outil sans cookie (Plausible, Umami) évite le bandeau de
+     consentement. Mettre alors à jour /confidentialite.
+
+10. Vérifications finales
+    - Aperçu de partage : LinkedIn Post Inspector, et un envoi du lien dans WhatsApp.
+    - Données structurées : test des résultats enrichis de Google.
+    - Performance : PageSpeed Insights sur mobile.
+    - Anciennes adresses /services : elles redirigent vers les expertises (déjà en place).

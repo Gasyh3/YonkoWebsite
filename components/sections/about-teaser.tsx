@@ -9,13 +9,13 @@ import { createAboutScene } from "@/lib/motion/about";
 import { useMotionModule } from "@/lib/motion/use-motion-module";
 
 const FACTS = [
-  "[à adapter] Basés à [ville], on se déplace chez vous",
-  "[à adapter] Un seul interlocuteur, du premier appel au suivi",
-  "[à adapter] Depuis [année], pour des PME et indépendants",
+  "Basés à Antananarivo, disponibles partout à distance",
+  "Un seul interlocuteur, du premier appel au suivi",
+  "Depuis 2025, aux côtés des PME et indépendants",
 ];
 
 // À propos (accueil) : l'agence en quelques lignes, entre les Résultats et le Process, et un bouton vers /about.
-// Animation : les trois fibres convergent en un Y, « trois expertises, une seule équipe » (lib/motion/about.ts).
+// Animation : les trois fibres convergent en un Y, « trois expertises, un seul interlocuteur » (lib/motion/about.ts).
 export function AboutTeaser() {
   const ref = useRef<HTMLElement>(null);
   useMotionModule(ref, createAboutScene);
@@ -27,11 +27,11 @@ export function AboutTeaser() {
         <div data-about-copy="">
           <p className="text-xs uppercase tracking-[0.24em] text-silver">L&apos;agence</p>
           <h2 id="about-title" className="mt-4 font-display text-4xl leading-[1.04] md:text-6xl">
-            [à adapter] Une équipe à taille humaine, à côté de chez vous.
+            Une agence à taille humaine, qui parle votre langue.
           </h2>
           <p className="mt-6 max-w-xl md:text-lg">
-            [à adapter] Yonko Tech Consulting, c&apos;est une équipe qui parle votre langue : pas de jargon, des
-            résultats que vous pouvez mesurer, et quelqu&apos;un qui décroche quand vous appelez.
+            Pas de jargon, pas de promesse intenable : des choix expliqués, des étapes validées avec vous, et une
+            réponse à chaque demande sous 24h.
           </p>
           <ul className="about-facts mt-8">
             {FACTS.map((fact) => (

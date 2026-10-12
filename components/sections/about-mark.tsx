@@ -14,7 +14,7 @@ const BRANCHES = [
 ];
 const STEM = `M${J.x} ${J.y}V280`;
 
-// Marque de l'agence : trois fibres convergent en Y, « trois expertises, une seule équipe ».
+// Marque de l'agence : trois fibres convergent en Y, « trois expertises, un seul interlocuteur ».
 // Animée par lib/motion/about.ts, branché sur la section qui la contient (ou par AboutMarkAnimated).
 export function AboutMark() {
   const uid = useId().replace(/:/g, "");
@@ -46,7 +46,7 @@ export function AboutMark() {
         <circle data-about-node="" cx={J.x} cy={J.y} r="6" fill={`url(#${uid}-gold)`} />
       </svg>
       <figcaption className="mt-6 text-center text-xs uppercase tracking-[0.24em] text-silver">
-        Trois expertises, une seule équipe
+        Trois expertises, un seul interlocuteur
       </figcaption>
     </figure>
   );

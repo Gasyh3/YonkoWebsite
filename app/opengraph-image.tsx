@@ -63,7 +63,7 @@ export default async function OpengraphImage() {
             <span>Être efficace.</span>
           </div>
           <div style={{ display: "flex", fontSize: 28, color: SILVER, maxWidth: 1000 }}>
-            Agence web et communication pour PME, commerçants et artisans.
+            Agence web à Madagascar, pour PME, commerçants et artisans.
           </div>
         </div>
 

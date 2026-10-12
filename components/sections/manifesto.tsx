@@ -51,8 +51,8 @@ export function Manifesto() {
         </h2>
 
         <p data-manifesto-paragraph="" className="mx-auto mt-14 max-w-md text-center text-base md:text-lg">
-          [à adapter] Trois promesses, une seule stratégie : on construit votre présence en ligne pour qu&apos;elle
-          vous amène des clients, pas seulement des visiteurs.
+          Trois promesses, une seule stratégie : une présence en ligne pensée pour vous amener des clients, pas
+          seulement des visiteurs.
         </p>
 
         {/* Les 3 fibres repartent par la gauche vers les rails de la Stratégie. */}

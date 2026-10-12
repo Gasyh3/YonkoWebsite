@@ -8,7 +8,8 @@ import { useMotionModule } from "@/lib/motion/use-motion-module";
 import { formatStat, resultStats } from "@/lib/results-data";
 
 // Résultats et projets (C8) : les fibres s'effacent (50 % d'opacité, marge droite), le travail parle.
-// Chiffres clés comptés puis passés en or ; projets révélés par leur image ; contour pointillé or au survol.
+// Chiffres comptés puis passés en or (engagements tant qu'il n'y a pas de résultats clients publiables) ;
+// cas d'usage révélés par leur image ; contour pointillé or au survol.
 export function Results() {
   const ref = useRef<HTMLElement>(null);
   useMotionModule(ref, createResultsScene);
@@ -18,9 +19,9 @@ export function Results() {
       {/* Grille et chiffres en retrait de 24px à droite : la marge reste aux fibres. */}
       <div className="container md:pr-[calc(2.75rem+1.5rem)]">
         <div className="max-w-2xl">
-          <p className="text-xs uppercase tracking-[0.24em] text-silver">Résultats</p>
+          <p className="text-xs uppercase tracking-[0.24em] text-silver">Engagements</p>
           <h2 id="results-title" className="mt-4 font-display text-4xl leading-[1.04] md:text-6xl">
-            [à adapter] Le travail parle de lui-même.
+            Des engagements simples, et tenus.
           </h2>
         </div>
 
@@ -53,9 +54,14 @@ export function Results() {
             </div>
           ))}
         </dl>
-        <p className="mt-8 text-xs text-silver">[à remplacer] Chiffres d&apos;exemple, en attente des résultats clients.</p>
 
-        <ProjectCards className="mt-20 md:mt-28" />
+        <div className="mt-20 max-w-2xl md:mt-28">
+          <p className="text-xs uppercase tracking-[0.24em] text-silver">Cas d&apos;usage</p>
+          <p className="mt-4 md:text-lg">
+            Quatre situations courantes, et ce que nous mettons en place pour chacune.
+          </p>
+        </div>
+        <ProjectCards className="mt-12 md:mt-16" />
       </div>
     </section>
   );

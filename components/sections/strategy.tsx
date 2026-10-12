@@ -10,19 +10,19 @@ const STEPS = [
     id: "strategy-audit",
     index: "01",
     title: "Audit",
-    text: "[à adapter] On regarde où vous en êtes : site, fiche Google, outils, concurrents. Ce qui marche, ce qui freine.",
+    text: "On regarde où vous en êtes : site, fiche Google, outils, concurrents. Ce qui marche, ce qui freine.",
   },
   {
     id: "strategy-plan",
     index: "02",
     title: "Plan",
-    text: "[à adapter] Une feuille de route claire : quoi construire, dans quel ordre, pour quel résultat attendu.",
+    text: "Une feuille de route claire : quoi construire, dans quel ordre, pour quel résultat attendu.",
   },
   {
     id: "strategy-pilotage",
     index: "03",
     title: "Pilotage",
-    text: "[à adapter] On mesure, on ajuste, on vous rend compte chaque mois. La stratégie vit avec votre activité.",
+    text: "On mesure, on ajuste, on vous rend compte régulièrement. La stratégie vit avec votre activité.",
   },
 ] as const;
 
@@ -51,10 +51,10 @@ export function Strategy() {
             data-ambient-target=""
             className="mt-4 font-display text-4xl leading-[1.04] md:text-6xl"
           >
-            [à adapter] Une <span className="text-gold">stratégie</span> d&apos;abord, les outils ensuite.
+            Une <span className="text-gold">stratégie</span> d&apos;abord, les outils ensuite.
           </h2>
           <p className="mt-6 max-w-lg">
-            [à adapter] Avant de construire quoi que ce soit, on pose le plan. Chaque site, chaque fiche, chaque
+            Avant de construire quoi que ce soit, on pose le plan. Chaque site, chaque fiche, chaque
             logiciel en découle.
           </p>
         </div>

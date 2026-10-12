@@ -1,4 +1,4 @@
-// À propos (accueil) : « trois expertises, une seule équipe ».
+// À propos (accueil) : « trois expertises, un seul interlocuteur ».
 // À l'entrée de la section, trois fibres pointillées convergent en Y (45° et verticale, la grammaire des
 // fibres) ; la jonction s'allume en or avec un anneau qui s'étend une fois, puis un seul fil descend, parcouru
 // par une impulsion. Une seule fois, ~1.7s, un seul point focal. Le texte reste lisible d'emblée (fondu court).

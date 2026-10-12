@@ -9,22 +9,22 @@ const STEPS = [
   {
     id: "process-echange",
     title: "Échange",
-    text: "[à adapter] Un premier rendez-vous pour comprendre votre activité, vos clients et ce qui vous fait perdre du temps.",
+    text: "Un premier rendez-vous pour comprendre votre activité, vos clients et ce qui vous fait perdre du temps.",
   },
   {
     id: "process-strategie",
     title: "Stratégie",
-    text: "[à adapter] On fixe les priorités : ce qui sera construit, dans quel ordre, et comment on mesurera le résultat.",
+    text: "On fixe les priorités : ce qui sera construit, dans quel ordre, et comment on mesurera le résultat.",
   },
   {
     id: "process-creation",
     title: "Création",
-    text: "[à adapter] Site, fiche Google, logiciel : on construit, vous validez à chaque étape, sans jargon.",
+    text: "Site, fiche Google, logiciel : on construit, vous validez à chaque étape, sans jargon.",
   },
   {
     id: "process-suivi",
     title: "Suivi",
-    text: "[à adapter] Après la mise en ligne, on reste là : mesures, ajustements et un point régulier ensemble.",
+    text: "Après la mise en ligne, on reste disponible : mesures, ajustements et points réguliers ensemble.",
   },
 ] as const;
 
@@ -42,7 +42,7 @@ export function Process() {
         <div className="max-w-md">
           <p className="text-xs uppercase tracking-[0.24em] text-silver">Process</p>
           <h2 id="process-title" className="mt-4 font-display text-4xl leading-[1.04] md:text-6xl">
-            [à adapter] Quatre étapes, un seul interlocuteur.
+            Quatre étapes, un seul interlocuteur.
           </h2>
         </div>
 

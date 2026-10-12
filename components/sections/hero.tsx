@@ -63,7 +63,7 @@ export function Hero() {
       <div className="container relative grid items-center gap-10 py-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] md:gap-12 md:py-16">
         <div data-hero-copy="" className="order-2 md:order-1">
           <p className="mb-5 text-xs uppercase tracking-[0.24em] text-silver">
-            Agence web &amp; communication [à adapter]
+            Agence web &amp; communication à Madagascar
           </p>
           <h1
             id="hero-title"
@@ -77,7 +77,7 @@ export function Hero() {
             </span>
           </h1>
           <p className="mt-6 max-w-md text-base md:text-lg">
-            [à adapter] Site vitrine, Google Maps et logiciel sur mesure, pilotés par une seule stratégie.
+            Site vitrine, Google Maps et logiciel sur mesure, pilotés par une seule stratégie.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-6">
             <Link

@@ -1,26 +1,23 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Mail } from "lucide-react";
 
 import { BackToTop } from "@/components/motion/back-to-top";
 import { DottedLink } from "@/components/motion/dotted-link";
+import { SITE } from "@/lib/site";
 import logoPng from "@/public/assets/images/icon.png";
 
 // Liens de pied de page (le header garde le parcours principal).
 const FOOTER_LINKS = [
   { href: "/expertises", label: "Expertises" },
-  { href: "/projets", label: "Réalisations" },
+  { href: "/projets", label: "Cas d'usage" },
   { href: "/about", label: "L'agence" },
-  { href: "/services", label: "Offres" },
   { href: "/faqs", label: "Questions fréquentes" },
   { href: "/contact", label: "Contact" },
 ];
 
-const SOCIALS = [
-  { href: "#", label: "LinkedIn", icon: Linkedin },
-  { href: "#", label: "GitHub", icon: Github },
-  { href: "mailto:contact@yonkotech.com", label: "Écrire à contact@yonkotech.com", icon: Mail },
-];
+// Réseaux : à compléter avec les profils (et SITE.sameAs) quand ils existent.
+const SOCIALS = [{ href: `mailto:${SITE.email}`, label: `Écrire à ${SITE.email}`, icon: Mail }];
 
 // Footer : séparé de la page par une fibre pointillée ; marque, navigation, retour en haut et réseaux, puis
 // mentions. Noir mat, argent, aucune couleur hors charte.
@@ -38,8 +35,8 @@ export function SiteFooter() {
             <span className="text-[0.65rem] uppercase tracking-[0.24em] text-silver">Tech Consulting</span>
           </Link>
           <p className="mt-6 max-w-sm text-sm">
-            [à adapter] Agence web et communication : stratégie, site vitrine, Google Maps et logiciel sur mesure
-            pour les PME, commerçants, artisans et professions libérales.
+            Agence web et communication basée à Antananarivo : stratégie, site vitrine, Google Maps et logiciel sur
+            mesure pour les PME, commerçants, artisans et professions libérales.
           </p>
         </div>
 
@@ -72,10 +69,10 @@ export function SiteFooter() {
         <p>© {currentYear} Yonko Tech Consulting. Tous droits réservés.</p>
         <ul className="flex gap-6">
           <li>
-            <DottedLink href="#">Mentions légales</DottedLink>
+            <DottedLink href="/mentions-legales">Mentions légales</DottedLink>
           </li>
           <li>
-            <DottedLink href="#">Politique de confidentialité</DottedLink>
+            <DottedLink href="/confidentialite">Politique de confidentialité</DottedLink>
           </li>
         </ul>
       </div>

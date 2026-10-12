@@ -5,12 +5,14 @@ import { notFound } from "next/navigation";
 import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
 import { CtaBand } from "@/components/page/cta-band";
 import { ExpertiseDemo } from "@/components/pages/expertise-demo";
-import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
+import { FaqSection } from "@/components/sections/faq-section";
+import { JsonLd, breadcrumbJsonLd, faqJsonLd } from "@/components/seo/json-ld";
 import { expertises, getExpertise, nextExpertise } from "@/lib/expertises-data";
+import { faqByCategory } from "@/lib/faq-data";
 import { pageMetadata } from "@/lib/site";
 
-// Page d'une expertise (contenus fictifs [à adapter]) : promesse, visualisation animée reprise de l'accueil,
-// contenu de l'offre, profils, déroulé, puis l'action « Démarrer un projet ».
+// Page d'une expertise : promesse, visualisation animée reprise de l'accueil, contenu de l'offre, profils,
+// déroulé, ce que vous recevez, questions fréquentes du thème, puis l'action « Démarrer un projet ».
 export function generateStaticParams() {
   return expertises.map((item) => ({ slug: item.slug }));
 }
@@ -19,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const item = getExpertise(slug);
   if (!item) return { title: "Expertise" };
-  return pageMetadata({ title: item.title, description: item.summary, path: `/expertises/${item.slug}` });
+  return pageMetadata({ title: item.seo.title, description: item.seo.description, path: `/expertises/${item.slug}` });
 }
 
 export default async function ExpertisePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -27,6 +29,7 @@ export default async function ExpertisePage({ params }: { params: Promise<{ slug
   const item = getExpertise(slug);
   if (!item) notFound();
   const next = nextExpertise(slug);
+  const questions = faqByCategory(item.faqCategory);
 
   return (
     <article>
@@ -36,6 +39,7 @@ export default async function ExpertisePage({ params }: { params: Promise<{ slug
           { name: item.title, path: `/expertises/${item.slug}` },
         ])}
       />
+      {questions.length > 0 ? <JsonLd data={faqJsonLd(questions)} /> : null}
       <header className="container pb-8 pt-16 md:pt-24">
         <nav aria-label="Fil d'Ariane" className="text-xs uppercase tracking-[0.24em] text-silver">
           <DottedLink href="/expertises">Expertises</DottedLink>
@@ -98,7 +102,7 @@ export default async function ExpertisePage({ params }: { params: Promise<{ slug
             <li key={step.title} className="expertise-steps__item">
               <span className="expertise-steps__node" aria-hidden="true" />
               <p className="text-xs tracking-[0.24em] text-silver">
-                {String(i + 1).padStart(2, "0")} · {step.duration}
+                {String(i + 1).padStart(2, "0")} · {step.moment}
               </p>
               <h3 className="mt-2 font-display text-2xl text-silver-light">{step.title}</h3>
               <p className="mt-2 text-sm md:text-base">{step.text}</p>
@@ -107,7 +111,33 @@ export default async function ExpertisePage({ params }: { params: Promise<{ slug
         </ol>
       </section>
 
-      <CtaBand title="[à adapter] On en parle ?">
+      <section className="container py-16 md:py-24" aria-labelledby="deliverables-title">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-20">
+          <h2 id="deliverables-title" className="font-display text-3xl md:text-5xl">
+            Ce que vous recevez
+          </h2>
+          <ul className="dot-list">
+            {item.deliverables.map((entry) => (
+              <li key={entry}>{entry}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {questions.length > 0 ? (
+        <FaqSection
+          items={questions}
+          eyebrow="Questions fréquentes"
+          title="Vos questions"
+          subtitle=""
+          showCategory={false}
+        />
+      ) : null}
+
+      <CtaBand
+        title="Parlons de votre projet."
+        text="Un premier échange, sans engagement, pour voir ce qui vous sera utile en premier."
+      >
         <DottedLink href={`/expertises/${next.slug}`} className="text-sm text-silver">
           Expertise suivante : {next.title} →
         </DottedLink>

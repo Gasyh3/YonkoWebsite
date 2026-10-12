@@ -7,7 +7,8 @@ import { expertises } from "@/lib/expertises-data";
 
 export const metadata: Metadata = pageMetadata({
   title: "Expertises",
-  description: "[à adapter] Stratégie, site vitrine et SEO, Google Maps, logiciel sur mesure.",
+  description:
+    "Stratégie de communication, création de site vitrine et SEO, Google Maps, logiciel sur mesure : les expertises de Yonko Tech Consulting à Madagascar.",
   path: "/expertises",
 });
 
@@ -17,11 +18,11 @@ export default function ExpertisesPage() {
     <div className="container py-16 md:py-24">
       <p className="text-xs uppercase tracking-[0.24em] text-silver">Expertises</p>
       <h1 className="mt-4 max-w-3xl font-display text-5xl leading-[1.02] md:text-7xl">
-        [à adapter] Une stratégie, trois leviers.
+        Une stratégie, trois leviers.
       </h1>
       <p className="mt-6 max-w-xl">
-        [à adapter] Être vu, être trouvé, être efficace : chaque expertise répond à un besoin concret de votre
-        activité, et toutes sont pilotées par la même stratégie.
+        Être vu, être trouvé, être efficace : chaque expertise répond à un besoin concret de votre activité, et
+        toutes sont pilotées par la même stratégie.
       </p>
 
       <ul className="expertise-index mt-16 md:mt-24">

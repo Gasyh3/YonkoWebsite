@@ -3,26 +3,17 @@ import { CtaBand } from "@/components/page/cta-band";
 import { PageHeader } from "@/components/page/page-header";
 import { FaqSection } from "@/components/sections/faq-section";
 import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
-import { faqItems, type FaqItem } from "@/lib/faq-data";
+import { FAQ_CATEGORIES, faqItems, type FaqItem } from "@/lib/faq-data";
 import { pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Questions fréquentes",
   description:
-    "Réponses sur l'ERP PME modulaire, le SaaS Next.js clé en main, la sécurité, l'hébergement et la propriété des développements.",
+    "Comment faire un site web, apparaître sur Google Maps, reprendre vos fichiers Excel, qui possède le site : nos réponses claires, sans jargon ni promesse intenable.",
   path: "/faqs",
 });
 
-const CATEGORY_ORDER = [
-  "ERP PME",
-  "SaaS Next.js",
-  "Positionnement",
-  "Acquisition",
-  "Gouvernance",
-  "Ops & sécurité",
-  "Pilotage",
-  "Intégrations",
-];
+const CATEGORY_ORDER: string[] = Object.values(FAQ_CATEGORIES);
 
 // Slug propre (accents, caractères spéciaux, espaces)
 function slugify(input: string) {
@@ -62,7 +53,7 @@ export default function FaqsPage() {
       <PageHeader
         eyebrow="Questions fréquentes"
         title="Toutes les questions"
-        lead="ERP PME modulaire, SaaS Next.js clé en main, sécurité, hébergement, propriété : trouvez des réponses rapides par thématique."
+        lead="Site, référencement, Google Maps, logiciel, propriété et suivi : des réponses simples, par thème, sans jargon."
       >
         {/* Accès direct aux thèmes. */}
         <nav aria-label="Thèmes" className="w-full">

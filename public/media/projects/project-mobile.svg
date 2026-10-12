@@ -12,5 +12,5 @@
 <rect x="784" y="360" width="150" height="16" rx="8" fill="#E3E6EA" opacity=".75"/>
 <g fill="#A8ADB4"><rect x="784" y="392" width="200" height="8" rx="4" opacity=".22"/><rect x="784" y="410" width="170" height="8" rx="4" opacity=".22"/><rect x="784" y="428" width="186" height="8" rx="4" opacity=".22"/></g>
 <rect x="784" y="470" width="110" height="34" rx="17" fill="url(#g)"/>
-<text x="600" y="866" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" letter-spacing="4" fill="#A8ADB4" opacity=".55">[VISUEL À REMPLACER]</text>
+<text x="600" y="866" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" letter-spacing="4" fill="#A8ADB4" opacity=".55">ILLUSTRATION</text>
 </svg>

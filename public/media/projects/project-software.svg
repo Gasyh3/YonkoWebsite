@@ -9,5 +9,5 @@
 <rect x="180" y="610" width="320" height="10" rx="5" opacity=".2"/><rect x="180" y="640" width="260" height="10" rx="5" opacity=".2"/>
 <rect x="660" y="600" width="40" height="110" rx="4" opacity=".3"/><rect x="730" y="550" width="40" height="160" rx="4" opacity=".3"/><rect x="800" y="630" width="40" height="80" rx="4" opacity=".3"/><rect x="870" y="580" width="40" height="130" rx="4" opacity=".3"/><rect x="940" y="610" width="40" height="100" rx="4" opacity=".3"/></g>
 <rect x="180" y="540" width="200" height="34" rx="8" fill="url(#g)"/>
-<text x="600" y="866" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" letter-spacing="4" fill="#A8ADB4" opacity=".55">[VISUEL À REMPLACER]</text>
+<text x="600" y="866" text-anchor="middle" font-family="system-ui, sans-serif" font-size="18" letter-spacing="4" fill="#A8ADB4" opacity=".55">ILLUSTRATION</text>
 </svg>

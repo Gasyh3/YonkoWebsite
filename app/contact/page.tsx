@@ -6,7 +6,7 @@ import { SITE, pageMetadata } from "@/lib/site";
 export const metadata = pageMetadata({
   title: "Contact",
   description:
-    "Décrivez votre projet à Yonko Tech Consulting : site vitrine, référencement local, logiciel sur mesure. Réponse sous 24h.",
+    "Un projet de site web, de fiche Google Maps ou de logiciel à Madagascar ? Décrivez-le à Yonko Tech Consulting, à Antananarivo : réponse sous 24h.",
   path: "/contact",
 });
 
@@ -23,7 +23,7 @@ export default function ContactPage() {
       <PageHeader
         eyebrow="Contact"
         title="Parlons de vos projets"
-        lead="Décrivez votre besoin : produit à lancer, refonte, audit technique, problématiques data ou cloud. Nous proposons un créneau rapide pour cadrer et recommander les premiers pas."
+        lead="Site vitrine, référencement, fiche Google, logiciel de gestion ou simple question : décrivez votre besoin en quelques lignes. Nous répondons sous 24h et proposons un échange pour cadrer les premiers pas."
       />
 
       <section id="contact" className="container pb-24 pt-8 md:pb-32" aria-label="Formulaire de contact">

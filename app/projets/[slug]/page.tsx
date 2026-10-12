@@ -9,7 +9,7 @@ import { getProject, projects } from "@/lib/results-data";
 import { pageMetadata } from "@/lib/site";
 
 // Page projet (C11) : son visuel d'en-tête reçoit l'image de la carte cliquée (View Transition « project-media »,
-// voir lib/motion/page-transitions.ts). Contenus provisoires : [à remplacer].
+// voir lib/motion/page-transitions.ts). Cas d'usage présentés comme tels, en attendant de vraies réalisations.
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
 }
@@ -20,47 +20,37 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!project) return { title: "Projet" };
   return pageMetadata({
     title: project.title,
-    description: `${project.service} pour ${project.sector.toLowerCase()} : ${project.result}.`,
+    description: project.situation,
     path: `/projets/${project.slug}`,
   });
 }
-
-const SECTIONS = [
-  {
-    title: "Le contexte",
-    text: "[à remplacer] Qui est le client, ce qui le freinait, ce qu'il attendait de nous.",
-  },
-  {
-    title: "Ce que nous avons fait",
-    text: "[à remplacer] Les choix de stratégie, ce qui a été construit et pourquoi, dans les mots du client.",
-  },
-  {
-    title: "Le résultat",
-    text: "[à remplacer] Les chiffres mesurés après la mise en ligne, et ce qu'ils changent au quotidien.",
-  },
-];
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const project = getProject(slug);
   if (!project) notFound();
+  const sections = [
+    { title: "La situation", text: project.situation },
+    { title: "Ce que nous mettons en place", text: project.approach },
+    { title: "Ce que l'on suit", text: project.tracking },
+  ];
 
   return (
     <article className="container py-16 md:py-24">
       <JsonLd
         data={breadcrumbJsonLd([
-          { name: "Réalisations", path: "/projets" },
+          { name: "Cas d'usage", path: "/projets" },
           { name: project.title, path: `/projets/${project.slug}` },
         ])}
       />
-      <DottedLink href="/#projets" className="text-xs uppercase tracking-[0.24em] text-silver">
-        ← Tous les projets
+      <DottedLink href="/projets" className="text-xs uppercase tracking-[0.24em] text-silver">
+        ← Tous les cas d&apos;usage
       </DottedLink>
 
       <header className="mt-10 grid gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-silver">
-            {project.service} · {project.sector}
+            Cas d&apos;usage · {project.service} · {project.sector}
           </p>
           <h1 className="mt-4 font-display text-5xl leading-[1.02] md:text-7xl">{project.title}</h1>
         </div>
@@ -80,7 +70,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       </div>
 
       <div className="mt-16 grid gap-12 md:mt-24 md:grid-cols-3 md:gap-10">
-        {SECTIONS.map((section) => (
+        {sections.map((section) => (
           <section key={section.title}>
             <h2 className="font-display text-3xl">{section.title}</h2>
             <p className="mt-4">{section.text}</p>
@@ -97,8 +87,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <ButtonGlint />
           Démarrer un projet
         </Link>
-        <DottedLink href="/#projets" className="text-sm text-silver">
-          Voir les autres projets
+        <DottedLink href="/projets" className="text-sm text-silver">
+          Voir les autres cas d&apos;usage
         </DottedLink>
       </div>
     </article>

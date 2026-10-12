@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 // Informations de l'entreprise, partagées par les métadonnées, le sitemap, les données structurées et le
-// formulaire. Les champs vides seront remplis avec docs/contenu-a-remplir.txt : ils ne sont publiés que
-// renseignés (adresse et téléphone activent le balisage d'établissement local).
+// formulaire. Les champs vides ne sont publiés que renseignés. Pas de local ouvert au public : seules la ville et
+// le pays sont déclarés ; une rue renseignée activerait le balisage d'établissement local (ProfessionalService).
 export const SITE = {
   name: "Yonko Tech Consulting",
   shortName: "Yonko",
@@ -11,16 +11,17 @@ export const SITE = {
   locale: "fr_FR",
   email: "contact@yonkotech.com",
   description:
-    "Agence web et communication pour PME, commerçants, artisans et professions libérales : stratégie, site vitrine et SEO, visibilité sur Google Maps, logiciel sur mesure.",
+    "Agence web à Madagascar : création de site vitrine et SEO, visibilité sur Google Maps, logiciel sur mesure et stratégie de communication pour PME et artisans.",
   logo: "/assets/images/logo.png",
   telephone: "", // format international, ex. +33 1 23 45 67 89
   address: {
     streetAddress: "",
     postalCode: "",
-    addressLocality: "",
-    addressCountry: "FR",
+    addressLocality: "Antananarivo",
+    addressCountry: "MG",
   },
-  areaServed: [] as string[], // villes ou départements couverts
+  foundingDate: "2025",
+  areaServed: ["Madagascar"] as string[], // zone prioritaire ; interventions à distance partout
   sameAs: [] as string[], // URL des profils (LinkedIn, Instagram, fiche Google…)
 } as const;
 
@@ -28,6 +29,7 @@ export const absoluteUrl = (path = "/") => `${SITE.url}${path === "/" ? "" : pat
 
 type PageMeta = {
   title?: string; // sans le nom du site : le modèle du layout l'ajoute (« Titre · Yonko Tech Consulting »)
+  absoluteTitle?: boolean; // titre complet, sans le modèle (accueil)
   description?: string;
   path: string;
 };
@@ -37,10 +39,10 @@ type PageMeta = {
 const SHARE_IMAGE = { url: "/opengraph-image", width: 1200, height: 630, alt: SITE.name };
 
 // Métadonnées d'une page : titre, description, URL canonique et partage.
-export function pageMetadata({ title, description, path }: PageMeta): Metadata {
-  const shareTitle = title ? `${title} · ${SITE.name}` : SITE.name;
+export function pageMetadata({ title, absoluteTitle, description, path }: PageMeta): Metadata {
+  const shareTitle = title ? (absoluteTitle ? title : `${title} · ${SITE.name}`) : SITE.name;
   return {
-    ...(title ? { title } : {}),
+    ...(title ? { title: absoluteTitle ? { absolute: title } : title } : {}),
     ...(description ? { description } : {}),
     alternates: { canonical: path },
     openGraph: {

@@ -11,9 +11,9 @@ import { expertises } from "@/lib/expertises-data";
 import logoPng from "@/public/assets/images/icon.png";
 
 // Pages du site (le header ne pointe plus vers les sections de l'accueil) : les expertises (sous-menu), les
-// réalisations, l'agence, les questions fréquentes, et l'action principale « Démarrer un projet ».
+// cas d'usage, l'agence, les questions fréquentes, et l'action principale « Démarrer un projet ».
 const LINKS = [
-  { href: "/projets", label: "Réalisations" },
+  { href: "/projets", label: "Cas d'usage" },
   { href: "/about", label: "À propos" },
   { href: "/faqs", label: "FAQ" },
 ];
@@ -131,7 +131,7 @@ export function SiteHeader() {
                 <div className="container grid grid-cols-[minmax(0,1fr)_minmax(0,3fr)] gap-10 py-10">
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-silver">Expertises</p>
-                    <p className="mt-3 font-display text-2xl text-silver-light">[à adapter] Une stratégie, trois leviers.</p>
+                    <p className="mt-3 font-display text-2xl text-silver-light">Une stratégie, trois leviers.</p>
                     <DottedLink
                       href="/expertises"
                       className="mt-6 text-sm text-silver"

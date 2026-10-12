@@ -24,8 +24,8 @@ export function Contact() {
           Connectons votre entreprise.
         </h2>
         <p className="mt-6 max-w-md">
-          [à adapter] Un premier échange de 30 minutes, sans engagement, pour parler de votre activité et de vos
-          priorités.
+          Un premier échange, sans engagement, pour parler de votre activité et de vos priorités. Réponse sous
+          24h.
         </p>
 
         <div className="contact-cta mt-14 md:mt-16">

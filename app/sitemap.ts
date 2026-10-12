@@ -2,10 +2,9 @@ import type { MetadataRoute } from "next";
 
 import { expertises } from "@/lib/expertises-data";
 import { projects } from "@/lib/results-data";
-import { services } from "@/lib/services-data";
 import { absoluteUrl } from "@/lib/site";
 
-// Plan du site (/sitemap.xml) : pages fixes, puis pages générées depuis les données (expertises, projets, offres).
+// Plan du site (/sitemap.xml) : pages fixes, puis pages générées depuis les données (expertises, cas d'usage).
 // Les pages /lab et /api en sont exclues (voir aussi app/robots.ts).
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
@@ -25,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/about", 0.7),
     entry("/contact", 0.8, "yearly"),
     entry("/faqs", 0.6),
-    entry("/services", 0.5),
-    ...services.map((service) => entry(`/services/${service.slug}`, 0.5)),
+    entry("/mentions-legales", 0.2, "yearly"),
+    entry("/confidentialite", 0.2, "yearly"),
   ];
 }

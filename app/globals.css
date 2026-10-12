@@ -2279,3 +2279,10 @@ html[data-navigating] [data-close-on-navigate] {
 .not-found__line--far {
   opacity: .2;
 }
+
+/* ---------------------------------------------------------------------------
+   Pages légales : components/page/legal-section.tsx */
+
+.legal-section p {
+  line-height: 1.7;
+}

@@ -81,7 +81,7 @@ Luxe, sobriété, précision. Noir mat, or, argent. Si tout brille, rien n'est p
 
 ## Stack et architecture
 
-- Framework : **Next.js 16 (App Router) + React 19 + TypeScript**, Tailwind CSS 3.4, composants shadcn/ui (`components/ui`). Build : `npm run build`, dev : `npm run dev`.
+- Framework : **Next.js 16 (App Router) + React 19 + TypeScript**, Tailwind CSS 3.4. `components/ui` ne garde que `skeleton.tsx` (les composants shadcn inutilisés ont été retirés ; `components.json` permet d'en réajouter avec la CLI shadcn). Build : `npm run build`, dev : `npm run dev`.
 - Les tokens du `:root` ci-dessous vivent dans `app/globals.css` ; côté JS, `lib/motion/tokens.ts` les expose (easings, durées). Tailwind les mappe (`bg-black`, `text-silver`, `bg-gold`…).
 - Modules motion : `lib/motion/*.ts` (TS pur, `init()` / `destroy()`), branchés dans React via `useMotionModule` (`lib/motion/use-motion-module.ts`). Lenis + ScrollTrigger sont pilotés par `components/motion/motion-root.tsx`.
 - Vidéos (hero V1 / V1-M, clips annexes) : produites avec **HyperFrames** (HTML + GSAP rendu en MP4/WebM), sources dans `video/`, rendus exportés dans `public/media/`. Skills dans `.claude/skills` (`/hyperframes` pour démarrer). Les positions des 3 ports de l'ordinateur sont définies une seule fois dans `lib/motion/hero-ports.json` et partagées par la composition vidéo et le FiberSystem.
@@ -118,7 +118,7 @@ Attributs complémentaires (implémentés dans `lib/motion/fiber/`) :
 - `data-fiber-merge` : fusion des fibres sur l'ancre, une seule ligne pointillée (points calés sur B). Avec `data-fiber-axis="y"` : A et C rejoignent B à 45° puis s'en séparent à 45° en bas (timeline du Process). Avec `data-fiber-axis="x"` : convergence à 45° vers un point unique, le bord de sortie (terminus du bouton Contact, `data-fiber-mode="end"` ; `fiber:arrive` y est émis au point de convergence).
 - `data-fiber-dim` : zone où les fibres passent à 50 % (voile couleur du fond dans le calque des fibres, fondu en entrée et en sortie ; jamais de masque à l'échelle de la page). Ex. Résultats.
 - `data-fiber-split` : zone où la fibre composite mobile se divise en 3 (prévoir ≥ 64px de padding gauche en mobile).
-- Couloirs : laisser ~56px libres à côté des ancres de bord (les 3 fibres occupent ±14px + marge de 10px). Le routeur signale en console (dev) tout segment qui traverse un texte ; `/lab/fibers?debug=1` affiche obstacles, ancres et collisions.
+- Couloirs : laisser ~56px libres à côté des ancres de bord (les 3 fibres occupent ±14px + marge de 10px). Le routeur signale en console (dev) tout segment qui traverse un texte ; `/lab/fibers?debug=1` affiche obstacles, ancres et collisions (pages `/lab` en développement uniquement : 404 en production via `next.config.ts`).
 - `fiber:arrive` peut être émis plusieurs fois pour une même ancre (respiration) : les sections réagissent de façon idempotente.
 
 Le module `FiberSystem` émet `window` → `CustomEvent("fiber:arrive", { detail: { fiber, anchorId, mode, direction? } })` (`direction` = `ltr` | `rtl` pour une ancre `data-fiber-axis="x"`) quand une impulsion atteint une ancre. Les sections écoutent cet événement pour réagir, elles ne pilotent pas les fibres elles-mêmes.

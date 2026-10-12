@@ -10,7 +10,6 @@ import { cn } from "@/lib/utils";
 import "lenis/dist/lenis.css";
 import "./globals.css";
 import { fontDisplay, fontSans } from "./fonts";
-import { Toaster } from "sonner";
 
 // SEO par défaut : chaque page fournit son titre court (modèle « Titre · Yonko Tech Consulting »), sa description
 // et son URL canonique via pageMetadata (lib/site.ts). Image de partage : app/opengraph-image.tsx.
@@ -59,7 +58,6 @@ export default function RootLayout({
           </main>
           <SiteFooter />
         </div>
-        <Toaster position="top-right" expand />
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
       </body>
     </html>

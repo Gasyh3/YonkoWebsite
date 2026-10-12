@@ -11,6 +11,11 @@ const SERVICE_REDIRECTS: Record<string, string> = {
 };
 
 const nextConfig: NextConfig = {
+  // Bancs d'essai /lab : développement uniquement. En production, réécrits vers une route inexistante (vraie 404).
+  async rewrites() {
+    if (process.env.NODE_ENV !== "production") return [];
+    return { beforeFiles: [{ source: "/lab/:path*", destination: "/_lab-indisponible" }], afterFiles: [], fallback: [] };
+  },
   async redirects() {
     return [
       { source: "/services", destination: "/expertises", permanent: true },

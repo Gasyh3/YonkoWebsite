@@ -23,6 +23,7 @@ import type { DrivenScene, DrivenSceneFactory } from "./driven-scene";
 import { SCENE_ENTRY, SCENES, type SceneId } from "./geometry";
 import { createMapsScene } from "./maps-scene";
 import { createSeoScene } from "./seo-scene";
+import { createSoftwareScene } from "./software-scene";
 
 const SVG_NS = "http://www.w3.org/2000/svg";
 const PINNED_QUERY = "(min-width: 768px) and (prefers-reduced-motion: no-preference)";
@@ -36,9 +37,10 @@ const CONFIG = {
   slideShift: 24, // px : glissement vertical d'une scène qui entre ou sort
 } as const;
 
-const FACTORIES: Partial<Record<SceneId, DrivenSceneFactory>> = {
+const FACTORIES: Record<SceneId, DrivenSceneFactory> = {
   seo: createSeoScene,
   maps: createMapsScene,
+  software: createSoftwareScene,
 };
 
 type Slide = { id: SceneId; fiber: FiberId; el: HTMLElement; scene: DrivenScene | null };
@@ -80,7 +82,7 @@ export function createExpertises(root: HTMLElement): MotionModule {
 
       // Empilé : chaque scène gère sa propre version (mobile ou reduced motion).
       mm.add(STACKED_QUERY, () => {
-        const scenes = slides.map((s) => FACTORIES[s.id]?.(s.el) ?? null);
+        const scenes = slides.map((s) => FACTORIES[s.id](s.el));
         scenes.forEach((scene) => scene?.init());
         return () => scenes.forEach((scene) => scene?.destroy());
       });
@@ -98,7 +100,7 @@ export function createExpertises(root: HTMLElement): MotionModule {
         root.classList.add("is-pinned");
 
         slides.forEach((s) => {
-          s.scene = FACTORIES[s.id]?.(s.el, { driven: true }) ?? null;
+          s.scene = FACTORIES[s.id](s.el, { driven: true });
           s.scene?.init();
         });
 

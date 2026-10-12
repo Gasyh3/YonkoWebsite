@@ -794,23 +794,158 @@ body::after {
   opacity: 0;
 }
 
-/* Expertises 03 — Logiciel : provisoire (C7). */
+/* ---------------------------------------------------------------------------
+   Expertises 03 — Logiciel sur mesure (C7) : components/sections/expertises/software-scene.tsx
+   Scène en argent ; l'or n'apparaît que sur le label final. */
+
 .software-line {
   fill: none;
   stroke: var(--silver);
   stroke-width: 2;
   stroke-linecap: round;
   stroke-dasharray: 0 7;
-  opacity: .5;
+  opacity: .55;
 }
 
-.software-placeholder {
+.software-line--bus {
+  opacity: .7;
+}
+
+.software-line-mask {
+  fill: none;
+  stroke: #fff; /* luminance du masque, pas une couleur affichée */
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.software-pulse {
+  fill: none;
+  stroke: var(--silver-light);
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.software-panel,
+.software-sheen {
+  position: absolute;
+  border-radius: 10px;
+}
+
+.software-panel {
+  border: 1px solid var(--fiber-off);
+  opacity: 0;
+}
+
+.software-sheen {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.software-glint {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background-image: linear-gradient(100deg, transparent, var(--silver-light), transparent);
+  opacity: 0;
+}
+
+/* Module : carte --surface, fin contour argent ; allumé, contour argent clair. */
+.software-card {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, .55vw, 8px);
+  padding: clamp(6px, .75vw, 11px) clamp(7px, .85vw, 12px);
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.software-card__edge {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--silver);
+  border-radius: inherit;
+  opacity: .35;
+  pointer-events: none;
+}
+
+.software-card__edge--lit {
+  border-color: var(--silver-light);
+  opacity: 0;
+}
+
+.software-card__name {
+  font-size: clamp(.5rem, .85vw, .72rem);
+  line-height: 1;
+  letter-spacing: .08em;
+  color: var(--silver-light);
+}
+
+.software-preview {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(3px, .4vw, 6px);
+  min-height: 0;
+}
+
+.software-preview--stock {
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0;
+}
+
+.software-bar {
+  display: block;
+  height: 4px;
+  border-radius: 9999px;
+  background: var(--silver);
+  opacity: .35;
+}
+
+.software-bar--thin {
+  height: 3px;
+  opacity: .2;
+}
+
+.software-bar--strong {
+  height: 7px;
+  opacity: .45;
+}
+
+.software-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(3px, .4vw, 6px);
+}
+
+.software-dot {
+  width: 5px;
+  height: 5px;
+  flex: none;
+  border-radius: 9999px;
+  background: var(--silver);
+  opacity: .4;
+}
+
+.software-column {
+  display: block;
+  width: 12%;
+  border-radius: 2px 2px 0 0;
+  background: var(--silver);
+  opacity: .3;
+}
+
+.software-label {
   position: absolute;
   left: 0;
   right: 0;
-  top: 52%;
+  top: 94%;
   text-align: center;
-  font-size: .75rem;
-  letter-spacing: .12em;
-  color: var(--silver);
+  font-size: clamp(.6rem, .9vw, .75rem);
+  letter-spacing: .2em;
+  text-transform: uppercase;
 }

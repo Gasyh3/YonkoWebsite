@@ -28,6 +28,7 @@ const AMBIENT = {
   pulseLength: 72,
   pulseSpeed: 420, // px/s : lent, pour se lire sans attirer l'œil comme les fibres principales
   drawStagger: 0.35, // s entre deux câbles d'une même section
+  maxLinkGap: 160, // px : au-delà, deux sections ne sont pas reliées
 } as const;
 
 type Side = "left" | "right";
@@ -94,8 +95,9 @@ export function planCables(width: number, containerLeft: number, containerRight:
         cables.push({ side: "right", section: i, order: order++, seed: i * 10 + 3, points: [{ x: innerRight, y: t1 }, { x, y: t1 }, { x, y: yd }, { x: width + 2, y: yd }] });
       }
       // Liaison vers la section suivante : quitte le bas de celle-ci, arrive en haut de la suivante.
+      // (uniquement entre sections voisines : pas de câble qui enjamberait une section sans réseau)
       const next = sections[i + 1];
-      if (next) {
+      if (next && next.top - s.bottom < AMBIENT.maxLinkGap) {
         const ya = s.bottom - Math.min(h * 0.14, 110);
         const nextT1 = next.targets[1] ?? next.top + (next.bottom - next.top) * 0.6;
         const yb = Math.min(next.top + Math.min((next.bottom - next.top) * 0.1, 90), nextT1 - minSpan);

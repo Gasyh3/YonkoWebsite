@@ -532,3 +532,285 @@ body::after {
     top: 5px; /* à hauteur du numéro de l'étape */
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Expertises (C5) : components/sections/expertises/expertises.tsx, lib/motion/expertises/expertises.ts */
+
+.expertises-fiber-in {
+  position: absolute;
+  top: 0;
+  left: -2.5rem; /* milieu de l'espace (gap-20) entre le texte et la visualisation */
+  width: 1px;
+  height: 1px;
+}
+
+.expertises-fiber-out {
+  position: absolute;
+  top: 0;
+  right: 1rem; /* marge droite, comme les autres sorties */
+  width: 1px;
+  height: 1px;
+}
+
+.expertises-fibers,
+.expertises-indicator {
+  display: none;
+}
+
+/* Épinglé (desktop, mouvement autorisé) : un cadre opaque d'une hauteur d'écran, les scènes superposées. */
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .expertises-frame {
+    position: relative;
+    z-index: 1; /* au-dessus du calque des fibres globales, qu'il masque */
+    height: calc(100vh - var(--expertises-top, 4rem));
+    overflow: hidden;
+    background: var(--black);
+  }
+
+  .expertises-fibers {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .expertises-fibers path {
+    fill: none;
+  }
+
+  .expertises-indicator {
+    display: flex;
+    position: absolute;
+    top: 2rem;
+    left: 0;
+    right: 0;
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+
+  .expertises-slides {
+    position: absolute;
+    inset: 0;
+    display: grid;
+  }
+
+  .expertises-slides > .expertise-scene {
+    grid-area: 1 / 1;
+    align-self: center;
+    padding-block: 0;
+  }
+
+  /* Avant le JS, seule la 1re scène est visible ; ensuite GSAP pilote opacité et visibilité. */
+  .expertises-slides > .expertise-scene:not(:first-child) {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* L'indicateur du cadre remplace le numéro propre à chaque scène. */
+  .expertises [data-scene-index] {
+    visibility: hidden;
+  }
+}
+
+.expertises-indicator__steps {
+  display: flex;
+  gap: .9rem;
+  font-size: .75rem;
+  letter-spacing: .24em;
+  color: var(--silver);
+}
+
+.expertises-indicator__step + .expertises-indicator__step::before {
+  content: "/";
+  margin-right: .9rem;
+  opacity: .4;
+}
+
+/* Fibres locales : éteintes (pointillés .fiber-off), allumées (mêmes pointillés, or ou argent clair), impulsion. */
+.expertises-fiber__lit {
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 7;
+  opacity: 0;
+}
+
+.expertises-fiber--C .expertises-fiber__lit {
+  stroke: var(--silver-light);
+}
+
+.expertises-fiber__pulse {
+  stroke-width: 2;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.expertises-fiber__pulse--0 { stroke: var(--gold-2); }
+.expertises-fiber__pulse--1 { stroke: var(--gold-glint); }
+.expertises-fiber--C .expertises-fiber__pulse--0 { stroke: var(--silver); }
+.expertises-fiber--C .expertises-fiber__pulse--1 { stroke: var(--silver-light); }
+
+/* ---------------------------------------------------------------------------
+   Expertises 01 — Site vitrine et SEO : components/sections/expertises/seo-scene.tsx */
+
+.seo-viz,
+.software-viz {
+  aspect-ratio: 7 / 5;
+}
+
+/* Contour et barre : pointillés de la fibre A (dots ronds de 2px, espacement 7px). */
+.seo-outline,
+.seo-bar {
+  fill: none;
+  stroke: var(--silver);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 7;
+  opacity: .7;
+}
+
+.seo-bar {
+  opacity: .35;
+}
+
+.seo-line-mask {
+  fill: none;
+  stroke: #fff; /* luminance du masque, pas une couleur affichée */
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.seo-dot {
+  fill: none;
+  stroke: var(--silver);
+  stroke-width: 1.2;
+}
+
+.seo-page {
+  position: absolute;
+  inset: 0;
+}
+
+.seo-search {
+  position: absolute;
+  left: 5.5%;
+  top: 15%;
+  width: 58%;
+  height: 9%;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding-inline: 3%;
+  border: 1px solid var(--fiber-off);
+  border-radius: 9999px;
+}
+
+.seo-search__icon {
+  width: .55rem;
+  height: .55rem;
+  flex: none;
+  border: 1px solid var(--silver);
+  border-radius: 9999px;
+  opacity: .5;
+}
+
+/* Résultats : 5 crans identiques ; une ligne mesure exactement un cran (yPercent ±100 = une place). */
+.seo-results {
+  position: absolute;
+  left: 5.5%;
+  right: 5.5%;
+  top: 30%;
+  height: 64%;
+}
+
+.seo-row {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--slot) * 20%);
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: .3rem;
+}
+
+.seo-line {
+  display: block;
+  height: 3px;
+  border-radius: 9999px;
+  background: var(--silver);
+  opacity: .16;
+}
+
+.seo-line--title {
+  height: 5px;
+  opacity: .32;
+}
+
+.seo-line--url {
+  opacity: .22;
+}
+
+.seo-line--query {
+  width: 38%;
+  opacity: .3;
+}
+
+.seo-row__name {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  font-size: clamp(.7rem, 1.25vw, .95rem);
+  line-height: 1.1;
+  font-weight: 500;
+}
+
+.seo-row__name-base {
+  color: var(--silver-light);
+}
+
+/* Passage en or : le calque or (avec reflet) recouvre exactement le nom argent. */
+.seo-row__name-gold {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+}
+
+.seo-label {
+  padding: .15rem .5rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 9999px;
+  font-size: .6rem;
+  font-weight: 400;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--silver);
+  white-space: nowrap;
+  opacity: 0;
+}
+
+/* Expertises 03 — Logiciel : provisoire (C7). */
+.software-line {
+  fill: none;
+  stroke: var(--silver);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 7;
+  opacity: .5;
+}
+
+.software-placeholder {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 52%;
+  text-align: center;
+  font-size: .75rem;
+  letter-spacing: .12em;
+  color: var(--silver);
+}

@@ -58,7 +58,7 @@ export const ROUTING = {
   candidateStep: 8, // pas de recherche du niveau de croisement horizontal
 } as const;
 
-const OFFSET: Record<FiberId, number> = { A: -ROUTING.gap, B: 0, C: ROUTING.gap };
+export const OFFSET: Record<FiberId, number> = { A: -ROUTING.gap, B: 0, C: ROUTING.gap };
 const DIAG_SHIFT = ROUTING.gap * (Math.SQRT2 - 1); // garde 14px perpendiculaires sur un 45°
 
 // ---------------------------------------------------------------------------

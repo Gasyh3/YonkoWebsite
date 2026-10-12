@@ -5,19 +5,17 @@
 //   60 – 85 %  l'épingle or tombe (back.out(1.4)), ondes radar en boucle ; épingles argent à 40 %
 //   85 – 100 % la fiche « Votre entreprise » s'ouvre
 // Autonome : scrub sur le défilement de la section (desktop) ou lecture courte à l'entrée (mobile).
-// Dans le conteneur Expertises épinglé (C5) : `driven: true`, puis setProgress(p).
+// Dans le conteneur Expertises épinglé (C5) : `driven: true`, puis setProgress(p) et setVisible(bool).
 
 import { isMobile, prefersReducedMotion } from "../env";
 import { gsap, ScrollTrigger } from "../gsap";
 import { tokens } from "../tokens";
-import type { MotionModule } from "../use-motion-module";
-
-export type MapsScene = MotionModule & { setProgress: (progress: number) => void };
+import type { DrivenScene } from "./driven-scene";
 
 const RADAR_FROM = 0.72; // les ondes ne tournent qu'une fois l'épingle or posée
 const MOBILE_PLAY_DURATION = 2.6; // s : version raccourcie déclenchée à l'entrée dans le viewport
 
-export function createMapsScene(root: HTMLElement, options: { driven?: boolean } = {}): MapsScene {
+export function createMapsScene(root: HTMLElement, options: { driven?: boolean } = {}): DrivenScene {
   let ctx: gsap.Context | null = null;
   let tl: gsap.core.Timeline | null = null;
   let radar: gsap.core.Timeline | null = null;
@@ -101,13 +99,13 @@ export function createMapsScene(root: HTMLElement, options: { driven?: boolean }
           );
         });
 
+        if (options.driven) return; // visibilité donnée par le conteneur (setVisible)
+
         observer = new IntersectionObserver(([entry]) => {
           visible = entry.isIntersecting;
           syncRadar();
         });
         observer.observe(root);
-
-        if (options.driven) return;
 
         if (isMobile()) {
           // Mobile : pas de scrub, une lecture courte à l'entrée dans le viewport.
@@ -131,6 +129,11 @@ export function createMapsScene(root: HTMLElement, options: { driven?: boolean }
 
     setProgress(progress: number) {
       tl?.progress(Math.min(1, Math.max(0, progress)));
+    },
+
+    setVisible(value: boolean) {
+      visible = value;
+      syncRadar();
     },
 
     destroy() {

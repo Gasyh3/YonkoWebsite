@@ -24,3 +24,6 @@ export function useMotionModule<E extends HTMLElement>(
     return () => motionModule.destroy();
   }, [ref, factory]);
 }
+
+// Module vide : pour un composant dont l'animation est pilotée par un conteneur parent.
+export const noMotion: MotionModuleFactory = () => ({ init() {}, destroy() {} });

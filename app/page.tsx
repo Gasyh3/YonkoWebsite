@@ -1,6 +1,7 @@
 import { FiberStage } from "@/components/motion/fiber-stage";
 import { Hero } from "@/components/sections/hero";
 import { Manifesto } from "@/components/sections/manifesto";
+import { Expertises } from "@/components/sections/expertises/expertises";
 import { Strategy } from "@/components/sections/strategy";
 import { QuickContact } from "@/components/sections/quick-contact";
 import { ServicesSection } from "@/components/sections/services-section";
@@ -16,6 +17,7 @@ export default function Home() {
         <Hero />
         <Manifesto />
         <Strategy />
+        <Expertises />
         <div data-ambient="">
           <ServicesSection />
         </div>

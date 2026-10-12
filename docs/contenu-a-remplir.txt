@@ -1,0 +1,515 @@
+YONKO TECH CONSULTING : CONTENUS À FOURNIR
+===========================================
+
+Mode d'emploi
+-------------
+- Écrivez votre texte après chaque flèche « → ». Laissez vide si le texte proposé vous convient
+  (écrivez alors « OK »).
+- « Actuel : » = le texte provisoire affiché aujourd'hui sur le site, marqué [à adapter] ou
+  [à remplacer] dans le code. Rien de ce qui est marqué ainsi n'est définitif.
+- Les longueurs indiquées (en caractères, espaces compris) correspondent à la place prévue
+  dans la mise en page. Les dépasser peut casser l'équilibre d'une section.
+- Pour le référencement : un titre de page fait au plus 60 caractères, une description entre
+  140 et 160 caractères, avec le métier et la ville quand c'est pertinent.
+- Renvoyez ce fichier rempli tel quel : chaque bloc correspond à un endroit précis du site.
+
+
+#############################################################################################
+1. INFORMATIONS DE L'ENTREPRISE
+   (pied de page, données structurées Google, mentions légales, formulaire)
+#############################################################################################
+
+Nom commercial affiché
+  Actuel : Yonko Tech Consulting
+  →
+
+Nom de domaine définitif (URL du site, ex. https://yonkotech.com)
+  Actuel : https://yonkotech.com (supposé)
+  →
+
+Adresse e-mail publique (affichée sur le site)
+  Actuel : contact@yonkotech.com
+  →
+
+Adresse(s) e-mail qui reçoivent les demandes du formulaire (plusieurs possibles)
+  →
+
+Téléphone (format international, ex. +33 6 12 34 56 78) : affiché ? oui / non
+  →
+
+Adresse postale de l'établissement (rue, code postal, ville, pays)
+  Important pour Google Maps : elle active la fiche « établissement local » dans le code.
+  Si vous travaillez sans local ouvert au public, dites-le.
+  →
+
+Ville de base (remplace [ville] dans « Basés à [ville], on se déplace chez vous »)
+  →
+
+Zone d'intervention (villes, départements, ou « toute la France / à distance »)
+  →
+
+Année de création (remplace [année] dans « Depuis [année], pour des PME et indépendants »)
+  →
+
+Horaires de disponibilité (facultatif)
+  →
+
+Réseaux sociaux : URL complète de chaque profil à afficher (les autres seront retirés)
+  Actuel : LinkedIn et GitHub (liens vides)
+  LinkedIn    →
+  Instagram   →
+  Facebook    →
+  Fiche Google (Google Business Profile) →
+  GitHub (le garder ? pertinent pour une cible PME/artisans ?) →
+  Autre       →
+
+Logo
+  Actuel : public/assets/images/icon.png et logo.png
+  Le logo actuel est-il définitif ? Sinon, fournir un SVG (ou PNG 512 px minimum, fond transparent).
+  →
+
+
+#############################################################################################
+2. ENVOI DU FORMULAIRE DE CONTACT
+#############################################################################################
+
+Le formulaire est branché. Il reste à choisir par où arrivent les demandes :
+
+  a) Par e-mail via Resend (gratuit jusqu'à 3 000 e-mails/mois) : il faut un compte Resend
+     et vérifier le domaine d'envoi (quelques enregistrements DNS).
+  b) Vers un outil (Make, Zapier, n8n, un CRM, Google Sheets…) via une URL de webhook.
+  c) Les deux.
+
+Votre choix (a / b / c)
+  →
+
+Adresse d'expédition souhaitée (ex. site@votre-domaine.fr) si e-mail
+  →
+
+Texte sous le formulaire (consentement)
+  Actuel : « Nous répondons sous 24h. En envoyant ce formulaire, vous acceptez le suivi par email
+           pour ce projet. »
+  À compléter avec un lien vers la politique de confidentialité (voir section 9).
+  →
+
+L'engagement « réponse sous 24h » est-il tenable (week-ends compris) ?
+  →
+
+
+#############################################################################################
+3. POSITIONNEMENT : DÉCISION À PRENDRE
+#############################################################################################
+
+Le nouveau site présente une agence web et communication pour PME, commerçants, artisans et
+professions libérales (stratégie, site vitrine et SEO, Google Maps, logiciel sur mesure).
+
+Plusieurs pages héritées de la v1 parlent encore d'une autre offre (ERP PME modulaire, SaaS
+Next.js clé en main, data, cloud, « équipe senior »). Leurs textes n'ont pas été modifiés :
+
+  - /services et ses 4 pages (ERP PME, SaaS Next.js, SEO & rebranding, réseaux sociaux)
+  - /about (valeurs, méthode, domaines « ERP PME », « SaaS Next.js »…)
+  - /faqs (questions sur l'ERP, le SaaS, la sécurité, l'hébergement)
+  - /contact, introduction : « produit à lancer, refonte, audit technique, problématiques data
+    ou cloud »
+
+Pour chacune, que fait-on ? (garder tel quel / réécrire dans le nouveau positionnement / retirer)
+  /services   →
+  /about      →
+  /faqs       →
+  /contact    →
+
+Si une page est réécrite : fournir ses nouveaux textes à la suite de ce fichier, ou demander une
+proposition à partir des sections ci-dessous.
+
+
+#############################################################################################
+4. RÉFÉRENCEMENT (SEO) : TITRE ET DESCRIPTION DE CHAQUE PAGE
+#############################################################################################
+
+Mots-clés principaux que vos clients tapent dans Google (ex. « création site internet
+artisan Lyon »). 5 à 10, avec la ville si vous visez une zone :
+  →
+
+Villes ou zones à cibler en priorité :
+  →
+
+Pour chaque page : le titre (60 car. max, « · Yonko Tech Consulting » est ajouté automatiquement
+sauf pour l'accueil) et la description (140 à 160 car.).
+
+Accueil
+  Titre actuel : Yonko Tech Consulting
+  Description actuelle : Agence web et communication pour PME, commerçants, artisans et
+  professions libérales : stratégie, site vitrine et SEO, visibilité sur Google Maps, logiciel
+  sur mesure.
+  Titre       →
+  Description →
+
+Expertises (index)
+  Description actuelle : [à adapter] Stratégie, site vitrine et SEO, Google Maps, logiciel sur mesure.
+  Description →
+
+Stratégie de communication / Site vitrine et SEO / Google Maps et visibilité locale /
+Logiciel sur mesure : la description reprend le « résumé » de chaque page (section 6).
+
+Réalisations
+  Description actuelle : [à adapter] Sites, fiches Google et logiciels réalisés pour des PME,
+  commerçants et artisans.
+  Description →
+
+À propos
+  Description actuelle : L'agence Yonko Tech Consulting : une seule équipe pour la stratégie, le
+  site, la visibilité locale et le logiciel sur mesure des PME.
+  Description →
+
+Contact
+  Description actuelle : Décrivez votre projet à Yonko Tech Consulting : site vitrine,
+  référencement local, logiciel sur mesure. Réponse sous 24h.
+  Description →
+
+Questions fréquentes
+  Description actuelle : Réponses sur l'ERP PME modulaire, le SaaS Next.js clé en main, la
+  sécurité, l'hébergement et la propriété des développements.
+  Description → (dépend de la décision de la section 3)
+
+Offres (/services)
+  Description → (dépend de la décision de la section 3)
+
+Image de partage (aperçu sur LinkedIn, WhatsApp…)
+  Actuelle : fond noir, « Être vu. Être trouvé. Être efficace. », sous-titre « Agence web et
+  communication pour PME, commerçants et artisans. », trois fibres.
+  Sous-titre →
+
+
+#############################################################################################
+5. PAGE D'ACCUEIL, SECTION PAR SECTION
+#############################################################################################
+
+--- 5.1 Hero (haut de page) -----------------------------------------------------------------
+
+Surtitre (40 car. max)
+  Actuel : Agence web & communication
+  →
+
+Titre (déjà validé ? les mots en or sont « stratégie » et « client »)
+  Actuel : Votre stratégie digitale, du premier clic au premier client.
+  →
+
+Sous-titre (90 car. max)
+  Actuel : [à adapter] Site vitrine, Google Maps et logiciel sur mesure, pilotés par une seule stratégie.
+  →
+
+--- 5.2 Manifeste -------------------------------------------------------------------------
+
+Les trois lignes « Être vu. Être trouvé. Être efficace. » : définitives ? →
+
+Paragraphe (160 car. max)
+  Actuel : [à adapter] Trois promesses, une seule stratégie : on construit votre présence en
+  ligne pour qu'elle vous amène des clients, pas seulement des visiteurs.
+  →
+
+--- 5.3 La méthode (Stratégie) ------------------------------------------------------------
+
+Titre (le mot en or est « stratégie »)
+  Actuel : [à adapter] Une stratégie d'abord, les outils ensuite.
+  →
+
+Introduction (140 car. max)
+  Actuel : [à adapter] Avant de construire quoi que ce soit, on pose le plan. Chaque site, chaque
+  fiche, chaque logiciel en découle.
+  →
+
+Étape 1 « Audit » (texte 120 car. max)
+  Actuel : [à adapter] On regarde où vous en êtes : site, fiche Google, outils, concurrents. Ce qui
+  marche, ce qui freine.
+  Titre →
+  Texte →
+
+Étape 2 « Plan »
+  Actuel : [à adapter] Une feuille de route claire : quoi construire, dans quel ordre, pour quel
+  résultat attendu.
+  Titre →
+  Texte →
+
+Étape 3 « Pilotage »
+  Actuel : [à adapter] On mesure, on ajuste, on vous rend compte chaque mois. La stratégie vit
+  avec votre activité.
+  Titre →
+  Texte →
+
+--- 5.4 Expertises (les 3 scènes animées) -------------------------------------------------
+
+Texte de chaque scène (150 car. max). Titres « Être vu / trouvé / efficace » conservés.
+
+SEO
+  Actuel : [à adapter] Un site rapide, clair et bien référencé : quand un client cherche votre
+  métier dans votre ville, c'est vous qu'il trouve en haut de la page.
+  →
+
+Google Maps
+  Actuel : [à adapter] Quand un client cherche « boulangerie près de moi », c'est votre
+  établissement qu'il voit en premier : fiche Google soignée, avis, horaires et itinéraire à jour.
+  →
+
+Logiciel
+  Actuel : [à adapter] Devis, planning, stock, facturation : un outil taillé pour votre activité,
+  qui vous fait gagner des heures chaque semaine.
+  →
+
+--- 5.5 Résultats -------------------------------------------------------------------------
+
+Titre
+  Actuel : [à adapter] Le travail parle de lui-même.
+  →
+
+Trois chiffres clés RÉELS, mesurés chez vos clients (valeur + libellé court, 40 car. max).
+Ces chiffres sont aujourd'hui des exemples et ne doivent pas être publiés tels quels.
+  Actuel 1 : +240 % d'appels entrants              → valeur :        libellé :
+  Actuel 2 : Top 3 sur Google, dans sa ville        → valeur :        libellé :
+  Actuel 3 : 12 h gagnées par semaine               → valeur :        libellé :
+  Source / client de chaque chiffre (pour nous, non publié) →
+
+Les cartes projets de cette section : voir section 7.
+
+--- 5.6 L'agence ------------------------------------------------------------------------
+
+Titre
+  Actuel : [à adapter] Une équipe à taille humaine, à côté de chez vous.
+  →
+
+Texte (200 car. max)
+  Actuel : [à adapter] Yonko Tech Consulting, c'est une équipe qui parle votre langue : pas de
+  jargon, des résultats que vous pouvez mesurer, et quelqu'un qui décroche quand vous appelez.
+  →
+
+Trois faits (60 car. max chacun)
+  Actuel 1 : Basés à [ville], on se déplace chez vous            →
+  Actuel 2 : Un seul interlocuteur, du premier appel au suivi    →
+  Actuel 3 : Depuis [année], pour des PME et indépendants        →
+
+--- 5.7 Process ---------------------------------------------------------------------------
+
+Titre
+  Actuel : [à adapter] Quatre étapes, un seul interlocuteur.
+  →
+
+Étape 1 « Échange »   Actuel : Un premier rendez-vous pour comprendre votre activité, vos clients
+                      et ce qui vous fait perdre du temps.
+  Titre →             Texte →
+Étape 2 « Stratégie » Actuel : On fixe les priorités : ce qui sera construit, dans quel ordre, et
+                      comment on mesurera le résultat.
+  Titre →             Texte →
+Étape 3 « Création »  Actuel : Site, fiche Google, logiciel : on construit, vous validez à chaque
+                      étape, sans jargon.
+  Titre →             Texte →
+Étape 4 « Suivi »     Actuel : Après la mise en ligne, on reste là : mesures, ajustements et un
+                      point régulier ensemble.
+  Titre →             Texte →
+
+--- 5.8 Contact (bas de page) -------------------------------------------------------------
+
+Titre (déjà validé ?)
+  Actuel : Connectons votre entreprise.
+  →
+
+Texte (120 car. max)
+  Actuel : [à adapter] Un premier échange de 30 minutes, sans engagement, pour parler de votre
+  activité et de vos priorités.
+  Le premier échange est-il bien gratuit, sans engagement, et de 30 minutes ?
+  →
+
+
+#############################################################################################
+6. PAGES EXPERTISES (/expertises et une page par expertise)
+#############################################################################################
+
+Page d'index /expertises
+  Titre actuel : [à adapter] Une stratégie, trois leviers.   (aussi dans le menu Expertises)
+  →
+  Introduction actuelle : [à adapter] Être vu, être trouvé, être efficace : chaque expertise
+  répond à un besoin concret de votre entreprise.
+  →
+
+Phrase du bandeau d'action en bas de chaque page
+  Actuel : [à adapter] On en parle ?
+  →
+
+Pour CHAQUE expertise ci-dessous, remplir :
+  - Résumé (1 phrase, 80 car. max) : menu, index, description Google.
+  - Introduction (2 à 3 phrases, 280 car. max).
+  - Ce qui est inclus : 4 éléments (titre 30 car. + texte 90 car.).
+  - Pour qui : 3 profils (titre 25 car. + texte 90 car.).
+  - Déroulé : 3 étapes (titre, durée, texte 70 car.).
+  - Prix ou « à partir de » (facultatif, non affiché aujourd'hui) : souhaitez-vous l'afficher ?
+
+--- 6.1 Stratégie de communication (« Le pilier qui pilote tout. ») ----------------------
+
+Résumé       Actuel : Un plan clair avant d'investir dans le moindre outil.
+  →
+Introduction Actuel : Avant de construire un site ou un logiciel, on pose le plan : qui sont vos
+             clients, où vous cherchent-ils, et quel message les fait venir. Tout le reste en découle.
+  →
+Inclus 1  Audit de présence : Site, fiche Google, réseaux, concurrents : ce qui marche et ce qui freine.  →
+Inclus 2  Positionnement et message : Ce que vous dites, à qui, et pourquoi on doit vous choisir.  →
+Inclus 3  Plan d'action priorisé : Les chantiers dans l'ordre, avec le résultat attendu pour chacun.  →
+Inclus 4  Pilotage mensuel : Un point régulier, des chiffres simples, des ajustements concrets.  →
+Profil 1  Commerçants : Vous voulez plus de passage en boutique, sans multiplier les dépenses.  →
+Profil 2  Artisans : Vous êtes débordés de travail ou de devis non signés : il faut mieux choisir.  →
+Profil 3  Professions libérales : Votre réputation se joue en ligne avant le premier rendez-vous.  →
+Étape 1   Audit · 1 semaine · Entretien, état des lieux, premiers constats.  →
+Étape 2   Plan · 1 semaine · Feuille de route chiffrée et priorisée.  →
+Étape 3   Pilotage · Mensuel · Mesure, ajustements, compte rendu.  →
+Prix      →
+
+--- 6.2 Site vitrine et SEO (« Être vu. ») -----------------------------------------------
+
+Résumé       Actuel : Un site rapide et bien référencé, en haut des résultats.
+  →
+Introduction Actuel : Un site clair, rapide et pensé pour Google : quand un client cherche votre
+             métier dans votre ville, c'est vous qu'il trouve en premier, et il sait tout de suite
+             comment vous contacter.
+  →
+Inclus 1  Site sur mesure : Design soigné, textes qui parlent à vos clients, mobile d'abord.  →
+Inclus 2  Référencement local : Pages optimisées pour vos services et votre zone.  →
+Inclus 3  Performance : Chargement rapide, scores Google au vert.  →
+Inclus 4  Suivi des contacts : Appels, formulaires, itinéraires : on mesure ce qui compte.  →
+Profil 1  Commerçants : Horaires, produits, accès : l'essentiel visible en un coup d'œil.  →
+Profil 2  Artisans : Vos réalisations mises en valeur, des demandes de devis qualifiées.  →
+Profil 3  Professions libérales : Une présence sérieuse, conforme, rassurante.  →
+Étape 1   Maquette · 2 semaines · Structure, textes, design validés ensemble.  →
+Étape 2   Construction · 3 semaines · Développement, référencement, tests.  →
+Étape 3   Mise en ligne · 1 semaine · Lancement, suivi des premières positions.  →
+Prix      →
+
+--- 6.3 Google Maps et visibilité locale (« Être trouvé. ») -----------------------------
+
+Résumé       Actuel : Votre établissement en tête de la carte, près de chez vos clients.
+  →
+Introduction Actuel : Quand un client cherche « près de moi », la carte décide. On soigne votre
+             fiche Google, vos avis et vos informations pour que votre établissement ressorte en premier.
+  →
+Inclus 1  Fiche Google optimisée : Catégories, photos, horaires, services : complets et à jour.  →
+Inclus 2  Avis clients : Une méthode simple pour en obtenir plus, et y répondre.  →
+Inclus 3  Annuaires locaux : Des informations cohérentes partout où l'on vous cherche.  →
+Inclus 4  Suivi des appels et itinéraires : Les demandes générées par la carte, chaque mois.  →
+Profil 1  Commerçants : Boulangerie, fleuriste, restaurant : être le premier choix du quartier.  →
+Profil 2  Artisans : Plombier, électricien, garage : être appelé en priorité.  →
+Profil 3  Professions libérales : Cabinet, étude, agence : être trouvé et bien noté.  →
+Étape 1   Diagnostic · 3 jours · Position actuelle, concurrents, mots recherchés.  →
+Étape 2   Optimisation · 2 semaines · Fiche, photos, avis, annuaires.  →
+Étape 3   Suivi · Mensuel · Positions, appels, itinéraires.  →
+Prix      →
+
+--- 6.4 Logiciel interne sur mesure (« Être efficace. ») --------------------------------
+
+Résumé       Actuel : Un outil taillé pour votre activité, qui fait gagner des heures.
+  →
+Introduction Actuel : Devis, planning, clients, facturation, stock : un seul outil, simple, conçu
+             autour de votre façon de travailler. Moins de ressaisies, moins d'oublis, plus de temps
+             pour votre métier.
+  →
+Inclus 1  Modules à la carte : Planning, clients, facturation, stock : seulement ce qui vous sert.  →
+Inclus 2  Accès partout : Sur ordinateur, tablette et téléphone, au bureau ou sur le chantier.  →
+Inclus 3  Reprise de vos données : Vos fichiers existants importés, sans repartir de zéro.  →
+Inclus 4  Accompagnement : Prise en main, formation, évolutions au fil du temps.  →
+Profil 1  Commerçants : Stock et ventes suivis sans tableur.  →
+Profil 2  Artisans : Devis et factures faits en quelques minutes, même sur le chantier.  →
+Profil 3  Professions libérales : Rendez-vous, dossiers et facturation au même endroit.  →
+Étape 1   Cadrage · 1 semaine · Vos tâches du quotidien, ce qui fait perdre du temps.  →
+Étape 2   Prototype · 3 semaines · Une première version utilisable, testée avec vous.  →
+Étape 3   Déploiement · 2 semaines · Mise en service, formation, ajustements.  →
+Prix      →
+
+Format : « Titre : texte » ou « Titre · durée · texte ». Les titres peuvent être gardés ou changés.
+
+
+#############################################################################################
+7. RÉALISATIONS (/projets, cartes de l'accueil, une page par projet)
+#############################################################################################
+
+Les 4 projets actuels sont fictifs (boulangerie, garage, cabinet de kinésithérapie, institut
+de beauté). Pour chaque projet réel (4 recommandés, 2 minimum) :
+
+Page /projets
+  Titre actuel : [à adapter] Ils nous ont confié leur visibilité.
+  →
+  Introduction actuelle : [à adapter] Commerces, artisans, cabinets : chaque projet part d'un
+  besoin concret et se mesure à ses résultats.
+  →
+
+Projet 1
+  Nom du client (ou description anonyme, ex. « Boulangerie à Lyon ») →
+  Accord du client pour être cité nommément (oui / non) →
+  Secteur (ex. Commerce de proximité, Artisan, Profession libérale) →
+  Service principal (Site vitrine et SEO / Google Maps / Logiciel / Stratégie) →
+  Résultat en une ligne, chiffré si possible (50 car. max) →
+  Le contexte : qui est le client, ce qui le freinait, ce qu'il attendait (400 car.) →
+  Ce que nous avons fait : choix, réalisations et pourquoi (500 car.) →
+  Le résultat : chiffres mesurés après la mise en ligne, et ce qu'ils changent (400 car.) →
+  Citation du client (facultatif, avec prénom et fonction) →
+  Lien vers le site réalisé (facultatif) →
+  Visuel : capture ou photo, format 4:3, 1600 × 1200 px minimum, sans texte incrusté →
+
+Projet 2
+  (mêmes rubriques)
+  →
+
+Projet 3
+  →
+
+Projet 4
+  →
+
+
+#############################################################################################
+8. EN-TÊTE ET PIED DE PAGE
+#############################################################################################
+
+Phrase du pied de page (sous le logo, 160 car. max)
+  Actuel : [à adapter] Agence web et communication : stratégie, site vitrine, Google Maps et
+  logiciel sur mesure pour les PME, commerçants, artisans et professions libérales.
+  →
+
+Phrase du panneau « Expertises » du menu
+  Actuel : [à adapter] Une stratégie, trois leviers.
+  →
+
+Liens du menu : Expertises, Réalisations, À propos, FAQ, « Démarrer un projet ».
+Changement souhaité ? →
+
+
+#############################################################################################
+9. PAGES LÉGALES (obligatoires avant la mise en ligne)
+#############################################################################################
+
+Les liens « Mentions légales » et « Politique de confidentialité » du pied de page ne mènent
+encore nulle part.
+
+Mentions légales : raison sociale, forme juridique, capital, adresse du siège, SIREN/SIRET,
+RCS ou RM, numéro de TVA intracommunautaire, directeur de la publication, hébergeur du site
+(nom, adresse, téléphone).
+  →
+
+Politique de confidentialité : qui reçoit les demandes du formulaire, combien de temps elles
+sont conservées, outils utilisés (Resend, CRM…), mesure d'audience prévue (aucune aujourd'hui),
+contact pour exercer ses droits (e-mail).
+  →
+
+Mesure d'audience souhaitée ? (aucune / Plausible ou équivalent sans cookie / Google Analytics,
+qui impose un bandeau de consentement)
+  →
+
+
+#############################################################################################
+10. MÉDIAS
+#############################################################################################
+
+Vidéo du hero (l'ordinateur) et bande d'introduction : validées en l'état ? →
+Photo(s) d'équipe ou de vos locaux pour la page À propos (facultatif) →
+Portrait du ou des fondateurs, avec nom et rôle (facultatif) →
+
+
+#############################################################################################
+11. AUTRES REMARQUES
+#############################################################################################
+
+→

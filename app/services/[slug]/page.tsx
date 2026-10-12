@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 
 import { ServiceDetail } from "@/app/services/service-detail";
 import { getServiceBySlug, services } from "@/lib/services-data";
+import { pageMetadata } from "@/lib/site";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -20,10 +21,7 @@ export async function generateMetadata({
     return {};
   }
 
-  return {
-    title: `${service.title} | Yonko Tech Consulting`,
-    description: service.shortDescription,
-  };
+  return pageMetadata({ title: service.title, description: service.shortDescription, path: `/services/${service.slug}` });
 }
 
 export default async function ServiceDetailPage({

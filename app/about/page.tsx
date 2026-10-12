@@ -1,11 +1,18 @@
 import type { Metadata } from "next";
 
+import { pageMetadata } from "@/lib/site";
+
 import { DottedLink } from "@/components/motion/dotted-link";
 import { CtaBand } from "@/components/page/cta-band";
 import { PageHeader, SectionTitle } from "@/components/page/page-header";
 import { AboutMarkAnimated } from "@/components/sections/about-mark";
 
-export const metadata: Metadata = { title: "À propos · Yonko Tech Consulting" };
+export const metadata: Metadata = pageMetadata({
+  title: "À propos",
+  description:
+    "L'agence Yonko Tech Consulting : une seule équipe pour la stratégie, le site, la visibilité locale et le logiciel sur mesure des PME.",
+  path: "/about",
+});
 
 const values = [
   {

@@ -2,9 +2,16 @@ import { DottedLink } from "@/components/motion/dotted-link";
 import { CtaBand } from "@/components/page/cta-band";
 import { PageHeader } from "@/components/page/page-header";
 import { FaqSection } from "@/components/sections/faq-section";
+import { JsonLd, faqJsonLd } from "@/components/seo/json-ld";
 import { faqItems, type FaqItem } from "@/lib/faq-data";
+import { pageMetadata } from "@/lib/site";
 
-export const metadata = { title: "Questions fréquentes · Yonko Tech Consulting" };
+export const metadata = pageMetadata({
+  title: "Questions fréquentes",
+  description:
+    "Réponses sur l'ERP PME modulaire, le SaaS Next.js clé en main, la sécurité, l'hébergement et la propriété des développements.",
+  path: "/faqs",
+});
 
 const CATEGORY_ORDER = [
   "ERP PME",
@@ -51,6 +58,7 @@ export default function FaqsPage() {
 
   return (
     <div>
+      <JsonLd data={faqJsonLd(faqItems)} />
       <PageHeader
         eyebrow="Questions fréquentes"
         title="Toutes les questions"

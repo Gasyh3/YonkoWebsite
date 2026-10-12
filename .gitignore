@@ -10,7 +10,9 @@ next-env.d.ts
 *.tsbuildinfo
 .DS_Store
 *.log
+.env
 .env*.local
+.env.production
 .vercel
 
 # hyperframes renders (sources are versioned, renders go to public/media)

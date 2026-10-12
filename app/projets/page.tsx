@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 
+import { pageMetadata } from "@/lib/site";
+
 import { ProjectsIndex } from "@/components/pages/projects-index";
 
-export const metadata: Metadata = {
-  title: "Réalisations · Yonko Tech Consulting",
+export const metadata: Metadata = pageMetadata({
+  title: "Réalisations",
   description: "[à adapter] Sites, fiches Google et logiciels réalisés pour des PME, commerçants et artisans.",
-};
+  path: "/projets",
+});
 
 export default function ProjectsPage() {
   return (

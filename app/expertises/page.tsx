@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 
 import { expertises } from "@/lib/expertises-data";
 
-export const metadata: Metadata = {
-  title: "Expertises · Yonko Tech Consulting",
+export const metadata: Metadata = pageMetadata({
+  title: "Expertises",
   description: "[à adapter] Stratégie, site vitrine et SEO, Google Maps, logiciel sur mesure.",
-};
+  path: "/expertises",
+});
 
 // Index des expertises : une ligne par service, chacune mène à sa page.
 export default function ExpertisesPage() {

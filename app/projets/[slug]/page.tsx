@@ -4,7 +4,9 @@ import { notFound } from "next/navigation";
 
 import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
 import { SkeletonImage } from "@/components/ui/skeleton";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
 import { getProject, projects } from "@/lib/results-data";
+import { pageMetadata } from "@/lib/site";
 
 // Page projet (C11) : son visuel d'en-tête reçoit l'image de la carte cliquée (View Transition « project-media »,
 // voir lib/motion/page-transitions.ts). Contenus provisoires : [à remplacer].
@@ -15,7 +17,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
-  return { title: project ? `${project.title} · Yonko Tech Consulting` : "Projet · Yonko Tech Consulting" };
+  if (!project) return { title: "Projet" };
+  return pageMetadata({
+    title: project.title,
+    description: `${project.service} pour ${project.sector.toLowerCase()} : ${project.result}.`,
+    path: `/projets/${project.slug}`,
+  });
 }
 
 const SECTIONS = [
@@ -40,6 +47,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   return (
     <article className="container py-16 md:py-24">
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Réalisations", path: "/projets" },
+          { name: project.title, path: `/projets/${project.slug}` },
+        ])}
+      />
       <DottedLink href="/#projets" className="text-xs uppercase tracking-[0.24em] text-silver">
         ← Tous les projets
       </DottedLink>

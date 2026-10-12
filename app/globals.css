@@ -2110,6 +2110,76 @@ html[data-navigating] [data-close-on-navigate] {
   border-color: color-mix(in srgb, var(--silver) 40%, transparent);
 }
 
+.form-field:disabled {
+  opacity: .6;
+}
+
+/* Champ en erreur : contour en dégradé or (jamais une couleur plate), message argent clair sous le champ. */
+.form-field[aria-invalid="true"] {
+  border-color: transparent;
+  background: linear-gradient(var(--black), var(--black)) padding-box, var(--gold) border-box;
+}
+
+.form-error {
+  display: flex;
+  align-items: baseline;
+  gap: .5rem;
+  font-size: .85rem;
+  color: var(--silver-light);
+}
+
+.form-error::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-image: var(--gold);
+  transform: translateY(-1px);
+}
+
+.form-status:empty {
+  display: none;
+}
+
+/* Champ piège anti-spam : hors écran, jamais affiché ni lu. */
+.form-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Confirmation d'envoi : remplace le formulaire, nœud or (la demande est arrivée). */
+.contact-done {
+  position: relative;
+  padding-top: 3.5rem;
+  animation: contact-done-in var(--dur-reveal) var(--ease-in-css) both;
+}
+
+.contact-done__node {
+  position: absolute;
+  top: 2rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-image: var(--gold);
+}
+
+@keyframes contact-done-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contact-done {
+    animation: none;
+  }
+}
+
 /* Étapes du Contact : toujours en colonne (fibre verticale). */
 @media (min-width: 768px) {
   .contact-steps {

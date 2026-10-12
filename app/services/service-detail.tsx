@@ -2,6 +2,7 @@ import { DottedLink } from "@/components/motion/dotted-link";
 import { PrimaryButton } from "@/components/page/buttons";
 import { CtaBand } from "@/components/page/cta-band";
 import { PageHeader } from "@/components/page/page-header";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
 import type { Service } from "@/lib/services-data";
 
 type Props = {
@@ -20,6 +21,12 @@ const COLUMNS = [
 export function ServiceDetail({ service, showBackLink = true }: Props) {
   return (
     <article>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Offres", path: "/services" },
+          { name: service.title, path: `/services/${service.slug}` },
+        ])}
+      />
       <PageHeader
         eyebrow={
           showBackLink ? (

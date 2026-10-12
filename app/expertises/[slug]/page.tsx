@@ -5,7 +5,9 @@ import { notFound } from "next/navigation";
 import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
 import { CtaBand } from "@/components/page/cta-band";
 import { ExpertiseDemo } from "@/components/pages/expertise-demo";
+import { JsonLd, breadcrumbJsonLd } from "@/components/seo/json-ld";
 import { expertises, getExpertise, nextExpertise } from "@/lib/expertises-data";
+import { pageMetadata } from "@/lib/site";
 
 // Page d'une expertise (contenus fictifs [à adapter]) : promesse, visualisation animée reprise de l'accueil,
 // contenu de l'offre, profils, déroulé, puis l'action « Démarrer un projet ».
@@ -16,10 +18,8 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const item = getExpertise(slug);
-  return {
-    title: item ? `${item.title} · Yonko Tech Consulting` : "Expertise · Yonko Tech Consulting",
-    description: item?.summary,
-  };
+  if (!item) return { title: "Expertise" };
+  return pageMetadata({ title: item.title, description: item.summary, path: `/expertises/${item.slug}` });
 }
 
 export default async function ExpertisePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -30,6 +30,12 @@ export default async function ExpertisePage({ params }: { params: Promise<{ slug
 
   return (
     <article>
+      <JsonLd
+        data={breadcrumbJsonLd([
+          { name: "Expertises", path: "/expertises" },
+          { name: item.title, path: `/expertises/${item.slug}` },
+        ])}
+      />
       <header className="container pb-8 pt-16 md:pt-24">
         <nav aria-label="Fil d'Ariane" className="text-xs uppercase tracking-[0.24em] text-silver">
           <DottedLink href="/expertises">Expertises</DottedLink>

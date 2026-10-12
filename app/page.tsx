@@ -12,6 +12,9 @@ import { WhyUs } from "@/components/sections/why-us";
 import { FaqSection } from "@/components/sections/faq-section";
 import { faqItems } from "@/lib/faq-data";
 import { DottedLink } from "@/components/motion/dotted-link";
+import { pageMetadata } from "@/lib/site";
+
+export const metadata = pageMetadata({ path: "/" });
 
 export default function Home() {
   return (

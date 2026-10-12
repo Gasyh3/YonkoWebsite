@@ -1,5 +1,7 @@
 import { GhostButton, PrimaryButton } from "@/components/page/buttons";
 
+export const metadata = { title: "Page introuvable" };
+
 // 404 : la fibre s'interrompt. Visuel statique (pointillés, extrémité or), deux chemins pour repartir.
 export default function NotFound() {
   return (

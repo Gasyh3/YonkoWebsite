@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { pageMetadata } from "@/lib/site";
+
 import { DottedLink } from "@/components/motion/dotted-link";
 import { CtaBand } from "@/components/page/cta-band";
 import { PageHeader } from "@/components/page/page-header";
@@ -7,7 +9,11 @@ import { FaqSection } from "@/components/sections/faq-section";
 import { OfferCards } from "@/components/sections/offer-cards";
 import { faqItems } from "@/lib/faq-data";
 
-export const metadata: Metadata = { title: "Offres · Yonko Tech Consulting" };
+export const metadata: Metadata = pageMetadata({
+  title: "Offres",
+  description: "Les offres Yonko Tech Consulting : ERP PME modulaire, SaaS Next.js clé en main, SEO et rebranding, communication sur les réseaux sociaux.",
+  path: "/services",
+});
 
 // Offres (contenu v1 inchangé) dans la direction artistique.
 export default function ServicesPage() {

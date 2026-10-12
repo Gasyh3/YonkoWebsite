@@ -1,10 +1,14 @@
-"use client";
-
-import { FormEvent, useState } from "react";
-import { toast } from "sonner";
-
-import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
+import { DottedLink } from "@/components/motion/dotted-link";
 import { PageHeader } from "@/components/page/page-header";
+import { ContactForm } from "@/components/pages/contact-form";
+import { SITE, pageMetadata } from "@/lib/site";
+
+export const metadata = pageMetadata({
+  title: "Contact",
+  description:
+    "Décrivez votre projet à Yonko Tech Consulting : site vitrine, référencement local, logiciel sur mesure. Réponse sous 24h.",
+  path: "/contact",
+});
 
 // Ce qui suit l'envoi (repris des engagements de la v1 : réponse sous 24h, créneau de cadrage).
 const NEXT_STEPS = [
@@ -13,24 +17,7 @@ const NEXT_STEPS = [
   { title: "Un créneau pour cadrer", text: "On précise ensemble et on recommande les premiers pas." },
 ];
 
-const FIELD = "form-field";
-
 export default function ContactPage() {
-  const [loading, setLoading] = useState(false);
-
-  const onSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    const formData = new FormData(event.currentTarget);
-    const payload = Object.fromEntries(formData.entries());
-    console.log("Contact form payload", payload);
-    toast.message("Merci !", {
-      description: "Nous revenons vers vous sous 24h avec une première proposition.",
-    });
-    event.currentTarget.reset();
-    setTimeout(() => setLoading(false), 700);
-  };
-
   return (
     <div>
       <PageHeader
@@ -55,74 +42,13 @@ export default function ContactPage() {
             </ol>
             <p className="mt-12 text-sm text-silver">
               Vous préférez l&apos;e-mail ?{" "}
-              <DottedLink href="mailto:contact@yonkotech.com" className="text-silver-light">
-                contact@yonkotech.com
+              <DottedLink href={`mailto:${SITE.email}`} className="text-silver-light">
+                {SITE.email}
               </DottedLink>
             </p>
           </div>
 
-          <form className="panel space-y-6" onSubmit={onSubmit}>
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label htmlFor="name" className="form-label">
-                  Nom
-                </label>
-                <input id="name" name="name" placeholder="Votre nom" required autoComplete="name" className={FIELD} />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="company" className="form-label">
-                  Société
-                </label>
-                <input id="company" name="company" placeholder="Votre entreprise" autoComplete="organization" className={FIELD} />
-              </div>
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2">
-              <div className="space-y-2">
-                <label htmlFor="email" className="form-label">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="vous@entreprise.com"
-                  required
-                  autoComplete="email"
-                  className={FIELD}
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="subject" className="form-label">
-                  Sujet
-                </label>
-                <input id="subject" name="subject" placeholder="Refonte app, audit tech..." required className={FIELD} />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="message" className="form-label">
-                Message
-              </label>
-              <textarea
-                id="message"
-                name="message"
-                placeholder="Détaillez le contexte, les objectifs et le délai souhaité."
-                required
-                className={`${FIELD} min-h-[160px] resize-y`}
-              />
-            </div>
-            <p className="text-xs text-silver">
-              Nous répondons sous 24h. En envoyant ce formulaire, vous acceptez le suivi par email pour ce projet.
-            </p>
-            <button
-              type="submit"
-              data-magnetic=""
-              disabled={loading}
-              className="btn-primary relative inline-flex h-12 w-full items-center justify-center rounded-full px-6 text-sm font-medium disabled:opacity-60 sm:w-auto"
-            >
-              <ButtonGlint />
-              <span className="relative">{loading ? "Envoi..." : "Envoyer ma demande"}</span>
-            </button>
-          </form>
+          <ContactForm />
         </div>
       </section>
     </div>

@@ -2204,42 +2204,6 @@ html[data-navigating] [data-close-on-navigate] {
   }
 }
 
-/* Cartes d'offre : --surface, fin contour, flèche qui avance au survol (transform). */
-.offer-card {
-  display: flex;
-  height: 100%;
-  flex-direction: column;
-  padding: 1.75rem;
-  border: 1px solid var(--fiber-off);
-  border-radius: 14px;
-  background: var(--surface);
-}
-
-@media (min-width: 768px) {
-  .offer-card {
-    padding: 2.25rem;
-  }
-}
-
-.offer-card:hover {
-  border-color: color-mix(in srgb, var(--silver) 40%, transparent);
-}
-
-.offer-card__more {
-  margin-top: auto;
-  padding-top: 2rem;
-}
-
-.offer-card__more span {
-  display: inline-block;
-  transition: transform var(--dur-micro) var(--ease-in-css);
-}
-
-.offer-card:hover .offer-card__more span,
-.offer-card:focus-visible .offer-card__more span {
-  transform: translateX(6px);
-}
-
 /* Footer : components/site-footer.tsx */
 .site-footer {
   background: var(--black);

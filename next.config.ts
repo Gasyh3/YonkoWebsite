@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 // Les offres v1 (/services) sont remplacées par les expertises : redirections permanentes (308) pour conserver
-// les liens et le référencement existants. Les redirections passent avant les pages, qui ne sont plus servies.
+// les liens et le référencement existants. Les pages v1 sont supprimées, leurs textes archivés dans
+// docs/archive/offres-v1.md.
 const SERVICE_REDIRECTS: Record<string, string> = {
   "erp-pme-modulaire": "logiciel-sur-mesure",
   "saas-cle-en-main-nextjs": "logiciel-sur-mesure",

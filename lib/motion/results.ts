@@ -1,4 +1,5 @@
-// Résultats et projets (C8) : ici les fibres s'effacent pour laisser parler le travail.
+// Résultats et projets (C8) : ici les fibres s'effacent pour laisser parler le travail. Aujourd'hui seuls les
+// chiffres (engagements) sont affichés ; la partie projets reste prête pour de vraies réalisations.
 // - Fibres : la section porte [data-fiber-dim] ; le FiberSystem y passe les fibres à 50 % (marge droite).
 // - Chiffres clés : à l'entrée, chaque nombre compte de 0 à sa valeur en argent (1.2s, expo.out), puis passe
 //   en dégradé or (fondu entre la couche argent et la couche or).

@@ -14,15 +14,16 @@ Où modifier les textes
 ----------------------
 - Expertises (pages, menu, index) : lib/expertises-data.ts
 - Questions fréquentes (/faqs, accueil, bas des pages expertises) : lib/faq-data.tsx
-- Engagements et cas d'usage : lib/results-data.ts
+- Engagements (section Résultats) : lib/results-data.ts
 - Informations de l'entreprise : lib/site.ts
 - Sections de l'accueil : components/sections/*.tsx
 
 Ce qui reste à fournir
 ----------------------
-1. Vraies réalisations, dès qu'il y en a (elles remplacent les cas d'usage, même structure) :
-   nom du client et accord pour le citer, secteur, service, résultat mesuré, contexte, ce qui a
-   été fait, citation éventuelle, visuel 4:3 (1600 × 1200 px minimum).
+1. Vraies réalisations, dès qu'il y en a (aucun projet n'est affiché tant qu'il n'y a pas de
+   client) : nom du client et accord pour le citer, secteur, service, résultat mesuré, contexte,
+   ce qui a été fait, citation éventuelle, visuel 4:3 (1600 × 1200 px minimum). Les cartes et
+   pages projets seront alors réactivées.
 2. Chiffres clés réels, plus tard : la section affiche pour l'instant des engagements
    (réponse sous 24h, un seul interlocuteur, trois leviers), pas des résultats.
 3. Téléphone (facultatif), profils de réseaux sociaux, logo en SVG si un nouveau logo existe.

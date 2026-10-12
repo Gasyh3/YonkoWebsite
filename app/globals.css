@@ -1570,7 +1570,7 @@ html[data-navigating] [data-close-on-navigate] {
 
 /* Ancres de l'accueil : le header (64px) ne recouvre pas le haut de la section. */
 #expertises,
-#projets,
+#engagements,
 #methode,
 #contact {
   scroll-margin-top: 4rem;

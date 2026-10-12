@@ -142,7 +142,7 @@ export function createPageTransitions(navigate: Navigate): PageTransitions {
     // Appelé quand la nouvelle page est rendue (changement de pathname).
     navigated() {
       if (!pending) {
-        // Premier affichage avec une ancre (lien partagé /#projets) : même recalage.
+        // Premier affichage avec une ancre (lien partagé /#expertises) : même recalage.
         if (first && location.hash) settleOnAnchor(decodeURIComponent(location.hash.slice(1)));
         first = false;
         return;

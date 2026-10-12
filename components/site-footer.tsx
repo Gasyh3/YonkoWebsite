@@ -10,7 +10,6 @@ import logoPng from "@/public/assets/images/icon.png";
 // Liens de pied de page (le header garde le parcours principal).
 const FOOTER_LINKS = [
   { href: "/expertises", label: "Expertises" },
-  { href: "/projets", label: "Cas d'usage" },
   { href: "/about", label: "L'agence" },
   { href: "/faqs", label: "Questions fréquentes" },
   { href: "/contact", label: "Contact" },

@@ -11,9 +11,8 @@ import { expertises } from "@/lib/expertises-data";
 import logoPng from "@/public/assets/images/icon.png";
 
 // Pages du site (le header ne pointe plus vers les sections de l'accueil) : les expertises (sous-menu), les
-// cas d'usage, l'agence, les questions fréquentes, et l'action principale « Démarrer un projet ».
+// l'agence, les questions fréquentes, et l'action principale « Démarrer un projet ».
 const LINKS = [
-  { href: "/projets", label: "Cas d'usage" },
   { href: "/about", label: "À propos" },
   { href: "/faqs", label: "FAQ" },
 ];

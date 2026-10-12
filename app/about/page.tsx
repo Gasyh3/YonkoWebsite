@@ -139,8 +139,8 @@ export default function AboutPage() {
       </section>
 
       <CtaBand title="Parlons de votre activité." text="Un premier échange pour comprendre votre contexte et vos priorités.">
-        <DottedLink href="/projets" className="text-sm text-silver">
-          Voir les cas d&apos;usage →
+        <DottedLink href="/expertises" className="text-sm text-silver">
+          Voir nos expertises →
         </DottedLink>
       </CtaBand>
     </div>

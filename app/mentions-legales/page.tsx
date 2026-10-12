@@ -41,9 +41,6 @@ export default function LegalNoticePage() {
             mention contraire. Toute reproduction, totale ou partielle, sans autorisation écrite préalable est
             interdite.
           </p>
-          <p>
-            Les cas d&apos;usage présentés décrivent des situations types : ils ne désignent pas des clients nommés.
-          </p>
         </LegalSection>
 
         <LegalSection title="Responsabilité">

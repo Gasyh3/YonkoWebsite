@@ -16,7 +16,7 @@ import { noMotion, useMotionModule } from "@/lib/motion/use-motion-module";
 // Scène Expertises 02 — Google Maps et visibilité locale (fibre B).
 // La fibre B se branche sur l'avenue principale du plan et le dessine (voir lib/motion/expertises/maps-scene.ts).
 // embedded : dans le conteneur Expertises (C5), qui pilote la scène et prolonge lui-même la fibre.
-export function MapsScene({ embedded = false }: { embedded?: boolean }) {
+export function MapsScene({ embedded = false, vizOnly = false }: { embedded?: boolean; vizOnly?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const uid = useId().replace(/:/g, "");
   useMotionModule(ref, embedded ? noMotion : createMapsScene);
@@ -34,6 +34,7 @@ export function MapsScene({ embedded = false }: { embedded?: boolean }) {
       }
       subtitle="Google Maps et visibilité locale"
       embedded={embedded}
+      vizOnly={vizOnly}
       fiberIn={
         embedded ? undefined : (
           // La fibre B arrive par la gauche et se branche sur l'avenue principale (milieu du plan).

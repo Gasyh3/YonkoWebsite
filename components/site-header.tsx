@@ -3,39 +3,36 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Menu, X } from "lucide-react";
 
 import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
+import { expertises } from "@/lib/expertises-data";
 import logoPng from "@/public/assets/images/icon.png";
 
-// Parcours d'un visiteur (PME, artisan, commerçant) : ce que vous faites, la preuve, la façon de travailler,
-// qui vous êtes. Le contact est l'action principale, toujours visible.
-const NAV = [
-  { href: "/#expertises", label: "Expertises", section: "expertises" },
-  { href: "/#projets", label: "Réalisations", section: "projets" },
-  { href: "/#methode", label: "Méthode", section: "methode" },
+// Pages du site (le header ne pointe plus vers les sections de l'accueil) : les expertises (sous-menu), les
+// réalisations, l'agence, les questions fréquentes, et l'action principale « Démarrer un projet ».
+const LINKS = [
+  { href: "/projets", label: "Réalisations" },
   { href: "/about", label: "À propos" },
-] as const;
-
-// Liens secondaires : dans le menu mobile et le footer.
-const SECONDARY = [
-  { href: "/services", label: "Toutes nos offres" },
-  { href: "/faqs", label: "Questions fréquentes" },
+  { href: "/faqs", label: "FAQ" },
 ];
 
+const HOVER_QUERY = "(hover: hover) and (pointer: fine)";
+const CLOSE_DELAY = 180; // ms : le pointeur peut passer du bouton au panneau sans le refermer
+
 // Header translucide, collé en haut pendant tout le défilement : transparent en haut de page, voile flouté dès
-// que le contenu passe dessous (seule l'opacité du voile change). Sur l'accueil, le lien de la section en vue
-// est marqué (point or).
+// que le contenu passe dessous (seule l'opacité du voile change).
 export function SiteHeader() {
   const pathname = usePathname();
-  // Menu et section en vue sont rattachés au chemin : ils se réinitialisent d'eux-mêmes à la navigation.
-  const [openPath, setOpenPath] = useState<string | null>(null);
-  const [spy, setSpy] = useState<{ path: string; id: string | null }>({ path: "", id: null });
+  // Menus rattachés au chemin : ils se referment d'eux-mêmes à la navigation.
+  const [menuPath, setMenuPath] = useState<string | null>(null);
+  const [panelPath, setPanelPath] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const open = openPath === pathname;
-  const section = spy.path === pathname ? spy.id : null;
-  const close = () => setOpenPath(null);
+  const menuOpen = menuPath === pathname;
+  const panelOpen = panelPath === pathname;
+  const closeTimer = useRef<number | undefined>(undefined);
+  const trigger = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     let frame = 0;
@@ -54,42 +51,40 @@ export function SiteHeader() {
     };
   }, []);
 
-  // Section en vue (accueil) : celle qui traverse le milieu de l'écran.
-  // Échap ferme le menu.
+  // Échap ferme le menu ouvert (et rend le focus au bouton du panneau Expertises).
   useEffect(() => {
-    if (!open) return;
+    if (!menuOpen && !panelOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenPath(null);
+      if (e.key !== "Escape") return;
+      if (panelOpen) trigger.current?.focus();
+      setMenuPath(null);
+      setPanelPath(null);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [menuOpen, panelOpen]);
 
-  useEffect(() => {
-    if (pathname !== "/") return;
-    const targets = NAV.flatMap((item) => ("section" in item ? [document.getElementById(item.section)] : [])).filter(
-      (el): el is HTMLElement => !!el,
-    );
-    const visible = new Set<string>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => (entry.isIntersecting ? visible.add(entry.target.id) : visible.delete(entry.target.id)));
-        setSpy({ path: pathname, id: targets.find((el) => visible.has(el.id))?.id ?? null });
-      },
-      { rootMargin: "-50% 0px -50% 0px" },
-    );
-    targets.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, [pathname]);
+  const openPanel = () => {
+    window.clearTimeout(closeTimer.current);
+    setPanelPath(pathname);
+  };
+  const closePanelSoon = () => {
+    window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setPanelPath(null), CLOSE_DELAY);
+  };
+  // Survol à la souris uniquement (au toucher, le bouton s'ouvre au tap).
+  const isMouseHover = (e: React.PointerEvent) => e.pointerType === "mouse" && window.matchMedia(HOVER_QUERY).matches;
 
-  const isActive = (item: (typeof NAV)[number]) =>
-    "section" in item ? pathname === "/" && section === item.section : pathname.startsWith(item.href);
+  const expertisesActive = pathname.startsWith("/expertises");
 
   return (
-    <header className="site-header sticky top-0 z-40" data-scrolled={scrolled || open ? "" : undefined}>
+    <header
+      className="site-header sticky top-0 z-40"
+      data-scrolled={scrolled || menuOpen || panelOpen ? "" : undefined}
+    >
       <div className="site-header__veil" aria-hidden="true" />
 
-      <div className="container relative flex h-16 items-center justify-between gap-6">
+      <div className="container flex h-16 items-center justify-between gap-6">
         <Link href="/" className="flex items-center gap-3" aria-label="Yonko Tech Consulting, accueil">
           <Image src={logoPng} alt="" width={32} height={32} className="h-8 w-8 rounded-md object-contain" priority />
           <span className="flex items-baseline gap-2">
@@ -102,14 +97,78 @@ export function SiteHeader() {
 
         <nav aria-label="Navigation principale" className="hidden lg:block">
           <ul className="flex items-center gap-9">
-            {NAV.map((item) => {
-              const active = isActive(item);
+            <li
+              onPointerEnter={(e) => {
+                if (isMouseHover(e)) openPanel();
+              }}
+              onPointerLeave={(e) => {
+                if (isMouseHover(e)) closePanelSoon();
+              }}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setPanelPath(null);
+              }}
+            >
+              <button
+                ref={trigger}
+                type="button"
+                className="site-header__link site-header__trigger inline-flex items-center gap-1 text-sm"
+                data-active={expertisesActive ? "" : undefined}
+                aria-expanded={panelOpen}
+                aria-controls="expertises-panel"
+                onClick={() => (panelOpen ? setPanelPath(null) : openPanel())}
+              >
+                Expertises
+                <ChevronDown className="site-header__chevron h-3.5 w-3.5" aria-hidden="true" />
+              </button>
+
+              {/* Panneau des expertises : sous le header, même voile ; apparition en opacité / transform. */}
+              <div
+                id="expertises-panel"
+                data-close-on-navigate=""
+                className="site-header__panel"
+                data-open={panelOpen ? "" : undefined}
+              >
+                <div className="container grid grid-cols-[minmax(0,1fr)_minmax(0,3fr)] gap-10 py-10">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.24em] text-silver">Expertises</p>
+                    <p className="mt-3 font-display text-2xl text-silver-light">[à adapter] Une stratégie, trois leviers.</p>
+                    <DottedLink
+                      href="/expertises"
+                      className="mt-6 text-sm text-silver"
+                      tabIndex={panelOpen ? 0 : -1}
+                      onClick={() => setPanelPath(null)}
+                    >
+                      Toutes les expertises →
+                    </DottedLink>
+                  </div>
+                  <ul className="grid grid-cols-2 gap-x-10 gap-y-8">
+                    {expertises.map((item) => (
+                      <li key={item.slug}>
+                        <Link
+                          href={`/expertises/${item.slug}`}
+                          tabIndex={panelOpen ? 0 : -1}
+                          aria-current={pathname === `/expertises/${item.slug}` ? "page" : undefined}
+                          className="site-header__panel-link block"
+                          onClick={() => setPanelPath(null)}
+                        >
+                          <span className="text-xs tracking-[0.24em] text-silver">{item.index}</span>
+                          <span className="mt-1 block font-display text-xl text-silver-light">{item.title}</span>
+                          <span className="mt-1 block text-sm">{item.summary}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </li>
+            {LINKS.map((item) => {
+              const active = pathname.startsWith(item.href);
               return (
                 <li key={item.href}>
                   <DottedLink
                     href={item.href}
                     data-active={active ? "" : undefined}
-                    aria-current={active ? ("section" in item ? "location" : "page") : undefined}
+                    aria-current={active ? "page" : undefined}
                     className="site-header__link text-sm"
                   >
                     {item.label}
@@ -135,42 +194,55 @@ export function SiteHeader() {
           <button
             type="button"
             className="inline-flex h-10 w-10 items-center justify-center rounded-full text-silver-light lg:hidden"
-            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
-            aria-expanded={open}
+            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={menuOpen}
             aria-controls="mobile-nav"
-            onClick={() => setOpenPath(open ? null : pathname)}
+            onClick={() => setMenuPath(menuOpen ? null : pathname)}
           >
-            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {open ? (
+      {menuOpen ? (
         // En superposition sous le header (la page ne bouge pas), même voile translucide.
-        <nav id="mobile-nav" aria-label="Navigation principale" className="site-header__menu lg:hidden">
-          <ul className="container flex flex-col gap-1 pt-4">
-            {NAV.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={isActive(item) ? "page" : undefined}
-                  className="block py-2 font-display text-3xl text-silver-light"
-                  onClick={close}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <ul className="container mt-4 flex flex-col gap-2 pb-8 text-sm">
-            {SECONDARY.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href} className="text-silver" onClick={close}>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <nav
+          id="mobile-nav"
+          data-close-on-navigate=""
+          aria-label="Navigation principale"
+          className="site-header__menu lg:hidden"
+        >
+          <div className="container pb-8 pt-4">
+            <p className="text-xs uppercase tracking-[0.24em] text-silver">Expertises</p>
+            <ul className="mt-3 flex flex-col gap-1">
+              {expertises.map((item) => (
+                <li key={item.slug}>
+                  <Link
+                    href={`/expertises/${item.slug}`}
+                    aria-current={pathname === `/expertises/${item.slug}` ? "page" : undefined}
+                    className="block py-1.5 font-display text-2xl text-silver-light"
+                    onClick={() => setMenuPath(null)}
+                  >
+                    {item.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <ul className="mt-6 flex flex-col gap-1 border-t border-border/60 pt-4">
+              {LINKS.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={pathname.startsWith(item.href) ? "page" : undefined}
+                    className="block py-1.5 font-display text-2xl text-silver-light"
+                    onClick={() => setMenuPath(null)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </nav>
       ) : null}
     </header>

@@ -1437,6 +1437,7 @@ body::after {
 .site-header__veil {
   position: absolute;
   inset: 0;
+  z-index: -1; /* sous le contenu du header (le header sticky forme le contexte d'empilement) */
   background: color-mix(in srgb, var(--black) 72%, transparent);
   -webkit-backdrop-filter: blur(14px) saturate(1.2);
   backdrop-filter: blur(14px) saturate(1.2);
@@ -1480,6 +1481,73 @@ body::after {
 
 .site-header__link.link-dotted {
   padding-top: 8px; /* place du point actif, dans le cadre du lien */
+}
+
+/* Bouton « Expertises » : même métrique que les liens (place du point actif), chevron qui pivote. */
+.site-header__trigger {
+  position: relative;
+  padding-top: 8px;
+  padding-bottom: 4px;
+}
+
+.site-header__chevron {
+  transition: transform var(--dur-micro) var(--ease-in-css);
+}
+
+.site-header__trigger[aria-expanded="true"] .site-header__chevron {
+  transform: rotate(180deg);
+}
+
+/* Panneau des expertises : pleine largeur sous le header, apparition en opacité / transform. */
+.site-header__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  background: color-mix(in srgb, var(--black) 92%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--fiber-off);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none; /* refermé (même pendant le fondu) : plus survolable */
+  transform: translateY(-8px);
+  transition:
+    opacity var(--dur-micro) var(--ease-in-css),
+    transform var(--dur-micro) var(--ease-in-css),
+    visibility 0s linear var(--dur-micro);
+}
+
+.site-header__panel[data-open] {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
+  transition:
+    opacity var(--dur-micro) var(--ease-in-css),
+    transform var(--dur-micro) var(--ease-in-css),
+    visibility 0s;
+}
+
+.site-header__panel-link:hover .font-display,
+.site-header__panel-link[aria-current] .font-display {
+  color: var(--silver-light);
+}
+
+.site-header__panel-link {
+  padding: .75rem 1rem;
+  margin: -.75rem -1rem;
+  border-radius: 12px;
+}
+
+.site-header__panel-link:hover {
+  background: var(--surface);
+}
+
+/* Transition de page en cours : les menus ouverts disparaissent sans fondu. */
+html[data-navigating] [data-close-on-navigate] {
+  visibility: hidden !important;
+  transition: none !important;
 }
 
 /* Menu mobile : en superposition sous le header, même voile translucide. */
@@ -1601,4 +1669,226 @@ body::after {
   border-radius: 9999px;
   transform: scaleX(0);
   transform-origin: 0 50%;
+}
+
+/* ---------------------------------------------------------------------------
+   Pages Expertises : app/expertises/page.tsx, app/expertises/[slug]/page.tsx */
+
+/* Index : une ligne par expertise, séparées par un filet pointillé (grammaire des fibres). */
+.expertise-index > li + li .expertise-index__row,
+.expertise-index > li:first-child .expertise-index__row {
+  background-image: radial-gradient(circle, var(--fiber-off) 1px, transparent 1.2px);
+  background-size: 7px 2px;
+  background-repeat: repeat-x;
+  background-position: top left;
+}
+
+.expertise-index__row {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 1.5rem;
+  padding-block: 2rem;
+}
+
+.expertise-index__promise {
+  display: none;
+}
+
+.expertise-index__arrow {
+  color: var(--silver);
+  transition: transform var(--dur-micro) var(--ease-in-css);
+}
+
+.expertise-index__row:hover .expertise-index__arrow,
+.expertise-index__row:focus-visible .expertise-index__arrow {
+  transform: translateX(6px);
+}
+
+@media (min-width: 768px) {
+  .expertise-index__row {
+    grid-template-columns: 3rem minmax(0, 1fr) auto auto;
+    gap: 2.5rem;
+    padding-block: 2.5rem;
+  }
+
+  .expertise-index__promise {
+    display: block;
+    color: var(--silver);
+  }
+}
+
+/* Contenu de l'offre : cartes --surface, fin contour. */
+.expertise-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .expertise-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.expertise-grid__item {
+  padding: 1.75rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+/* Déroulé : nœuds sur une fibre pointillée (horizontale en desktop, verticale en mobile). */
+.expertise-steps {
+  position: relative;
+  display: grid;
+  gap: 2.5rem;
+  padding-left: 1.75rem;
+}
+
+.expertise-steps::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background-image: radial-gradient(circle, var(--silver) 1px, transparent 1.2px);
+  background-size: 2px 7px;
+  opacity: .35;
+}
+
+.expertise-steps__item {
+  position: relative;
+}
+
+.expertise-steps__node {
+  position: absolute;
+  left: calc(-1.75rem + 0px);
+  top: 3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background-image: var(--gold);
+}
+
+@media (min-width: 768px) {
+  .expertise-steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-left: 0;
+    padding-top: 2rem;
+  }
+
+  .expertise-steps::before {
+    left: 0;
+    right: 0;
+    top: 4px;
+    bottom: auto;
+    width: auto;
+    height: 2px;
+    background-size: 7px 2px;
+  }
+
+  .expertise-steps__node {
+    left: 0;
+    top: -2rem;
+  }
+}
+
+.expertise-cta {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2.5rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 16px;
+  background: var(--surface);
+}
+
+@media (min-width: 768px) {
+  .expertise-cta {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 3.5rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   À propos (accueil) : components/sections/about-teaser.tsx, lib/motion/about.ts */
+
+.about-facts {
+  display: grid;
+  gap: .75rem;
+  font-size: .9rem;
+}
+
+/* Puces : un point or (la jonction), comme les nœuds des fibres. */
+.about-facts li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.about-facts li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-image: var(--gold);
+}
+
+.about-mark {
+  margin: 0 auto;
+  width: min(100%, 15rem);
+}
+
+@media (min-width: 768px) {
+  .about-mark {
+    width: min(100%, 18rem);
+  }
+}
+
+.about-mark__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* Fibres de la marque : pointillés argent (dots 2px, espacement 7px). */
+.about-mark__fiber {
+  fill: none;
+  stroke: var(--silver);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 0 7;
+  opacity: .55;
+}
+
+.about-mark__fiber--stem {
+  opacity: .8;
+}
+
+.about-mark__mask {
+  fill: none;
+  stroke: #fff; /* luminance du masque, pas une couleur affichée */
+  stroke-width: 12;
+  stroke-linecap: round;
+}
+
+.about-mark__pulse {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  opacity: 0;
+}
+
+.about-mark__ring {
+  fill: none;
+  stroke: var(--gold-2);
+  stroke-width: 1;
+  opacity: 0;
 }

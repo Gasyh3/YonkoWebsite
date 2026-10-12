@@ -13,7 +13,7 @@ import { noMotion, useMotionModule } from "@/lib/motion/use-motion-module";
 // La fibre A dessine une fenêtre de navigateur ; le résultat du client monte en 1re position
 // (voir lib/motion/expertises/seo-scene.ts).
 // embedded : dans le conteneur Expertises (C5), qui pilote la scène et prolonge lui-même la fibre.
-export function SeoScene({ embedded = false }: { embedded?: boolean }) {
+export function SeoScene({ embedded = false, vizOnly = false }: { embedded?: boolean; vizOnly?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const uid = useId().replace(/:/g, "");
   useMotionModule(ref, embedded ? noMotion : createSeoScene);
@@ -31,6 +31,7 @@ export function SeoScene({ embedded = false }: { embedded?: boolean }) {
       }
       subtitle="Site vitrine et SEO"
       embedded={embedded}
+      vizOnly={vizOnly}
       viz={
         <div
           data-expertise-viz=""

@@ -62,7 +62,7 @@ function ModulePreview({ kind }: { kind: SoftwareModuleKind }) {
 // Scène Expertises 03 — Logiciel interne sur mesure (fibre C).
 // La fibre C se ramifie en 4 modules qui s'emboîtent en dashboard (voir lib/motion/expertises/software-scene.ts).
 // embedded : dans le conteneur Expertises (C5), qui pilote la scène et prolonge lui-même la fibre.
-export function SoftwareScene({ embedded = false }: { embedded?: boolean }) {
+export function SoftwareScene({ embedded = false, vizOnly = false }: { embedded?: boolean; vizOnly?: boolean }) {
   const ref = useRef<HTMLElement>(null);
   const uid = useId().replace(/:/g, "");
   useMotionModule(ref, embedded ? noMotion : createSoftwareScene);
@@ -86,6 +86,7 @@ export function SoftwareScene({ embedded = false }: { embedded?: boolean }) {
       }
       subtitle="Logiciel interne sur mesure"
       embedded={embedded}
+      vizOnly={vizOnly}
       viz={
         <div
           data-expertise-viz=""

@@ -15,10 +15,27 @@ type Props = {
   fiberIn?: ReactNode;
   // Dans le conteneur Expertises : la colonne de droite laisse 56px pour les couloirs de sortie des fibres.
   embedded?: boolean;
+  // Page d'une expertise : la visualisation seule (le texte est porté par la page), centrée.
+  vizOnly?: boolean;
 };
 
 // Mise en page commune des scènes Expertises : texte à gauche, visualisation (cadre 7:5) à droite.
-export function SceneShell({ ref, scene, index, titleId, title, subtitle, children, viz, fiberIn, embedded }: Props) {
+export function SceneShell(props: Props) {
+  const { ref, scene, index, titleId, title, subtitle, children, viz, fiberIn, embedded, vizOnly } = props;
+  if (vizOnly) {
+    return (
+      <section
+        ref={ref}
+        data-expertise-scene={scene}
+        className={`expertise-scene expertise-scene--${scene} py-12 md:py-20`}
+        aria-label={subtitle}
+      >
+        <div className="container">
+          <div className="relative mx-auto max-w-3xl">{viz}</div>
+        </div>
+      </section>
+    );
+  }
   return (
     <section
       ref={ref}

@@ -81,6 +81,10 @@ export function createPageTransitions(navigate: Navigate): PageTransitions {
     busy = true;
     pending = true;
     const t = tokens();
+    // Menus ouverts (panneau Expertises, menu mobile) masqués tout de suite : ils ne figent pas dans l'image
+    // de la page sortante. Ils se referment d'eux-mêmes au changement de page.
+    const root = document.documentElement;
+    root.setAttribute("data-navigating", "");
     try {
       if (typeof document.startViewTransition === "function") {
         if (media) media.style.viewTransitionName = "project-media";
@@ -99,6 +103,7 @@ export function createPageTransitions(navigate: Navigate): PageTransitions {
         if (main) gsap.set(main, { clearProps: "opacity" });
       }
     } finally {
+      root.removeAttribute("data-navigating");
       busy = false;
     }
   };

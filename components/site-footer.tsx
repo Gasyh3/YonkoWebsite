@@ -7,7 +7,9 @@ import { DottedLink } from "@/components/motion/dotted-link";
 
 // Liens secondaires (le header garde le parcours principal).
 const FOOTER_LINKS = [
-  { href: "/services", label: "Toutes nos offres" },
+  { href: "/expertises", label: "Expertises" },
+  { href: "/projets", label: "Réalisations" },
+  { href: "/about", label: "L'agence" },
   { href: "/faqs", label: "Questions fréquentes" },
   { href: "/contact", label: "Contact" },
 ];

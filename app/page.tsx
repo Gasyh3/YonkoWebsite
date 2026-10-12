@@ -4,6 +4,7 @@ import { Manifesto } from "@/components/sections/manifesto";
 import { Expertises } from "@/components/sections/expertises/expertises";
 import { Strategy } from "@/components/sections/strategy";
 import { Results } from "@/components/sections/results";
+import { AboutTeaser } from "@/components/sections/about-teaser";
 import { Process } from "@/components/sections/process";
 import { Contact } from "@/components/sections/contact";
 import { ServicesSection } from "@/components/sections/services-section";
@@ -21,6 +22,7 @@ export default function Home() {
         <Strategy />
         <Expertises />
         <Results />
+        <AboutTeaser />
         <Process />
         <div data-ambient="">
           <ServicesSection />

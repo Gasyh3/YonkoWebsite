@@ -2,6 +2,8 @@
 
 import { type RefObject, useEffect } from "react";
 
+import { onReducedMotionChange } from "./env";
+
 // Contrat de tout module d'animation : init() installe, destroy() nettoie tout
 // (ScrollTriggers, timelines, listeners, nœuds créés).
 export type MotionModule = {
@@ -11,7 +13,8 @@ export type MotionModule = {
 
 export type MotionModuleFactory<E extends HTMLElement = HTMLElement> = (root: E) => MotionModule;
 
-// Branche un module motion sur le cycle de vie d'un composant React.
+// Branche un module motion sur le cycle de vie d'un composant React. Au changement de prefers-reduced-motion,
+// le module est recréé : chaque scène passe d'elle-même à son état final statique (ou revient à l'animation).
 export function useMotionModule<E extends HTMLElement>(
   ref: RefObject<E | null>,
   factory: MotionModuleFactory<E>,
@@ -19,9 +22,17 @@ export function useMotionModule<E extends HTMLElement>(
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    const motionModule = factory(root);
+    let motionModule = factory(root);
     motionModule.init();
-    return () => motionModule.destroy();
+    const unsubscribe = onReducedMotionChange(() => {
+      motionModule.destroy();
+      motionModule = factory(root);
+      motionModule.init();
+    });
+    return () => {
+      unsubscribe();
+      motionModule.destroy();
+    };
   }, [ref, factory]);
 }
 

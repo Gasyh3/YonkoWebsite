@@ -3,6 +3,7 @@ import { Github, Linkedin, Mail } from "lucide-react";
 import Image from "next/image";
 import logoPng from "@/public/assets/images/icon.png";
 import { BackToTop } from "@/components/motion/back-to-top";
+import { DottedLink } from "@/components/motion/dotted-link";
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
@@ -30,12 +31,8 @@ export function SiteFooter() {
             © {currentYear} Yonko Tech Consulting. Tous droits réservés.
           </p>
           <div className="flex gap-4 text-sm text-muted-foreground">
-            <Link href="#" className="hover:text-primary">
-              Mentions légales
-            </Link>
-            <Link href="#" className="hover:text-primary">
-              Politique de confidentialité
-            </Link>
+            <DottedLink href="#">Mentions légales</DottedLink>
+            <DottedLink href="#">Politique de confidentialité</DottedLink>
           </div>
         </div>
         <div className="flex items-center gap-6 text-muted-foreground">
@@ -46,7 +43,7 @@ export function SiteFooter() {
           <Link href="#" aria-label="Lien GitHub" className="hover:text-primary">
             <Github className="h-5 w-5" />
           </Link>
-          <Link href="mailto:contact@yonkotech.com" className="hover:text-primary">
+          <Link href="mailto:contact@yonkotech.com" aria-label="Écrire à contact@yonkotech.com" className="hover:text-primary">
             <Mail className="h-5 w-5" />
           </Link>
         </div>

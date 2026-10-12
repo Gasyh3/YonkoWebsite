@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
+import { ButtonGlint } from "@/components/motion/dotted-link";
 import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
@@ -45,13 +46,13 @@ export function SiteHeader() {
               priority
             />
           </span>
-          <span className="hidden text-base md:inline">
+          <span className="hidden text-base lg:inline">
             Yonko Tech Consulting
           </span>
-          <span className="text-base md:hidden">Yonko Tech</span>
+          <span className="text-base lg:hidden">Yonko Tech</span>
         </Link>
 
-        <div className="hidden items-center gap-6 md:flex">
+        <div className="hidden items-center gap-6 lg:flex">
           <NavigationMenu>
             <NavigationMenuList>
               {navLinks.map((link) => (
@@ -73,19 +74,24 @@ export function SiteHeader() {
               ))}
             </NavigationMenuList>
           </NavigationMenu>
-          <Button asChild size="sm">
-            <Link href="/contact">Nous contacter</Link>
+          <Button asChild size="sm" className="relative">
+            <Link href="/contact" data-magnetic="">
+              <ButtonGlint />
+              Nous contacter
+            </Link>
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <Button asChild variant="outline" size="sm">
             <Link href="/contact">Contact</Link>
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            aria-label="Ouvrir le menu"
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={open}
+            aria-controls="mobile-nav"
             onClick={() => setOpen((prev) => !prev)}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -94,8 +100,8 @@ export function SiteHeader() {
       </div>
 
       {open ? (
-        <div className="border-t border-border/70 bg-secondary md:hidden">
-          <nav className="container flex flex-col gap-2 py-4 text-sm font-medium">
+        <div className="border-t border-border/70 bg-secondary lg:hidden">
+          <nav id="mobile-nav" className="container flex flex-col gap-2 py-4 text-sm font-medium">
             {navLinks.map((link) => (
               <Link
                 key={link.href}

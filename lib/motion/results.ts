@@ -4,8 +4,8 @@
 //   en dégradé or (fondu entre la couche argent et la couche or).
 // - Projets : chaque image se révèle dans son cadre en overflow hidden (translateY 12 % et scale 1.08 → 0 et 1,
 //   1.2s, expo.out).
-// - Survol (pointeur fin uniquement) : contour pointillé or dessiné autour de la carte (stroke-dashoffset, 0.7s),
-//   image à scale 1.03. Rien d'autre : pas de parallax, pas de curseur spécial.
+// - Survol (pointeur fin) ou focus clavier : contour pointillé or dessiné autour de la carte (stroke-dashoffset,
+//   0.7s), image à scale 1.03. Rien d'autre : pas de parallax. La carte mène à la page projet (C11).
 // Reduced motion : chiffres en or, images en place ; au survol, contour affiché sans tracé animé.
 
 import { prefersReducedMotion } from "./env";
@@ -70,8 +70,8 @@ export function createResultsScene(root: HTMLElement): MotionModule {
         }
       }, root);
 
-      // Survol : contour pointillé or + image à 1.03 (pointeur fin uniquement).
-      if (!window.matchMedia(HOVER_QUERY).matches) return;
+      // Survol (pointeur fin) et focus clavier : contour pointillé or + image à 1.03.
+      const hover = window.matchMedia(HOVER_QUERY).matches;
       cards.forEach((card) => {
         const mask = card.querySelector<SVGRectElement>("[data-results-outline-mask]");
         const image = card.querySelector<HTMLElement>("[data-results-image]");
@@ -84,11 +84,20 @@ export function createResultsScene(root: HTMLElement): MotionModule {
           if (mask) gsap.to(mask, { strokeDashoffset: 1, duration, ease: t.ease.transition, overwrite: true });
           if (image && !reduced) gsap.to(image, { scale: 1, duration, ease: t.ease.transition, overwrite: true });
         };
-        card.addEventListener("pointerenter", enter);
-        card.addEventListener("pointerleave", leave);
+        const focusIn = (e: FocusEvent) => {
+          if ((e.target as Element).matches(":focus-visible")) enter();
+        };
+        if (hover) {
+          card.addEventListener("pointerenter", enter);
+          card.addEventListener("pointerleave", leave);
+        }
+        card.addEventListener("focusin", focusIn);
+        card.addEventListener("focusout", leave);
         cleanups.push(() => {
           card.removeEventListener("pointerenter", enter);
           card.removeEventListener("pointerleave", leave);
+          card.removeEventListener("focusin", focusIn);
+          card.removeEventListener("focusout", leave);
           gsap.killTweensOf([mask, image].filter(Boolean));
           gsap.set([mask, image].filter(Boolean), { clearProps: "all" });
         });

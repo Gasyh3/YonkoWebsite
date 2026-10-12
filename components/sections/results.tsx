@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 
 import { createResultsScene } from "@/lib/motion/results";
@@ -14,7 +15,7 @@ export function Results() {
   useMotionModule(ref, createResultsScene);
 
   return (
-    <section ref={ref} data-fiber-dim="" className="results py-24 md:py-36" aria-labelledby="results-title">
+    <section ref={ref} id="projets" data-fiber-dim="" className="results py-24 md:py-36" aria-labelledby="results-title">
       {/* Grille et chiffres en retrait de 24px à droite : la marge reste aux fibres. */}
       <div className="container md:pr-[calc(2.75rem+1.5rem)]">
         <div className="max-w-2xl">
@@ -88,29 +89,31 @@ export function Results() {
                   />
                 </svg>
 
-                <div data-results-media="" className="results-card__media">
-                  <div data-results-reveal="" className="results-card__reveal">
-                    <Image
-                      data-results-image=""
-                      src={project.image.src}
-                      alt={project.image.alt}
-                      width={project.image.width}
-                      height={project.image.height}
-                      sizes="(min-width: 768px) 50vw, 100vw"
-                      unoptimized
-                      className="results-card__image"
-                    />
+                <Link href={`/projets/${project.slug}`} data-project-link="" className="results-card__link">
+                  <div data-results-media="" data-transition-media="" className="results-card__media">
+                    <div data-results-reveal="" className="results-card__reveal">
+                      <Image
+                        data-results-image=""
+                        src={project.image.src}
+                        alt={project.image.alt}
+                        width={project.image.width}
+                        height={project.image.height}
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                        unoptimized
+                        className="results-card__image"
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-                  <p className="text-xs uppercase tracking-[0.2em] text-silver">{project.service}</p>
-                  <p className="text-xs text-silver">{project.sector}</p>
-                </div>
-                <h3 id={`project-${i}-title`} className="mt-3 font-display text-2xl text-silver-light md:text-3xl">
-                  {project.title}
-                </h3>
-                <p className="mt-2 text-sm">{project.result}</p>
+                  <div className="mt-6 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+                    <p className="text-xs uppercase tracking-[0.2em] text-silver">{project.service}</p>
+                    <p className="text-xs text-silver">{project.sector}</p>
+                  </div>
+                  <h3 id={`project-${i}-title`} className="mt-3 font-display text-2xl text-silver-light md:text-3xl">
+                    {project.title}
+                  </h3>
+                  <p className="mt-2 text-sm">{project.result}</p>
+                </Link>
               </article>
             </li>
           ))}

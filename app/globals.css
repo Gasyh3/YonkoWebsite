@@ -24,6 +24,9 @@
   --dur-reveal: .7s;
   --dur-major: 1.2s;
   --stagger: .06s;
+  /* Équivalents CSS des easings GSAP (View Transitions, transitions CSS). */
+  --ease-in-css: cubic-bezier(.16, 1, .3, 1);            /* expo.out */
+  --ease-transition-css: cubic-bezier(.65, 0, .35, 1);   /* power3.inOut */
 
   /* Variables shadcn/ui (HSL) remappées sur la charte pour que les composants existants suivent. */
   --background: 240 4% 4%;             /* --black */
@@ -1241,4 +1244,185 @@ body::after {
 
 .back-to-top:hover {
   color: var(--silver-light);
+}
+
+
+/* ---------------------------------------------------------------------------
+   Finitions (C11) : lib/motion/micro-interactions.ts, lib/motion/cursor.ts, lib/motion/page-transitions.ts */
+
+/* Liens texte : soulignement pointillé argent, dessiné de gauche à droite au survol, effacé vers la droite. */
+.link-dotted {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  padding-bottom: 4px;
+  vertical-align: bottom;
+}
+
+.link-dotted__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-image: radial-gradient(circle, var(--silver) .9px, transparent 1.1px);
+  background-size: 6px 2px;
+  transform: translateX(-101%);
+  pointer-events: none;
+}
+
+/* Boutons principaux : reflet or qui traverse le bouton au survol (transform seul). */
+.btn-glint {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.btn-glint__band {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 40%;
+  background-image: linear-gradient(100deg, transparent, var(--gold-glint), transparent);
+  opacity: .35;
+  transform: translateX(-100%);
+}
+
+/* Curseur : point or de 6px (desktop), anneau argent de 32px au survol d'un élément cliquable. */
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 90;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.cursor__dot,
+.cursor__ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 9999px;
+}
+
+.cursor__dot {
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  background-image: var(--gold);
+}
+
+.cursor__ring {
+  width: 32px;
+  height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 1px solid var(--silver);
+  opacity: 0;
+}
+
+/* Transition de page : impulsion or le long d'une fibre, du haut vers le bas de l'écran. */
+.page-pulse {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 20px;
+  z-index: 95;
+  width: 2px;
+  pointer-events: none;
+  view-transition-name: page-pulse;
+}
+
+.page-pulse__fiber {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, var(--silver) 1px, transparent 1.2px);
+  background-size: 2px 7px;
+  opacity: .18;
+}
+
+.page-pulse__head {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2px;
+  height: 120px;
+  border-radius: 9999px;
+  background-image: linear-gradient(to bottom, transparent, var(--gold-2) 70%, var(--gold-glint));
+  transform: translateY(-100%);
+}
+
+@media (min-width: 768px) {
+  .page-pulse {
+    left: max(1rem, calc((100vw - 1200px) / 2 + 1rem));
+  }
+}
+
+/* View Transitions : la page sortante s'efface ; l'entrante est révélée par lignes (JS). */
+::view-transition-old(root) {
+  animation: page-fade-out var(--dur-reveal) var(--ease-transition-css) both;
+}
+
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(page-pulse) {
+  display: none;
+}
+
+::view-transition-group(page-pulse),
+::view-transition-new(page-pulse) {
+  animation: none;
+}
+
+/* Projet : l'image de la carte devient le visuel d'en-tête (morph, 1.2s, power3.inOut). */
+::view-transition-group(project-media) {
+  animation-duration: var(--dur-major);
+  animation-timing-function: var(--ease-transition-css);
+}
+
+::view-transition-old(project-media),
+::view-transition-new(project-media) {
+  animation-duration: var(--dur-major);
+  animation-timing-function: var(--ease-transition-css);
+  height: 100%;
+  object-fit: cover;
+}
+
+@keyframes page-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+/* Page projet */
+.project-hero__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  background: var(--surface);
+  view-transition-name: project-media;
+}
+
+.project-hero__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.results-card__link {
+  display: block;
+  border-radius: 12px;
 }

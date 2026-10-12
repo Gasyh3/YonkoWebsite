@@ -17,6 +17,7 @@ export const formatStat = (stat: ResultStat, value = stat.value) =>
   `${stat.prefix ?? ""}${value}${stat.suffix ?? ""}`;
 
 export type Project = {
+  slug: string;
   title: string;
   sector: string;
   service: string;
@@ -26,6 +27,7 @@ export type Project = {
 
 export const projects: Project[] = [
   {
+    slug: "boulangerie-artisanale",
     title: "[à remplacer] Boulangerie artisanale",
     sector: "Commerce de proximité",
     service: "Site vitrine et SEO",
@@ -33,6 +35,7 @@ export const projects: Project[] = [
     image: { src: "/media/projects/project-seo.svg", alt: "Visuel provisoire : page de résultats de recherche", width: 1200, height: 900 },
   },
   {
+    slug: "garage-automobile",
     title: "[à remplacer] Garage automobile",
     sector: "Artisan",
     service: "Google Maps et visibilité locale",
@@ -40,6 +43,7 @@ export const projects: Project[] = [
     image: { src: "/media/projects/project-maps.svg", alt: "Visuel provisoire : plan local et fiche établissement", width: 1200, height: 900 },
   },
   {
+    slug: "cabinet-kinesitherapie",
     title: "[à remplacer] Cabinet de kinésithérapie",
     sector: "Profession libérale",
     service: "Logiciel interne sur mesure",
@@ -47,6 +51,7 @@ export const projects: Project[] = [
     image: { src: "/media/projects/project-software.svg", alt: "Visuel provisoire : tableau de bord en quatre modules", width: 1200, height: 900 },
   },
   {
+    slug: "institut-de-beaute",
     title: "[à remplacer] Institut de beauté",
     sector: "Commerce de proximité",
     service: "Site vitrine et réservation",
@@ -54,3 +59,5 @@ export const projects: Project[] = [
     image: { src: "/media/projects/project-mobile.svg", alt: "Visuel provisoire : site vitrine sur ordinateur et mobile", width: 1200, height: 900 },
   },
 ];
+
+export const getProject = (slug: string) => projects.find((project) => project.slug === slug);

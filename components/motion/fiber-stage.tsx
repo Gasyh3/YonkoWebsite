@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useRef } from "react";
 
+import { onReducedMotionChange } from "@/lib/motion/env";
 import { AmbientNetwork } from "@/lib/motion/fiber/ambient-network";
 import { FiberSystem } from "@/lib/motion/fiber/fiber-system";
 import "@/lib/motion/fiber/fiber.css";
@@ -26,7 +27,13 @@ export function FiberStage({ children, className, debug = false }: Props) {
     if (!stage || !layer) return;
     FiberSystem.init(stage, layer);
     AmbientNetwork.init(stage, layer);
+    // Le FiberSystem suit lui-même prefers-reduced-motion ; le réseau des marges est recréé dans le bon état.
+    const unsubscribe = onReducedMotionChange(() => {
+      AmbientNetwork.destroy();
+      AmbientNetwork.init(stage, layer);
+    });
     return () => {
+      unsubscribe();
       AmbientNetwork.destroy();
       FiberSystem.destroy();
     };

@@ -10,7 +10,7 @@ import { ServicesSection } from "@/components/sections/services-section";
 import { WhyUs } from "@/components/sections/why-us";
 import { FaqSection } from "@/components/sections/faq-section";
 import { faqItems } from "@/lib/faq-data";
-import Link from "next/link";
+import { DottedLink } from "@/components/motion/dotted-link";
 
 export default function Home() {
   return (
@@ -36,12 +36,9 @@ export default function Home() {
             subtitle="Les réponses clés pour comprendre l’ERP PME et le SaaS Next.js clé en main."
           />
           <div className="container flex items-center justify-end">
-            <Link
-              href="/faqs"
-              className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
-            >
+            <DottedLink href="/faqs" className="text-sm font-semibold text-primary">
               Consulter toutes les FAQ
-            </Link>
+            </DottedLink>
           </div>
         </div>
         <Contact />

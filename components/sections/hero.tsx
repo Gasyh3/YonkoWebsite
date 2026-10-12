@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 
+import { ButtonGlint } from "@/components/motion/dotted-link";
 import { GoldWord } from "@/components/motion/gold-word";
 import { heroMedia } from "@/lib/hero-media";
 import { createHeroMotion } from "@/lib/motion/hero";
@@ -64,8 +65,10 @@ export function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-6">
             <Link
               href="/contact"
-              className="inline-flex items-center rounded-full border border-silver px-6 py-3 text-sm text-silver-light transition-colors hover:border-silver-light"
+              data-magnetic=""
+              className="relative inline-flex items-center rounded-full border border-silver px-6 py-3 text-sm text-silver-light transition-colors hover:border-silver-light"
             >
+              <ButtonGlint />
               Démarrer un projet
             </Link>
             <div data-hero-indicator="" className="hero-indicator" aria-hidden="true">

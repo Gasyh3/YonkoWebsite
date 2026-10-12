@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { MotionRoot } from "@/components/motion/motion-root";
+import { PageTransitions } from "@/components/motion/page-transitions";
 import { HERO_INTRO_CLASS, HERO_INTRO_STORAGE_KEY } from "@/lib/motion/hero-intro";
 import { cn } from "@/lib/utils";
 import "lenis/dist/lenis.css";
@@ -36,6 +37,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
         <MotionRoot />
+        <PageTransitions />
         <div className="flex min-h-screen flex-col bg-background">
           <SiteHeader />
           {/* #top : cible du focus après « Retour en haut ». */}

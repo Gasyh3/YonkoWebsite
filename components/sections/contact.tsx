@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
+
 import { useRef } from "react";
+
+import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
 
 import { createContactScene } from "@/lib/motion/contact";
 import { useMotionModule } from "@/lib/motion/use-motion-module";
@@ -28,8 +31,9 @@ export function Contact() {
         <div className="contact-cta mt-14 md:mt-16">
           {/* Halo statique : seule son opacité varie, une fois, à l'allumage. */}
           <span data-contact-halo="" className="contact-halo" aria-hidden="true" />
-          <Link href="/contact" data-contact-button="" data-fiber-ignore="" className="contact-button">
+          <Link href="/contact" data-contact-button="" data-fiber-ignore="" data-magnetic="" className="contact-button">
             <span data-contact-fill="" className="contact-button__fill" aria-hidden="true" />
+            <ButtonGlint />
             <svg className="contact-button__outline" aria-hidden="true" focusable="false">
               <defs>
                 <linearGradient id="contact-gold" x1="0" y1="0" x2="1" y2="0">
@@ -76,9 +80,9 @@ export function Contact() {
 
         <p className="mt-10 text-sm text-silver">
           ou écrivez-nous :{" "}
-          <a href="mailto:contact@yonkotech.com" className="text-silver-light underline-offset-4 hover:underline">
+          <DottedLink href="mailto:contact@yonkotech.com" className="text-silver-light">
             contact@yonkotech.com
-          </a>
+          </DottedLink>
         </p>
       </div>
     </section>

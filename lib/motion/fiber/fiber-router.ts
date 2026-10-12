@@ -17,6 +17,9 @@ export type AnchorSpec = {
   mode: AnchorMode;
   axis: AnchorAxis;
   rect: Rect;
+  // Ancre verticale (axis "y") où les fibres fusionnent : A et C rejoignent B à 45°, partagent sa ligne,
+  // puis s'en séparent à 45° en bas de l'ancre.
+  merge?: boolean;
 };
 
 export type RouteInput = {
@@ -173,6 +176,7 @@ function planNodes(input: RouteInput) {
       const o = grouped ? OFFSET[f] : 0;
       let entry: Vec;
       let exit: Vec | null = null;
+      let run: Vec[] | null = null;
       let direction: ArrivalMarker["direction"];
 
       if (anchor.axis === "x") {
@@ -187,6 +191,10 @@ function planNodes(input: RouteInput) {
       } else if (anchor.axis === "y") {
         entry = { x: c.x + o, y: anchor.rect.top };
         exit = { x: c.x + o, y: anchor.rect.bottom };
+        if (anchor.merge && o) {
+          const d = Math.abs(o);
+          run = [entry, { x: c.x, y: entry.y + d }, { x: c.x, y: exit.y - d }, exit];
+        }
       } else {
         entry = { x: c.x + o, y: c.y };
       }
@@ -194,7 +202,7 @@ function planNodes(input: RouteInput) {
       const node: Node = { point: entry, key };
       plans[f].nodes.push(node);
       if (exit && !same(exit, entry)) {
-        plans[f].runs.set(key, [entry, exit]);
+        plans[f].runs.set(key, run ?? [entry, exit]);
         plans[f].nodes.push({ point: exit, key: `${key}-exit` });
       }
       markers.push({ fiber: f, carrier: f, anchorId: anchor.id, mode: anchor.mode, point: entry, direction });

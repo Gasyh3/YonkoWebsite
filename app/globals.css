@@ -1019,3 +1019,98 @@ body::after {
 .results-card__image {
   object-fit: cover;
 }
+
+/* ---------------------------------------------------------------------------
+   Process (C9) : components/sections/process.tsx, lib/motion/process.ts */
+
+/* Ancre de la timeline : au centre (desktop) ; en mobile, la fibre composite (x = 20px) en tient lieu. */
+.process-line {
+  position: absolute;
+  left: 50%;
+  top: -2.5rem; /* la fusion (45°, 14px) se fait au-dessus du premier nœud */
+  bottom: 0;
+  width: 1px;
+}
+
+.process-step {
+  position: relative;
+  padding-bottom: 4.5rem;
+}
+
+.process-step:last-child {
+  padding-bottom: 0;
+}
+
+/* Nœud de 10px : contour argent, s'allume en or ; anneau qui s'étend une fois. */
+.process-node {
+  position: absolute;
+  left: calc(20px - 2.75rem - 5px);
+  top: 3px; /* à hauteur du numéro de l'étape */
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--black);
+  outline: 1px solid var(--silver);
+  outline-offset: -1px;
+}
+
+.process-node__lit,
+.process-node__ring {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+}
+
+.process-node__lit {
+  background-image: var(--gold);
+}
+
+.process-node__ring {
+  border: 1px solid var(--gold-2);
+  opacity: 0;
+}
+
+@media (min-width: 768px) {
+  .process-step {
+    width: 50%;
+    padding-bottom: 6rem;
+  }
+
+  /* Le contenu se tient à 56px de la ligne : les fibres y fusionnent (±14px) avant de partager le centre. */
+  .process-step--left {
+    padding-right: 3.5rem;
+    text-align: right;
+  }
+
+  .process-step--right {
+    margin-left: 50%;
+    padding-left: 3.5rem;
+  }
+
+  .process-node {
+    top: 3px;
+  }
+
+  .process-step--left .process-node {
+    left: auto;
+    right: -5px;
+  }
+
+  .process-step--right .process-node {
+    left: -5px;
+  }
+}
+
+.process-fiber-out {
+  position: absolute;
+  right: 1rem; /* marge droite, comme les autres sorties */
+  bottom: -5rem;
+  width: 1px;
+  height: 1px;
+}
+
+@media (max-width: 767px) {
+  .process-fiber-out {
+    display: none;
+  }
+}

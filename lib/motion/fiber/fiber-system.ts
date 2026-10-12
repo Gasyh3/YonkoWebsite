@@ -4,7 +4,7 @@
 // - impulsion lumineuse liée au scroll, respiration après 2s d'inactivité
 // - événement window "fiber:arrive" { fiber, anchorId, mode } quand une impulsion atteint une ancre
 //   ou un point de passage [data-fiber-checkpoint] (repère qui ne modifie pas le tracé)
-// - zones [data-fiber-dim] : les fibres y passent à 50 % d'opacité (fondu en entrée et en sortie)
+// - zones [data-fiber-dim] : les fibres y passent à 50 % (voile couleur du fond, fondu en entrée et en sortie)
 // API : FiberSystem.setLit(fiber, bool), FiberSystem.pulse(fiber, fromAnchor, toAnchor, duration)
 
 import heroPorts from "../hero-ports.json";
@@ -20,6 +20,7 @@ import {
   type FiberId,
   FIBERS,
   type Rect,
+  ROUTING,
   type RouteResult,
   routeFibers,
   type Vec,
@@ -51,6 +52,7 @@ const CONFIG = {
   rebuildDebounce: 150,
   // Impulsion : traînée en paliers le long du trait (un dégradé SVG ne peut pas suivre un chemin).
   pulseSegments: [120, 72, 36, 12],
+  dotGap: 7, // espacement des points des fibres éteintes (stroke-dasharray: 0 7 dans fiber.css)
   dim: 0.5, // opacité des fibres dans une zone [data-fiber-dim]
   dimFade: 0.08, // part de la zone consacrée au fondu, en haut et en bas
 } as const;
@@ -86,7 +88,7 @@ type Instance = {
   svg: SVGSVGElement;
   glowSvg: SVGSVGElement;
   debugGroup: SVGGElement;
-  dimMask: SVGMaskElement;
+  dimGroup: SVGGElement;
   fibers: Record<FiberId, FiberState>;
   markers: (ArrivalMarker & { len: number })[];
   anchors: Map<string, { el: HTMLElement; spec: AnchorSpec }>;
@@ -130,20 +132,22 @@ function createLayer(layer: HTMLElement) {
   const defs = svgEl("defs");
   svg.append(defs);
 
-  // Zones atténuées : masque alpha (opaque partout, DIM dans les zones [data-fiber-dim], fondu aux bords).
-  const dimMask = svgEl("mask", { id: `${prefix}-dim`, maskUnits: "userSpaceOnUse", style: "mask-type: alpha" });
+  // Zones atténuées [data-fiber-dim] : un voile couleur du fond, posé sur les fibres (sous le contenu), fondu aux
+  // bords. Pas de masque : un masque à l'échelle de la page dépasse la taille de texture GPU et coûte à chaque image.
   const fade = svgEl("linearGradient", { id: `${prefix}-dim-fade`, x1: 0, y1: 0, x2: 0, y2: 1 });
+  const veil = 1 - CONFIG.dim;
   [
-    [0, 1],
-    [CONFIG.dimFade, CONFIG.dim],
-    [1 - CONFIG.dimFade, CONFIG.dim],
-    [1, 1],
+    [0, 0],
+    [CONFIG.dimFade, veil],
+    [1 - CONFIG.dimFade, veil],
+    [1, 0],
   ].forEach(([offset, opacity]) =>
-    fade.append(svgEl("stop", { offset, "stop-color": "#fff", "stop-opacity": opacity })),
+    fade.append(svgEl("stop", { offset, style: `stop-color: var(--black); stop-opacity: ${opacity}` })),
   );
-  defs.append(dimMask, fade);
+  defs.append(fade);
   const fibersGroup = svgEl("g", { class: "fiber-all" });
-  svg.append(fibersGroup);
+  const dimGroup = svgEl("g", { class: "fiber-dim", "data-fade": `${prefix}-dim-fade` });
+  svg.append(fibersGroup, dimGroup);
 
   const fibers = {} as Record<FiberId, FiberState>;
   for (const id of FIBERS) {
@@ -188,7 +192,7 @@ function createLayer(layer: HTMLElement) {
   const debugGroup = svgEl("g", { class: "fiber-debug" });
   svg.append(debugGroup);
   layer.append(glowSvg, svg);
-  return { svg, glowSvg, fibers, debugGroup, dimMask };
+  return { svg, glowSvg, fibers, debugGroup, dimGroup };
 }
 
 // ---------------------------------------------------------------------------
@@ -209,10 +213,11 @@ function readAnchors(stage: HTMLElement, origin: DOMRect) {
     const fibers = readFibers(el);
     const mode = (["pass", "plug", "end"].includes(el.dataset.fiberMode ?? "") ? el.dataset.fiberMode : "pass") as AnchorMode;
     const axis = (["x", "y"].includes(el.dataset.fiberAxis ?? "") ? el.dataset.fiberAxis : "point") as AnchorAxis;
+    const merge = axis === "y" && "fiberMerge" in el.dataset;
     if (anchors.has(id) && process.env.NODE_ENV !== "production") {
       console.warn(`[FiberSystem] ancre en double : "${id}"`);
     }
-    anchors.set(id, { el, spec: { id, fibers, mode, axis, rect: relRect(el, origin) } });
+    anchors.set(id, { el, spec: { id, fibers, mode, axis, merge, rect: relRect(el, origin) } });
   });
   return anchors;
 }
@@ -362,6 +367,41 @@ function headLength(state: FiberState, y: number) {
   }
   const t = (y - keys[lo]) / (keys[hi] - keys[lo]);
   return lens[lo] + t * (lens[hi] - lens[lo]);
+}
+
+// Longueur au point le plus proche, affinée au 1/20 de pixel (calage des pointillés sur une ligne fusionnée).
+function preciseLength(state: FiberState, point: Vec) {
+  const around = nearestLength(state, point);
+  let best = around;
+  let bestDist = Infinity;
+  for (let l = Math.max(0, around - 1); l <= Math.min(state.length, around + 1); l += 0.05) {
+    const p = state.offPath.getPointAtLength(l);
+    const dist = (p.x - point.x) ** 2 + (p.y - point.y) ** 2;
+    if (dist < bestDist) {
+      bestDist = dist;
+      best = l;
+    }
+  }
+  return best;
+}
+
+// Ligne fusionnée ([data-fiber-merge]) : les pointillés des fibres qui rejoignent la ligne sont décalés pour
+// tomber exactement sur ceux de la fibre de référence (B si présente) : on ne voit qu'une seule ligne.
+function alignMergedDots(inst: Instance) {
+  for (const f of FIBERS) inst.fibers[f].offPath.style.strokeDashoffset = "0";
+  if (inst.mobile) return;
+  inst.anchors.forEach(({ spec }) => {
+    if (!spec.merge || spec.fibers.length < 2) return;
+    const cx = (spec.rect.left + spec.rect.right) / 2;
+    const start = { x: cx, y: spec.rect.top + ROUTING.gap * 2 }; // dans la portion commune
+    const reference = spec.fibers.includes("B") ? "B" : spec.fibers[0];
+    const refLength = preciseLength(inst.fibers[reference], start);
+    for (const f of spec.fibers) {
+      if (f === reference) continue;
+      const shift = (((refLength - preciseLength(inst.fibers[f], start)) % CONFIG.dotGap) + CONFIG.dotGap) % CONFIG.dotGap;
+      inst.fibers[f].offPath.style.strokeDashoffset = String(shift);
+    }
+  });
 }
 
 function nearestLength(state: FiberState, point: Vec) {
@@ -524,24 +564,13 @@ function drawDebug(inst: Instance, obstacles: Rect[]) {
   }
 }
 
-function drawDim(inst: Instance, width: number, height: number, regions: Rect[]) {
-  const mask = inst.dimMask;
-  const group = inst.svg.querySelector(".fiber-all");
-  // Sans zone, pas de masque : rien à composer à chaque image.
-  if (!regions.length) {
-    group?.removeAttribute("mask");
-    mask.replaceChildren();
-    return;
-  }
-  group?.setAttribute("mask", `url(#${mask.id})`);
-  for (const [k, v] of Object.entries({ x: 0, y: 0, width, height })) mask.setAttribute(k, String(v));
-  // Opaque partout sauf dans les zones (trous en evenodd), que chaque zone remplit de son dégradé.
-  const holes = regions.map((r) => `M0 ${r.top}H${width}V${r.bottom}H0Z`).join("");
-  const base = svgEl("path", { d: `M0 0H${width}V${height}H0Z${holes}`, fill: "#fff", "fill-rule": "evenodd" });
-  const zones = regions.map((r) =>
-    svgEl("rect", { x: 0, y: r.top, width, height: r.bottom - r.top, fill: `url(#${mask.id}-fade)` }),
+function drawDim(inst: Instance, width: number, regions: Rect[]) {
+  const fade = inst.dimGroup.dataset.fade;
+  inst.dimGroup.replaceChildren(
+    ...regions.map((r) =>
+      svgEl("rect", { x: 0, y: r.top, width, height: r.bottom - r.top, fill: `url(#${fade})` }),
+    ),
   );
-  mask.replaceChildren(base, ...zones);
 }
 
 // ---------------------------------------------------------------------------
@@ -573,7 +602,7 @@ function rebuild(inst: Instance) {
       .filter(isRendered)
       .map((el) => relRect(el, origin)),
   }));
-  drawDim(inst, width, height, dimRegions);
+  drawDim(inst, width, dimRegions);
   inst.anchors = anchors;
   inst.checkpoints = checkpoints;
 
@@ -604,6 +633,8 @@ function rebuild(inst: Instance) {
     ...m,
     len: nearestLength(inst.fibers[m.carrier], m.point),
   }));
+  alignMergedDots(inst);
+
   // Points de passage : en mobile, la fibre composite (portée par A) les annonce pour chaque fibre.
   for (const c of checkpoints) {
     for (const fiber of c.fibers) {
@@ -670,14 +701,14 @@ function observeAnchors(inst: Instance) {
 }
 
 function setup(stage: HTMLElement, layer: HTMLElement) {
-  const { svg, glowSvg, fibers, debugGroup, dimMask } = createLayer(layer);
+  const { svg, glowSvg, fibers, debugGroup, dimGroup } = createLayer(layer);
   const inst: Instance = {
     stage,
     layer,
     svg,
     glowSvg,
     debugGroup,
-    dimMask,
+    dimGroup,
     fibers,
     markers: [],
     anchors: new Map(),

@@ -56,6 +56,14 @@ export default function PrivacyPage() {
           </p>
         </LegalSection>
 
+        <LegalSection title="Protection contre les robots">
+          <p>
+            Le formulaire peut être protégé par Cloudflare Turnstile, qui vérifie qu&apos;il est envoyé par une personne.
+            Ce service analyse des signaux techniques du navigateur au moment de l&apos;envoi, ne sert pas à la
+            publicité et ne dépose pas de cookie de suivi (voir la politique de confidentialité de Cloudflare).
+          </p>
+        </LegalSection>
+
         <LegalSection title="Durée de conservation">
           <p>
             Le temps nécessaire au traitement de votre demande et au suivi de la relation, puis trois ans au plus après

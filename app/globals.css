@@ -2250,3 +2250,8 @@ html[data-navigating] [data-close-on-navigate] {
 .legal-section p {
   line-height: 1.7;
 }
+
+/* Cloudflare Turnstile (formulaire de contact) : vide tant qu'aucun défi n'est affiché. */
+.turnstile:empty {
+  display: none;
+}

@@ -1,13 +1,15 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 
 import { ButtonGlint } from "@/components/motion/dotted-link";
+import { TURNSTILE_SITE_KEY, Turnstile } from "@/components/pages/turnstile";
 import {
   CONTACT_FIELDS,
   CONTACT_MAX_LENGTH,
   HONEYPOT_FIELD,
   STARTED_FIELD,
+  TURNSTILE_FIELD,
   readPayload,
   validateContact,
   type ContactErrors,
@@ -42,7 +44,8 @@ const FIELDS: {
 
 // Formulaire de contact : validation immédiate (mêmes règles que /api/contact), erreurs sous chaque champ
 // (aria-invalid + aria-describedby, focus sur le premier champ en erreur), état d'envoi, confirmation qui
-// remplace le formulaire et reçoit le focus. Anti-spam : champ piège invisible et heure d'ouverture du formulaire.
+// remplace le formulaire et reçoit le focus. Anti-spam : champ piège invisible, heure d'ouverture du formulaire et,
+// si configuré, Cloudflare Turnstile.
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<ContactErrors>({});
@@ -51,6 +54,9 @@ export function ContactForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const doneRef = useRef<HTMLHeadingElement>(null);
   const restart = useRef(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaRound, setCaptchaRound] = useState(0);
+  const onCaptchaToken = useCallback((token: string) => setCaptchaToken(token), []);
 
   // Le focus suit l'état : sur la confirmation après l'envoi, sur le premier champ pour une nouvelle demande.
   useEffect(() => {
@@ -87,6 +93,11 @@ export function ContactForm() {
       return;
     }
     setErrors({});
+    if (TURNSTILE_SITE_KEY && !captchaToken) {
+      setStatus("error");
+      setMessage("Vérification anti-robot en cours : réessayez dans un instant.");
+      return;
+    }
     setStatus("sending");
 
     try {
@@ -97,8 +108,11 @@ export function ContactForm() {
           ...payload,
           [HONEYPOT_FIELD]: data[HONEYPOT_FIELD] ?? "",
           [STARTED_FIELD]: startedAt.current || Date.now(),
+          [TURNSTILE_FIELD]: captchaToken,
         }),
       });
+      // Un jeton Turnstile ne sert qu'une fois : nouveau défi pour un éventuel nouvel envoi.
+      if (TURNSTILE_SITE_KEY) setCaptchaRound((n) => n + 1);
       const result = (await res.json().catch(() => null)) as ContactResponse | null;
       if (res.ok && result?.ok) {
         setStatus("sent");
@@ -199,6 +213,8 @@ export function ContactForm() {
         <label htmlFor={HONEYPOT_FIELD}>Ne pas remplir</label>
         <input id={HONEYPOT_FIELD} name={HONEYPOT_FIELD} type="text" tabIndex={-1} autoComplete="off" />
       </div>
+
+      <Turnstile onToken={onCaptchaToken} resetKey={captchaRound} />
 
       <p className="text-xs text-silver">
         Nous répondons sous 24h. En envoyant ce formulaire, vous acceptez le suivi par email pour ce projet.

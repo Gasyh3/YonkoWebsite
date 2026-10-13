@@ -10,6 +10,8 @@ export type ContactErrors = Partial<Record<ContactField, string>>;
 export const HONEYPOT_FIELD = "website";
 export const STARTED_FIELD = "startedAt";
 export const MIN_FILL_MS = 3000;
+// Jeton Cloudflare Turnstile (si activé, voir components/pages/turnstile.tsx).
+export const TURNSTILE_FIELD = "turnstileToken";
 
 const LIMITS: Record<ContactField, { min: number; max: number }> = {
   name: { min: 2, max: 100 },

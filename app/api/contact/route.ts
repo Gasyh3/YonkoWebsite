@@ -4,6 +4,7 @@ import {
   HONEYPOT_FIELD,
   MIN_FILL_MS,
   STARTED_FIELD,
+  TURNSTILE_FIELD,
   readPayload,
   validateContact,
   type ContactPayload,
@@ -12,7 +13,7 @@ import {
 import { SITE } from "@/lib/site";
 
 // Réception du formulaire de contact. Revalide tout côté serveur, filtre les robots (champ piège, durée de
-// remplissage, origine, débit par adresse IP), puis transmet la demande :
+// remplissage, origine, débit par adresse IP, Cloudflare Turnstile si TURNSTILE_SECRET_KEY est défini), puis transmet la demande :
 // - par e-mail via Resend si RESEND_API_KEY est défini ;
 // - à un webhook (Make, Zapier, n8n, CRM…) si CONTACT_WEBHOOK_URL est défini ;
 // - les deux si les deux sont configurés (succès dès qu'un canal aboutit).
@@ -48,6 +49,26 @@ function sameOrigin(request: Request) {
   try {
     return new URL(origin).host === request.headers.get("host");
   } catch {
+    return false;
+  }
+}
+
+// Cloudflare Turnstile : vérification du jeton côté serveur (jamais confiée au navigateur). Sans clé secrète, la
+// vérification est désactivée (développement local). Service injoignable = échec : on ne laisse rien passer.
+const TURNSTILE_VERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+async function verifyTurnstile(token: unknown, ip: string) {
+  const secret = process.env.TURNSTILE_SECRET_KEY;
+  if (!secret) return true;
+  if (typeof token !== "string" || token === "" || token.length > 2048) return false;
+  const form = new URLSearchParams({ secret, response: token });
+  if (ip !== "unknown") form.set("remoteip", ip);
+  try {
+    const res = await fetch(TURNSTILE_VERIFY, { method: "POST", body: form, signal: AbortSignal.timeout(8000) });
+    const data = (await res.json()) as { success?: boolean };
+    return data.success === true;
+  } catch (error) {
+    console.error("[contact] Vérification Turnstile impossible :", error);
     return false;
   }
 }
@@ -148,6 +169,13 @@ export async function POST(request: Request) {
   const payload = readPayload(body);
   const errors = validateContact(payload);
   if (Object.keys(errors).length > 0) return reply({ ok: false, errors }, 422);
+
+  if (!(await verifyTurnstile(body[TURNSTILE_FIELD], clientIp(request)))) {
+    return reply(
+      { ok: false, message: `La vérification anti-robot a échoué. Réessayez, ou écrivez-nous à ${SITE.email}.` },
+      400,
+    );
+  }
 
   const resendKey = process.env.RESEND_API_KEY;
   const webhook = process.env.CONTACT_WEBHOOK_URL;

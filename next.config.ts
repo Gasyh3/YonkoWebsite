@@ -11,19 +11,21 @@ const SERVICE_REDIRECTS: Record<string, string> = {
 };
 
 const isDev = process.env.NODE_ENV !== "production";
+// Cloudflare Turnstile (formulaire de contact) : seule source externe, autorisée uniquement si la clé est définie.
+const turnstile = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ? " https://challenges.cloudflare.com" : "";
 
-// Content-Security-Policy : uniquement les sources réellement chargées (relevé de l'audit) — tout est servi par le
-// site lui-même. 'unsafe-inline' (scripts) : Next injecte les données de page en scripts inline et le hero en a deux ;
-// un nonce rendrait toutes les pages dynamiques. 'unsafe-eval' et ws: : développement uniquement (rechargement à chaud).
+// Content-Security-Policy : uniquement les sources réellement chargées (relevé de l'audit) — le site lui-même, plus
+// Turnstile s'il est activé. 'unsafe-inline' (scripts) : Next injecte les données de page en scripts inline et le hero
+// en a deux ; un nonce rendrait toutes les pages dynamiques. 'unsafe-eval' et ws: : développement uniquement.
 const CSP = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${turnstile}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "media-src 'self'",
   "font-src 'self'",
   `connect-src 'self'${isDev ? " ws:" : ""}`,
-  "frame-src 'none'",
+  turnstile ? `frame-src${turnstile}` : "frame-src 'none'",
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

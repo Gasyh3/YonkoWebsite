@@ -12,7 +12,7 @@ export const SITE = {
   email: "contact@yonkotech.com",
   description:
     "Agence web à Madagascar : création de site vitrine et SEO, visibilité sur Google Maps, logiciel sur mesure et stratégie de communication pour PME et artisans.",
-  logo: "/assets/images/logo.png",
+  logo: "/assets/images/logo-512.png", // version allégée (40 Ko) de logo.png pour les données structurées
   telephone: "" as string, // format international, ex. +261 34 00 000 00 ; affiché (lien tel:) dès qu'il est renseigné
   address: {
     streetAddress: "",

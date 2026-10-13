@@ -50,6 +50,8 @@ const ALTERNATE_HOST = SITE_URL.hostname.startsWith("www.") ? SITE_URL.hostname.
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // next/image : AVIF en priorité (plus léger), WebP sinon.
+  images: { formats: ["image/avif", "image/webp"] },
   async headers() {
     return [
       { source: "/:path*", headers: SECURITY_HEADERS },

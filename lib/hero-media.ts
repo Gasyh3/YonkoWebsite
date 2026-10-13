@@ -11,11 +11,11 @@ export const heroMedia = {
   computer: {
     webm: "/media/hero-computer.webm",
     mp4: "/media/hero-computer.mp4",
-    poster: "/media/hero-computer.jpg",
+    poster: "/media/hero-computer.webp",
   },
   intro: {
     webm: "/media/hero-intro.webm",
     mp4: "/media/hero-intro.mp4",
-    poster: "/media/hero-intro.jpg",
+    poster: "/media/hero-intro.webp",
   },
 } as const;

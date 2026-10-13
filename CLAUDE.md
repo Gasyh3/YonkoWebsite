@@ -156,7 +156,7 @@ En bas de page, la ligne de tête des impulsions glisse jusqu'au bas du viewport
 2. Une demande à la fois. Ne commence pas la scène suivante sans qu'on le demande.
 3. Ordre prévu : C1 (FiberSystem) → C2 (Hero) → C6 (Maps) pour valider la DA → les autres sections dans l'ordre de la page → C11 (finitions, transitions, reduced motion).
 4. Pour chaque tâche, réponds avec : l'approche en une phrase, le code complet (pas de `...`), le markup et les ancres requis, comment tester.
-5. Les textes marqués `[à adapter]` ou `[à remplacer]` sont des placeholders : ne les présente jamais comme définitifs.
+5. Les textes marqués `[à adapter]`, `[à remplacer]` ou `[À COMPLÉTER]` (pages légales : informations que seul le client peut fournir) sont des placeholders : ne les présente jamais comme définitifs.
 6. Contenus : les textes sont rédigés (agence web basée à Antananarivo, Madagascar, travail à distance, depuis 2025). Ton : « nous », un seul interlocuteur, jamais de taille d'équipe ; aucune promesse intenable (pas de position Google garantie, pas de délai chiffré) ; aucune statistique inventée. Tout nouveau texte non validé reste marqué `[à adapter]`.
 
 ## Définition de « terminé » pour une tâche

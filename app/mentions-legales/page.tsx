@@ -18,21 +18,23 @@ export default function LegalNoticePage() {
       <div className="container max-w-3xl space-y-14 pb-24 pt-8 md:pb-32">
         <LegalSection title="Éditeur du site">
           <p>
-            {SITE.name}, [à remplacer : forme juridique], dont le siège est situé à {SITE.address.addressLocality},
+            {SITE.name}, [À COMPLÉTER : forme juridique et capital], dont le siège est situé à {SITE.address.addressLocality},
             Madagascar.
           </p>
-          <p>NIF : [à remplacer] · STAT : [à remplacer] · RCS : [à remplacer]</p>
+          <p>NIF : [À COMPLÉTER] · STAT : [À COMPLÉTER] · RCS : [À COMPLÉTER]</p>
           <p>
             Contact :{" "}
             <DottedLink href={`mailto:${SITE.email}`} className="text-silver-light">
               {SITE.email}
             </DottedLink>
           </p>
-          <p>Directeur de la publication : [à remplacer : nom et qualité].</p>
+          <p>Directeur de la publication : [À COMPLÉTER : nom et qualité].</p>
         </LegalSection>
 
         <LegalSection title="Hébergement">
-          <p>[à remplacer : nom, adresse et contact de l&apos;hébergeur, connus à la mise en ligne].</p>
+          <p>Hébergeur : [À COMPLÉTER : raison sociale]</p>
+          <p>Adresse : [À COMPLÉTER]</p>
+          <p>Contact : [À COMPLÉTER : téléphone ou site web]</p>
         </LegalSection>
 
         <LegalSection title="Propriété intellectuelle">

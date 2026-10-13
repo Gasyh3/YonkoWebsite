@@ -51,7 +51,7 @@ export default function PrivacyPage() {
         <LegalSection title="Destinataires">
           <p>
             Les demandes sont réservées à {SITE.name}. Elles transitent par un service d&apos;automatisation et une
-            messagerie électronique [à remplacer : nom des services, connus à la mise en ligne], qui agissent pour
+            messagerie électronique [À COMPLÉTER : nom du service d&apos;automatisation et de la messagerie], qui agissent pour
             notre compte.
           </p>
         </LegalSection>

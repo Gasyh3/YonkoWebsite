@@ -44,10 +44,22 @@ const SECURITY_HEADERS = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
 ];
 
+// Domaine unique : la variante www (ou sans www, selon NEXT_PUBLIC_SITE_URL) redirige en 308 vers l'URL canonique.
+const SITE_URL = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://yonkotech.com");
+const ALTERNATE_HOST = SITE_URL.hostname.startsWith("www.") ? SITE_URL.hostname.slice(4) : `www.${SITE_URL.hostname}`;
+
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   async headers() {
-    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+    return [
+      { source: "/:path*", headers: SECURITY_HEADERS },
+      // Vidéos et images de public/ : 7 jours en cache (+1 jour servi pendant la revalidation). Pas « immutable » :
+      // les rendus vidéo gardent le même nom quand on les régénère (renommer les fichiers pour un cache d'un an).
+      ...["/media/:path*", "/assets/:path*"].map((source) => ({
+        source,
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=86400" }],
+      })),
+    ];
   },
   // Bancs d'essai /lab : développement uniquement. En production, réécrits vers une route inexistante (vraie 404).
   async rewrites() {
@@ -56,6 +68,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: ALTERNATE_HOST }],
+        destination: `${SITE_URL.origin}/:path*`,
+        permanent: true,
+      },
       { source: "/services", destination: "/expertises", permanent: true },
       ...Object.entries(SERVICE_REDIRECTS).map(([from, to]) => ({
         source: `/services/${from}`,

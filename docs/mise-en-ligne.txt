@@ -2,54 +2,122 @@ YONKO TECH CONSULTING : À FAIRE À LA MISE EN LIGNE (en dernier)
 ================================================================
 
 Rien de ceci n'est nécessaire pour travailler en local. Tout se règle à la fin, dans cet ordre.
+Toutes les variables d'environnement sont décrites dans .env.example (jamais de clé dans le code).
 
 1. Nom de domaine
-   - Réserver ou confirmer le domaine (supposé : yonkotech.com).
-   - Le déclarer au site : variable NEXT_PUBLIC_SITE_URL (voir .env.example). Il sert aux URL
-     canoniques, au sitemap, au robots.txt et aux données structurées.
+   - Réserver ou confirmer le domaine (supposé : yonkotech.com). Activer le renouvellement
+     automatique et les alertes d'expiration du registraire.
+   - NEXT_PUBLIC_SITE_URL=https://yonkotech.com (sans www, sans barre finale). Il sert aux URL
+     canoniques, au sitemap, au robots.txt, aux données structurées et à la redirection
+     www → domaine nu (déjà codée dans next.config.ts : la variante www répond en 308).
+   - DNS : faire pointer le domaine nu ET www vers l'hébergeur (les deux doivent répondre pour que
+     la redirection www fonctionne).
 
-2. Hébergement
+2. Hébergement, HTTPS et compression
    - Un hébergeur compatible Next.js : Vercel (offre Pro pour un usage commercial, l'offre gratuite
-     l'interdit), Netlify, ou un serveur Node.
-   - Brancher le domaine, vérifier que le HTTPS est actif.
+     l'interdit), Netlify, ou un serveur Node derrière nginx.
+   - Vercel / Netlify : HTTPS, redirection http → https et compression Brotli sont automatiques.
+     Rien à configurer.
+   - Serveur Node + nginx : certificat Let's Encrypt (certbot --nginx), puis :
+       server {
+         listen 80;
+         server_name yonkotech.com www.yonkotech.com;
+         return 301 https://yonkotech.com$request_uri;
+       }
+     et dans le bloc « listen 443 ssl » : « brotli on; » (module ngx_brotli) ou à défaut
+     « gzip on; gzip_types text/css application/javascript application/json image/svg+xml; ».
+     Lancer le site avec « npm run build && npm start » (port 3000) derrière proxy_pass.
+   - Les en-têtes de sécurité (CSP, HSTS 2 ans, nosniff, Referrer-Policy, X-Frame-Options,
+     Permissions-Policy) sont envoyés par le site lui-même (next.config.ts) : rien à dupliquer.
+   - Vérifier :
+       curl -I http://yonkotech.com        → 301 ou 308 vers https://yonkotech.com/
+       curl -I https://www.yonkotech.com   → 308 vers https://yonkotech.com/
+       curl -I https://yonkotech.com | grep -iE "strict-transport|content-security"
+       curl -s -o /dev/null -w "%{content_encoding}\n" -H "Accept-Encoding: br" https://yonkotech.com
+     puis https://securityheaders.com et https://www.ssllabs.com/ssltest/ (viser A / A+).
+   - HSTS « preload » : ne l'ajouter qu'après plusieurs semaines sans souci de HTTPS sur tous les
+     sous-domaines (retour en arrière très lent).
    - Reporter le nom, l'adresse et le contact de l'hébergeur dans /mentions-legales.
 
-3. Adresse e-mail publique
-   - Créer la boîte contact@<domaine> affichée sur le site (chez le registraire du domaine,
-     Zoho Mail, Google Workspace…), ou en choisir une autre et la changer dans lib/site.ts.
+3. Adresse e-mail publique et délivrabilité (SPF / DKIM / DMARC)
+   - Créer la boîte contact@<domaine> affichée sur le site (Zoho Mail, Google Workspace, ou la
+     messagerie du registraire), ou en choisir une autre et la changer dans lib/site.ts.
+   - Chez le fournisseur choisi, ajouter dans la zone DNS les enregistrements qu'il fournit :
+       SPF   : TXT sur @        "v=spf1 include:<valeur donnée par le fournisseur> ~all"
+               (Google : include:_spf.google.com ; Zoho : include:zoho.com ou zoho.eu)
+               un seul enregistrement SPF par domaine.
+       DKIM  : TXT sur <sélecteur>._domainkey, clé générée dans la console du fournisseur.
+       DMARC : TXT sur _dmarc   "v=DMARC1; p=none; rua=mailto:contact@yonkotech.com"
+               puis passer à p=quarantine après 2 à 4 semaines de rapports sans anomalie.
+   - Vérifier avec https://mxtoolbox.com (SPF, DKIM, DMARC) et un e-mail de test vers
+     https://www.mail-tester.com (viser 9/10 ou plus).
+   - Si un jour l'envoi passe par Resend (RESEND_API_KEY) : vérifier le domaine dans Resend, il
+     fournit ses propres enregistrements SPF et DKIM.
 
 4. Formulaire de contact (choix retenu : webhook)
    - Créer un scénario dans Make, Zapier ou n8n : « Webhook personnalisé » → « Envoyer un e-mail »
-     vers votre adresse Gmail (celle indiquée dans le questionnaire), et éventuellement une ligne
-     dans Google Sheets pour garder un historique.
+     vers votre adresse Gmail (celle indiquée dans le questionnaire), et une ligne dans Google
+     Sheets pour garder un historique (sert aussi de sauvegarde, voir 10).
    - Copier l'URL du webhook dans la variable CONTACT_WEBHOOK_URL de l'hébergeur.
    - Faire un envoi test depuis le site en ligne. Sans cette variable, le formulaire affiche
      « envoi indisponible » et propose l'adresse e-mail.
    - Nommer ces services dans /confidentialite (rubrique « Destinataires »).
 
-5. Pages légales (/mentions-legales)
-   - Forme juridique, NIF, STAT, RCS, directeur de la publication, hébergeur.
+5. Anti-robot Cloudflare Turnstile (gratuit, sans compte Cloudflare payant)
+   - https://dash.cloudflare.com → Turnstile → « Add widget » : domaine yonkotech.com, mode
+     « Managed ». Récupérer la clé du site et la clé secrète.
+   - Dans l'hébergeur : NEXT_PUBLIC_TURNSTILE_SITE_KEY (avant le build : elle est lue au build) et
+     TURNSTILE_SECRET_KEY. Définir les deux, ou aucune.
+   - Redéployer, puis vérifier : un envoi normal passe, et
+       curl -s -X POST https://yonkotech.com/api/contact -H "Content-Type: application/json" \
+         -H "Origin: https://yonkotech.com" -d '{}'
+     répond par une erreur (pas de jeton).
+   - La CSP autorise challenges.cloudflare.com automatiquement quand la clé est définie.
+
+6. Pages légales (/mentions-legales, /confidentialite)
+   - Remplir les champs [À COMPLÉTER] : forme juridique et capital, NIF, STAT, RCS, directeur de
+     la publication, hébergeur (raison sociale, adresse, contact), services destinataires.
    - Faire relire les deux pages légales par une personne compétente.
 
-6. Google Search Console
+7. Google Search Console
    - Ajouter le domaine, le vérifier (enregistrement DNS), soumettre https://<domaine>/sitemap.xml.
-   - Vérifier ensuite la couverture des pages et les données structurées.
+   - Vérifier ensuite la couverture des pages et les données structurées. Activer les alertes
+     e-mail (problèmes d'indexation, sécurité).
 
-7. Fiche Google Business Profile de Yonko
+8. Fiche Google Business Profile de Yonko
    - Créer la fiche comme « entreprise de services » avec une zone desservie (Antananarivo,
      Madagascar), sans afficher d'adresse puisqu'il n'y a pas de local ouvert au public.
    - Mettre le lien du site, les catégories (agence web, conception de sites web…), les horaires.
 
-8. Réseaux sociaux (facultatif)
+9. Surveillance (monitoring)
+   - Disponibilité : UptimeRobot (gratuit) ou Better Stack, contrôle HTTPS toutes les 5 minutes
+     sur https://yonkotech.com et sur https://yonkotech.com/contact, alerte par e-mail / SMS.
+     Ajouter un contrôle « mot-clé » (ex. « Yonko ») pour détecter une page d'erreur servie en 200.
+   - Certificat : moniteur « SSL / expiration du certificat » d'UptimeRobot (alerte 14 jours
+     avant). Sur Vercel/Netlify le renouvellement est automatique, l'alerte reste un filet.
+   - Domaine : renouvellement automatique + alerte d'expiration chez le registraire (et un rappel
+     d'agenda 30 jours avant l'échéance).
+   - Formulaire : activer les notifications d'erreur du scénario Make / Zapier / n8n.
+
+10. Sauvegarde
+   - Pas de base de données ni de CMS : le site entier est dans le dépôt GitHub (code, textes,
+     médias). Garder le dépôt à jour, c'est la sauvegarde du site.
+   - Demandes du formulaire : historique Google Sheets du scénario + boîte Gmail. Export
+     trimestriel via Google Takeout (Gmail + Drive) conseillé.
+   - Variables d'environnement : en garder une copie dans un gestionnaire de mots de passe.
+
+11. Réseaux sociaux (facultatif)
    - Si des profils sont créés (LinkedIn, Facebook, Instagram…), les ajouter dans lib/site.ts
-     (sameAs) et dans le pied de page.
+     (sameAs) et dans le pied de page. Téléphone : le renseigner dans lib/site.ts (telephone), le
+     lien tel: s'affiche alors automatiquement.
 
-9. Mesure d'audience (facultatif)
+12. Mesure d'audience (facultatif)
    - Aucune aujourd'hui. Si besoin : un outil sans cookie (Plausible, Umami) évite le bandeau de
-     consentement. Mettre alors à jour /confidentialite.
+     consentement. L'ajouter à la CSP (next.config.ts) et mettre à jour /confidentialite.
 
-10. Vérifications finales
+13. Vérifications finales
     - Aperçu de partage : LinkedIn Post Inspector, et un envoi du lien dans WhatsApp.
     - Données structurées : test des résultats enrichis de Google.
-    - Performance : PageSpeed Insights sur mobile.
+    - Performance : PageSpeed Insights sur mobile (Core Web Vitals réels).
+    - En-têtes et TLS : securityheaders.com, ssllabs.com (voir 2).
     - Anciennes adresses /services : elles redirigent vers les expertises (déjà en place).

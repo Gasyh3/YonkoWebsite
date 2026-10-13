@@ -13,7 +13,7 @@ export const SITE = {
   description:
     "Agence web à Madagascar : création de site vitrine et SEO, visibilité sur Google Maps, logiciel sur mesure et stratégie de communication pour PME et artisans.",
   logo: "/assets/images/logo.png",
-  telephone: "", // format international, ex. +33 1 23 45 67 89
+  telephone: "" as string, // format international, ex. +261 34 00 000 00 ; affiché (lien tel:) dès qu'il est renseigné
   address: {
     streetAddress: "",
     postalCode: "",
@@ -24,6 +24,10 @@ export const SITE = {
   areaServed: ["Madagascar"] as string[], // zone prioritaire ; interventions à distance partout
   sameAs: [] as string[], // URL des profils (LinkedIn, Instagram, fiche Google…)
 } as const;
+
+// Lien d'appel (tel:) : chiffres et « + » seulement ; null tant qu'aucun numéro n'est renseigné.
+export const phoneHref = (): string | null =>
+  SITE.telephone ? `tel:${SITE.telephone.replace(/[^+\d]/g, "")}` : null;
 
 export const absoluteUrl = (path = "/") => `${SITE.url}${path === "/" ? "" : path}`;
 

@@ -1,7 +1,7 @@
 import { DottedLink } from "@/components/motion/dotted-link";
 import { PageHeader } from "@/components/page/page-header";
 import { ContactForm } from "@/components/pages/contact-form";
-import { SITE, pageMetadata } from "@/lib/site";
+import { SITE, pageMetadata, phoneHref } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Contact",
@@ -46,6 +46,14 @@ export default function ContactPage() {
                 {SITE.email}
               </DottedLink>
             </p>
+            {phoneHref() ? (
+              <p className="mt-3 text-sm text-silver">
+                Ou le téléphone :{" "}
+                <DottedLink href={phoneHref() as string} className="text-silver-light">
+                  {SITE.telephone}
+                </DottedLink>
+              </p>
+            ) : null}
           </div>
 
           <ContactForm />

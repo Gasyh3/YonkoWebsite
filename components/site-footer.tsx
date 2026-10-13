@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Mail } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 import { BackToTop } from "@/components/motion/back-to-top";
 import { DottedLink } from "@/components/motion/dotted-link";
-import { SITE } from "@/lib/site";
+import { SITE, phoneHref } from "@/lib/site";
 import logoPng from "@/public/assets/images/icon.png";
 
 // Liens de pied de page (le header garde le parcours principal).
@@ -15,8 +15,15 @@ const FOOTER_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-// Réseaux : à compléter avec les profils (et SITE.sameAs) quand ils existent.
-const SOCIALS = [{ href: `mailto:${SITE.email}`, label: `Écrire à ${SITE.email}`, icon: Mail }];
+// Contact direct et réseaux : à compléter avec les profils (et SITE.sameAs) quand ils existent. Le téléphone
+// n'apparaît que s'il est renseigné dans lib/site.ts.
+function contactLinks() {
+  const tel = phoneHref();
+  return [
+    ...(tel ? [{ href: tel, label: `Appeler le ${SITE.telephone}`, icon: Phone }] : []),
+    { href: `mailto:${SITE.email}`, label: `Écrire à ${SITE.email}`, icon: Mail },
+  ];
+}
 
 // Footer : séparé de la page par une fibre pointillée ; marque, navigation, retour en haut et réseaux, puis
 // mentions. Noir mat, argent, aucune couleur hors charte.
@@ -52,7 +59,7 @@ export function SiteFooter() {
           <div className="flex flex-col items-start gap-6 sm:items-end">
             <BackToTop />
             <ul className="flex items-center gap-4 text-silver">
-              {SOCIALS.map(({ href, label, icon: Icon }) => (
+              {contactLinks().map(({ href, label, icon: Icon }) => (
                 <li key={label}>
                   <Link href={href} aria-label={label} className="site-footer__social">
                     <Icon className="h-4 w-4" aria-hidden="true" />

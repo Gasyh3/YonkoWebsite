@@ -21,11 +21,21 @@ const LIMITS: Record<ContactField, { min: number; max: number }> = {
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+// Champs d'une ligne : aucun caractère de contrôle (CR/LF compris), ce qui empêche toute injection d'en-tête dans
+// le sujet d'un e-mail ou un outil branché sur le webhook. Message : retours à la ligne et tabulations conservés.
+const SINGLE_LINE_CONTROL = /[\u0000-\u001F\u007F\u2028\u2029]+/g;
+const MULTILINE_CONTROL = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]+/g;
+
 export function readPayload(source: Record<string, unknown>): ContactPayload {
   const payload = {} as ContactPayload;
   for (const field of CONTACT_FIELDS) {
     const value = source[field];
-    payload[field] = typeof value === "string" ? value.trim() : "";
+    const text = typeof value === "string" ? value : "";
+    payload[field] = (
+      field === "message"
+        ? text.replace(/\r\n?/g, "\n").replace(MULTILINE_CONTROL, "")
+        : text.replace(SINGLE_LINE_CONTROL, " ")
+    ).trim();
   }
   return payload;
 }

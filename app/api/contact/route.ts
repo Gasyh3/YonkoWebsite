@@ -54,6 +54,26 @@ function sameOrigin(request: Request) {
 
 const reply = (body: ContactResponse, status = 200) => NextResponse.json(body, { status });
 
+// Lit le corps en s'arrêtant à MAX_BODY octets, que l'en-tête content-length soit présent ou non (transfert
+// « chunked ») : null si la limite est dépassée.
+async function readBody(request: Request): Promise<string | null> {
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > MAX_BODY) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  return Buffer.concat(chunks).toString("utf8");
+}
+
 function emailText(p: ContactPayload) {
   return [
     `Nom : ${p.name}`,
@@ -99,9 +119,12 @@ export async function POST(request: Request) {
   if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY)
     return reply({ ok: false, message: "Message trop long." }, 413);
 
+  const raw = await readBody(request);
+  if (raw === null) return reply({ ok: false, message: "Message trop long." }, 413);
+
   let body: Record<string, unknown>;
   try {
-    const parsed: unknown = await request.json();
+    const parsed: unknown = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") throw new Error("not an object");
     body = parsed as Record<string, unknown>;
   } catch {

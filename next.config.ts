@@ -10,7 +10,43 @@ const SERVICE_REDIRECTS: Record<string, string> = {
   "communication-reseaux-sociaux": "strategie-de-communication",
 };
 
+const isDev = process.env.NODE_ENV !== "production";
+
+// Content-Security-Policy : uniquement les sources réellement chargées (relevé de l'audit) — tout est servi par le
+// site lui-même. 'unsafe-inline' (scripts) : Next injecte les données de page en scripts inline et le hero en a deux ;
+// un nonce rendrait toutes les pages dynamiques. 'unsafe-eval' et ws: : développement uniquement (rechargement à chaud).
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "media-src 'self'",
+  "font-src 'self'",
+  `connect-src 'self'${isDev ? " ws:" : ""}`,
+  "frame-src 'none'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  "manifest-src 'self'",
+].join("; ");
+
+const SECURITY_HEADERS = [
+  { key: "Content-Security-Policy", value: CSP },
+  // HSTS : n'a d'effet que servi en HTTPS (ignoré en local). Pas de « preload » : engagement difficile à annuler.
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+];
+
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  async headers() {
+    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+  },
   // Bancs d'essai /lab : développement uniquement. En production, réécrits vers une route inexistante (vraie 404).
   async rewrites() {
     if (process.env.NODE_ENV !== "production") return [];

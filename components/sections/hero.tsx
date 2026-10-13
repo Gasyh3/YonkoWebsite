@@ -35,8 +35,10 @@ export function Hero() {
           </div>
           <span className="sr-only">Préparation de la page</span>
         </div>
+        {/* preload est passé à « auto » par le script ci-dessous avant l'hydratation : différence voulue. */}
         <video
           data-hero-intro-video=""
+          suppressHydrationWarning
           className="hero-intro-overlay__video"
           muted
           playsInline

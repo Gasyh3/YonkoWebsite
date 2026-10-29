@@ -255,7 +255,7 @@ export const faqItems: FaqItem[] = [
     id: "response-time",
     category: C.ownership,
     question: "En combien de temps répondez-vous ?",
-    answer: <p>Sous 24h, à chaque demande, par e-mail ou par le formulaire de contact.</p>,
+    answer: <p>Sous 24h, à chaque demande envoyée par le formulaire de contact.</p>,
   },
 ];
 

@@ -20,7 +20,7 @@ Ce document rassemble le **fond** du site : qui est l'entreprise, ce qu'elle pro
 | Zone | Madagascar en priorité, travail à distance partout |
 | Depuis | 2025 |
 | Clients visés | PME, commerçants, artisans, professions libérales |
-| Contact public | contact@yonkotech.com (formulaire sur /contact) |
+| Contact public | Formulaire de contact (/contact) uniquement ; aucune adresse e-mail affichée tant que la boîte n'existe pas |
 | Engagement de réponse | Sous 24h, à chaque demande |
 | Téléphone | Non communiqué pour l'instant |
 | Réseaux sociaux | Aucun pour l'instant |
@@ -313,7 +313,7 @@ Dans l'ordre de la page :
 8. **Process** : *Quatre étapes, un seul interlocuteur.* (voir section 7).
 9. **Pourquoi Yonko ?** : quatre raisons (voir section 8).
 10. **FAQ express** : *« Les questions qu'on nous pose avant de démarrer. »* (5 questions) et lien « Consulter toutes les FAQ ».
-11. **Contact** : *« Connectons votre entreprise. »* puis *« Un premier échange, sans engagement, pour parler de votre activité et de vos priorités. Réponse sous 24h. »* Bouton *Démarrer un projet*, ou e-mail contact@yonkotech.com.
+11. **Contact** : *« Connectons votre entreprise. »* puis *« Un premier échange, sans engagement, pour parler de votre activité et de vos priorités. Réponse sous 24h. »* Bouton *Démarrer un projet* (l'e-mail s'ajoutera ici quand l'adresse existera).
 
 ### Expertises (/expertises)
 
@@ -345,7 +345,7 @@ Chaque page d'expertise : titre, promesse en or, introduction, bouton « Démarr
 
 - Titre : *Parlons de vos projets*
 - Texte : *« Site vitrine, référencement, fiche Google, logiciel de gestion ou simple question : décrivez votre besoin en quelques lignes. Nous répondons sous 24h et proposons un échange pour cadrer les premiers pas. »*
-- Les trois étapes après l'envoi (section 7), puis *« Vous préférez l'e-mail ? contact@yonkotech.com »*.
+- Les trois étapes après l'envoi (section 7). La ligne *« Vous préférez l'e-mail ? »* n'apparaîtra qu'une fois l'adresse créée.
 - Formulaire : Nom, Société (facultatif), Email, Sujet, Message.
 - Mention sous le formulaire : *« Nous répondons sous 24h. En envoyant ce formulaire, vous acceptez le suivi par email pour ce projet. »*
 - Après envoi : *« Merci, votre demande est bien partie. Nous revenons vers vous sous 24h avec une première lecture de votre besoin. »*
@@ -362,7 +362,7 @@ Chaque page d'expertise : titre, promesse en or, introduction, bouton « Démarr
 ### En-tête et pied de page
 
 - **Menu** : Expertises (avec le panneau des quatre expertises), À propos, FAQ, et le bouton *Démarrer un projet* (« Contact » sur mobile).
-- **Pied de page** : *« Agence web et communication basée à Antananarivo : stratégie, site vitrine, Google Maps et logiciel sur mesure pour les PME, commerçants, artisans et professions libérales. »* Liens : Expertises, L'agence, Questions fréquentes, Contact ; e-mail ; Retour en haut ; © Yonko Tech Consulting ; Mentions légales ; Politique de confidentialité.
+- **Pied de page** : *« Agence web et communication basée à Antananarivo : stratégie, site vitrine, Google Maps et logiciel sur mesure pour les PME, commerçants, artisans et professions libérales. »* Liens : Expertises, L'agence, Questions fréquentes, Contact ; Retour en haut (l'icône e-mail s'ajoutera avec l'adresse) ; © Yonko Tech Consulting ; Mentions légales ; Politique de confidentialité.
 
 ---
 
@@ -489,6 +489,7 @@ Hors accueil, chaque titre est suivi de « · Yonko Tech Consulting ».
 - **Plus tard** : premières réalisations (accord du client, résultat mesuré, visuel) et chiffres réels.
 - **Facultatif** : numéro de téléphone (il s'affichera automatiquement), profils de réseaux sociaux, logo en SVG.
 - **À confirmer** : le nom de domaine définitif (yonkotech.com est supposé).
+- **Adresse e-mail publique** : aucune pour l'instant, le site n'en affiche donc pas. Une fois la boîte créée, la renseigner dans `lib/site.ts` (`email`) : elle apparaîtra automatiquement (pied de page, Contact, pages légales, messages d'erreur du formulaire).
 
 ## Où changer les textes
 
@@ -497,6 +498,6 @@ Hors accueil, chaque titre est suivi de « · Yonko Tech Consulting ».
 | Expertises (pages, menu, index) | `lib/expertises-data.ts` |
 | Questions fréquentes | `lib/faq-data.tsx` |
 | Engagements (section Résultats) | `lib/results-data.ts` |
-| Nom, e-mail, ville, description, téléphone, réseaux | `lib/site.ts` |
+| Nom, e-mail (vide pour l'instant), ville, description, téléphone, réseaux | `lib/site.ts` |
 | Sections de l'accueil | `components/sections/*.tsx` |
 | Pages À propos, Contact, légales | `app/about`, `app/contact`, `app/mentions-legales`, `app/confidentialite` |

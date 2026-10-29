@@ -40,8 +40,9 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
    - Reporter le nom, l'adresse et le contact de l'hébergeur dans /mentions-legales.
 
 3. Adresse e-mail publique et délivrabilité (SPF / DKIM / DMARC)
-   - Créer la boîte contact@<domaine> affichée sur le site (Zoho Mail, Google Workspace, ou la
-     messagerie du registraire), ou en choisir une autre et la changer dans lib/site.ts.
+   - Créer la boîte contact@<domaine> (Zoho Mail, Google Workspace, ou la messagerie du
+     registraire), puis la renseigner dans lib/site.ts (email) : elle s'affiche alors partout
+     automatiquement. Tant que ce champ est vide, le site n'affiche aucune adresse e-mail.
    - Chez le fournisseur choisi, ajouter dans la zone DNS les enregistrements qu'il fournit :
        SPF   : TXT sur @        "v=spf1 include:<valeur donnée par le fournisseur> ~all"
                (Google : include:_spf.google.com ; Zoho : include:zoho.com ou zoho.eu)

@@ -9,7 +9,9 @@ export const SITE = {
   // Domaine de production : NEXT_PUBLIC_SITE_URL (voir .env.example), sans barre finale.
   url: (process.env.NEXT_PUBLIC_SITE_URL || "https://yonkotech.com").replace(/\/+$/, ""),
   locale: "fr_FR",
-  email: "contact@yonkotech.com",
+  // Adresse publique : vide tant que la boîte n'existe pas ; le site ne l'affiche (liens, messages, données
+  // structurées) que renseignée. Le formulaire de contact reste le canal principal.
+  email: "" as string, // ex. contact@yonkotech.com
   description:
     "Agence web à Madagascar : création de site vitrine et SEO, visibilité sur Google Maps, logiciel sur mesure et stratégie de communication pour PME et artisans.",
   logo: "/assets/images/logo-512.png", // version allégée (40 Ko) de logo.png pour les données structurées
@@ -24,6 +26,12 @@ export const SITE = {
   areaServed: ["Madagascar"] as string[], // zone prioritaire ; interventions à distance partout
   sameAs: [] as string[], // URL des profils (LinkedIn, Instagram, fiche Google…)
 } as const;
+
+// Lien e-mail (mailto:) : null tant qu'aucune adresse n'est renseignée.
+export const emailHref = (): string | null => (SITE.email ? `mailto:${SITE.email}` : null);
+
+// Complément des messages d'erreur du formulaire : « ou écrivez-nous à … » seulement si une adresse existe.
+export const orWriteUs = (): string => (SITE.email ? ` ou écrivez-nous à ${SITE.email}` : "");
 
 // Lien d'appel (tel:) : chiffres et « + » seulement ; null tant qu'aucun numéro n'est renseigné.
 export const phoneHref = (): string | null =>

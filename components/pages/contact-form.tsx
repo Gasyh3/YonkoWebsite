@@ -16,7 +16,7 @@ import {
   type ContactField,
   type ContactResponse,
 } from "@/lib/contact";
-import { SITE } from "@/lib/site";
+import { orWriteUs } from "@/lib/site";
 
 type Status = "idle" | "sending" | "sent" | "error";
 
@@ -124,11 +124,11 @@ export function ContactForm() {
         (result && !result.ok && result.message) ||
           (result && !result.ok && result.errors
             ? "Certains champs sont à corriger."
-            : `L'envoi n'a pas abouti. Réessayez dans un instant ou écrivez-nous à ${SITE.email}.`),
+            : `L'envoi n'a pas abouti. Réessayez dans un instant${orWriteUs()}.`),
       );
     } catch {
       setStatus("error");
-      setMessage(`Connexion impossible. Vérifiez votre réseau ou écrivez-nous à ${SITE.email}.`);
+      setMessage(`Connexion impossible. Vérifiez votre réseau et réessayez${orWriteUs()}.`);
     }
   };
 

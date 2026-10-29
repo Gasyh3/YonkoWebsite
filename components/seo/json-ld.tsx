@@ -27,7 +27,7 @@ export function organizationJsonLd(): Json {
     url: SITE.url,
     logo: absoluteUrl(SITE.logo),
     ...(local ? { image: absoluteUrl(SITE.logo) } : {}),
-    email: SITE.email,
+    ...(SITE.email ? { email: SITE.email } : {}),
     description: SITE.description,
     ...(SITE.telephone ? { telephone: SITE.telephone } : {}),
     foundingDate: SITE.foundingDate,

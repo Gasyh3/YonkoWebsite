@@ -10,7 +10,7 @@ import {
   type ContactPayload,
   type ContactResponse,
 } from "@/lib/contact";
-import { SITE } from "@/lib/site";
+import { SITE, orWriteUs } from "@/lib/site";
 
 // Réception du formulaire de contact. Revalide tout côté serveur, filtre les robots (champ piège, durée de
 // remplissage, origine, débit par adresse IP, Cloudflare Turnstile si TURNSTILE_SECRET_KEY est défini), puis transmet la demande :
@@ -161,7 +161,7 @@ export async function POST(request: Request) {
 
   if (rateLimited(clientIp(request))) {
     return reply(
-      { ok: false, message: `Trop de demandes en peu de temps. Réessayez plus tard ou écrivez-nous à ${SITE.email}.` },
+      { ok: false, message: `Trop de demandes en peu de temps. Réessayez plus tard${orWriteUs()}.` },
       429,
     );
   }
@@ -172,7 +172,7 @@ export async function POST(request: Request) {
 
   if (!(await verifyTurnstile(body[TURNSTILE_FIELD], clientIp(request)))) {
     return reply(
-      { ok: false, message: `La vérification anti-robot a échoué. Réessayez, ou écrivez-nous à ${SITE.email}.` },
+      { ok: false, message: `La vérification anti-robot a échoué. Réessayez${orWriteUs()}.` },
       400,
     );
   }
@@ -190,7 +190,7 @@ export async function POST(request: Request) {
     }
     console.error("[contact] Aucun canal d'envoi configuré en production.");
     return reply(
-      { ok: false, message: `L'envoi est momentanément indisponible. Écrivez-nous directement à ${SITE.email}.` },
+      { ok: false, message: `L'envoi est momentanément indisponible. Réessayez un peu plus tard${orWriteUs()}.` },
       503,
     );
   }
@@ -200,7 +200,7 @@ export async function POST(request: Request) {
   for (const failure of failures) console.error("[contact] Échec d'un canal d'envoi :", failure.reason);
   if (failures.length === results.length) {
     return reply(
-      { ok: false, message: `L'envoi n'a pas abouti. Réessayez dans un instant ou écrivez-nous à ${SITE.email}.` },
+      { ok: false, message: `L'envoi n'a pas abouti. Réessayez dans un instant${orWriteUs()}.` },
       502,
     );
   }

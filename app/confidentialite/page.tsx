@@ -1,7 +1,7 @@
 import { DottedLink } from "@/components/motion/dotted-link";
 import { LegalSection } from "@/components/page/legal-section";
 import { PageHeader } from "@/components/page/page-header";
-import { SITE, pageMetadata } from "@/lib/site";
+import { SITE, emailHref, pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Politique de confidentialité",
@@ -14,8 +14,8 @@ export const metadata = pageMetadata({
 // cookie de suivi, mémorisation locale de l'intro du hero). À mettre à jour si un outil d'audience est ajouté.
 export default function PrivacyPage() {
   const mail = (
-    <DottedLink href={`mailto:${SITE.email}`} className="text-silver-light">
-      {SITE.email}
+    <DottedLink href={emailHref() ?? "/contact"} className="text-silver-light">
+      {SITE.email || "le formulaire de contact"}
     </DottedLink>
   );
 
@@ -89,7 +89,7 @@ export default function PrivacyPage() {
         <LegalSection title="Vos droits">
           <p>
             Vous pouvez demander l&apos;accès à vos données, leur rectification ou leur suppression, et vous opposer à
-            leur utilisation, en écrivant à {mail}. Nous répondons sous 24h, et traitons la demande dans les meilleurs
+            leur utilisation, en nous écrivant via {mail}. Nous répondons sous 24h, et traitons la demande dans les meilleurs
             délais.
           </p>
           <p>

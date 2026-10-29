@@ -8,6 +8,7 @@ import { ButtonGlint, DottedLink } from "@/components/motion/dotted-link";
 
 import { createContactScene } from "@/lib/motion/contact";
 import { useMotionModule } from "@/lib/motion/use-motion-module";
+import { SITE, emailHref } from "@/lib/site";
 
 // Contact (C10) : la conclusion du récit. La ligne unique du Process s'est redivisée en 3 fibres, qui convergent
 // vers un seul point, le bouton « Démarrer un projet » (terminus). Quand les 3 impulsions arrivent, il s'allume.
@@ -78,12 +79,14 @@ export function Contact() {
           />
         </div>
 
-        <p className="mt-10 text-sm text-silver">
-          ou écrivez-nous :{" "}
-          <DottedLink href="mailto:contact@yonkotech.com" className="text-silver-light">
-            contact@yonkotech.com
-          </DottedLink>
-        </p>
+        {emailHref() ? (
+          <p className="mt-10 text-sm text-silver">
+            ou écrivez-nous :{" "}
+            <DottedLink href={emailHref() as string} className="text-silver-light">
+              {SITE.email}
+            </DottedLink>
+          </p>
+        ) : null}
       </div>
     </section>
   );

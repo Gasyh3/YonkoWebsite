@@ -4,7 +4,7 @@ import { Mail, Phone } from "lucide-react";
 
 import { BackToTop } from "@/components/motion/back-to-top";
 import { DottedLink } from "@/components/motion/dotted-link";
-import { SITE, phoneHref } from "@/lib/site";
+import { SITE, emailHref, phoneHref } from "@/lib/site";
 import logoPng from "@/public/assets/images/icon.png";
 
 // Liens de pied de page (le header garde le parcours principal).
@@ -15,13 +15,14 @@ const FOOTER_LINKS = [
   { href: "/contact", label: "Contact" },
 ];
 
-// Contact direct et réseaux : à compléter avec les profils (et SITE.sameAs) quand ils existent. Le téléphone
-// n'apparaît que s'il est renseigné dans lib/site.ts.
+// Contact direct et réseaux : à compléter avec les profils (et SITE.sameAs) quand ils existent. Téléphone et
+// e-mail n'apparaissent que s'ils sont renseignés dans lib/site.ts.
 function contactLinks() {
   const tel = phoneHref();
+  const mail = emailHref();
   return [
     ...(tel ? [{ href: tel, label: `Appeler le ${SITE.telephone}`, icon: Phone }] : []),
-    { href: `mailto:${SITE.email}`, label: `Écrire à ${SITE.email}`, icon: Mail },
+    ...(mail ? [{ href: mail, label: `Écrire à ${SITE.email}`, icon: Mail }] : []),
   ];
 }
 
@@ -58,15 +59,17 @@ export function SiteFooter() {
           </nav>
           <div className="flex flex-col items-start gap-6 sm:items-end">
             <BackToTop />
-            <ul className="flex items-center gap-4 text-silver">
-              {contactLinks().map(({ href, label, icon: Icon }) => (
-                <li key={label}>
-                  <Link href={href} aria-label={label} className="site-footer__social">
-                    <Icon className="h-4 w-4" aria-hidden="true" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {contactLinks().length > 0 ? (
+              <ul className="flex items-center gap-4 text-silver">
+                {contactLinks().map(({ href, label, icon: Icon }) => (
+                  <li key={label}>
+                    <Link href={href} aria-label={label} className="site-footer__social">
+                      <Icon className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
           </div>
         </div>
       </div>

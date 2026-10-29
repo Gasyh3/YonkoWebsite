@@ -1,7 +1,7 @@
 import { DottedLink } from "@/components/motion/dotted-link";
 import { LegalSection } from "@/components/page/legal-section";
 import { PageHeader } from "@/components/page/page-header";
-import { SITE, pageMetadata } from "@/lib/site";
+import { SITE, emailHref, pageMetadata } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: "Mentions légales",
@@ -24,8 +24,8 @@ export default function LegalNoticePage() {
           <p>NIF : [À COMPLÉTER] · STAT : [À COMPLÉTER] · RCS : [À COMPLÉTER]</p>
           <p>
             Contact :{" "}
-            <DottedLink href={`mailto:${SITE.email}`} className="text-silver-light">
-              {SITE.email}
+            <DottedLink href={emailHref() ?? "/contact"} className="text-silver-light">
+              {SITE.email || "formulaire de contact"}
             </DottedLink>
           </p>
           <p>Directeur de la publication : [À COMPLÉTER : nom et qualité].</p>

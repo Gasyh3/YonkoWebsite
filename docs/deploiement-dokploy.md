@@ -19,7 +19,7 @@ Deux familles, à ne pas confondre :
 
 | Variable | Où la mettre dans Dokploy | Quand elle est lue | Obligatoire |
 |---|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Build-time Arguments (« Build Args ») | Au build | Oui (ex. `https://yonkotech.com`) |
+| `NEXT_PUBLIC_SITE_URL` | Build-time Arguments (« Build Args ») | Au build | Oui (ex. `https://yonko.tech`) |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Build-time Arguments | Au build | Avec Turnstile |
 | `CONTACT_WEBHOOK_URL` | Environment | Au démarrage | Oui, pour recevoir les demandes |
 | `TURNSTILE_SECRET_KEY` | Environment | Au démarrage | Avec Turnstile |
@@ -32,16 +32,16 @@ Turnstile) : après les avoir changées, il faut **redéployer** (reconstruire),
 
 1. **Serveur** : un VPS avec Dokploy installé, au moins **2 Go de RAM** (le build Next.js en a besoin ; sinon,
    ajouter du swap). Le serveur doit accéder à Internet pendant le build (npm et polices Google).
-2. **DNS** : chez le registraire, un enregistrement `A` pour `yonkotech.com` **et** pour `www.yonkotech.com`
+2. **DNS** : chez le registraire, un enregistrement `A` pour `yonko.tech` **et** pour `www.yonko.tech`
    vers l'IP du serveur.
 3. **Dokploy → Projects → Create Project** (ex. « Yonko »), puis **Create Service → Application**.
 4. **Source** : *Provider* GitHub (connecter l'application GitHub de Dokploy si ce n'est pas fait), dépôt
    `YonkoWebsite`, branche de production.
 5. **Build Type** : **Dockerfile**. Docker File : `Dockerfile` ; Docker Context Path : `.` ; Build Stage : vide.
 6. **Environment** : coller les variables d'exécution (tableau ci-dessus) ; dans **Build-time Arguments**, mettre
-   `NEXT_PUBLIC_SITE_URL=https://yonkotech.com` (et la clé Turnstile publique si elle existe).
-7. **Domains** : ajouter `yonkotech.com`, *Path* `/`, *Container Port* **3000**, **HTTPS activé**, certificat
-   **Let's Encrypt**. Ajouter de même `www.yonkotech.com` (le site le redirige lui-même vers le domaine nu).
+   `NEXT_PUBLIC_SITE_URL=https://yonko.tech` (et la clé Turnstile publique si elle existe).
+7. **Domains** : ajouter `yonko.tech`, *Path* `/`, *Container Port* **3000**, **HTTPS activé**, certificat
+   **Let's Encrypt**. Ajouter de même `www.yonko.tech` (le site le redirige lui-même vers le domaine nu).
    Avec HTTPS activé, Dokploy (Traefik) redirige automatiquement http → https.
 8. **Deploy**. Suivre l'onglet *Deployments* / *Logs* : le build prend quelques minutes la première fois.
 9. **Auto Deploy** (onglet *General* ou *Deployments*) : l'activer pour redéployer à chaque push sur la branche.
@@ -52,10 +52,10 @@ Les libellés exacts peuvent varier légèrement selon la version de Dokploy.
 ## Vérifier après déploiement
 
 ```bash
-curl -s https://yonkotech.com/api/health                 # {"status":"ok"}
-curl -sI http://yonkotech.com | head -3                    # redirection vers https
-curl -sI https://www.yonkotech.com | grep -i location      # → https://yonkotech.com/
-curl -sI https://yonkotech.com | grep -iE "strict-transport|content-security"
+curl -s https://yonko.tech/api/health                 # {"status":"ok"}
+curl -sI http://yonko.tech | head -3                    # redirection vers https
+curl -sI https://www.yonko.tech | grep -i location      # → https://yonko.tech/
+curl -sI https://yonko.tech | grep -iE "strict-transport|content-security"
 ```
 
 Puis un envoi test du formulaire, et les vérifications de `docs/mise-en-ligne.txt` (étape 13).

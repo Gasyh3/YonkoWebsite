@@ -5,9 +5,9 @@ Rien de ceci n'est nécessaire pour travailler en local. Tout se règle à la fi
 Toutes les variables d'environnement sont décrites dans .env.example (jamais de clé dans le code).
 
 1. Nom de domaine
-   - Réserver ou confirmer le domaine (supposé : yonkotech.com). Activer le renouvellement
+   - Domaine retenu : yonko.tech. Activer le renouvellement
      automatique et les alertes d'expiration du registraire.
-   - NEXT_PUBLIC_SITE_URL=https://yonkotech.com (sans www, sans barre finale). Il sert aux URL
+   - NEXT_PUBLIC_SITE_URL=https://yonko.tech (sans www, sans barre finale). Il sert aux URL
      canoniques, au sitemap, au robots.txt, aux données structurées et à la redirection
      www → domaine nu (déjà codée dans next.config.ts : la variante www répond en 308).
    - DNS : faire pointer le domaine nu ET www vers l'hébergeur (les deux doivent répondre pour que
@@ -23,8 +23,8 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
    - Serveur Node + nginx : certificat Let's Encrypt (certbot --nginx), puis :
        server {
          listen 80;
-         server_name yonkotech.com www.yonkotech.com;
-         return 301 https://yonkotech.com$request_uri;
+         server_name yonko.tech www.yonko.tech;
+         return 301 https://yonko.tech$request_uri;
        }
      et dans le bloc « listen 443 ssl » : « brotli on; » (module ngx_brotli) ou à défaut
      « gzip on; gzip_types text/css application/javascript application/json image/svg+xml; ».
@@ -32,10 +32,10 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
    - Les en-têtes de sécurité (CSP, HSTS 2 ans, nosniff, Referrer-Policy, X-Frame-Options,
      Permissions-Policy) sont envoyés par le site lui-même (next.config.ts) : rien à dupliquer.
    - Vérifier :
-       curl -I http://yonkotech.com        → 301 ou 308 vers https://yonkotech.com/
-       curl -I https://www.yonkotech.com   → 308 vers https://yonkotech.com/
-       curl -I https://yonkotech.com | grep -iE "strict-transport|content-security"
-       curl -s -o /dev/null -w "%{content_encoding}\n" -H "Accept-Encoding: br" https://yonkotech.com
+       curl -I http://yonko.tech        → 301 ou 308 vers https://yonko.tech/
+       curl -I https://www.yonko.tech   → 308 vers https://yonko.tech/
+       curl -I https://yonko.tech | grep -iE "strict-transport|content-security"
+       curl -s -o /dev/null -w "%{content_encoding}\n" -H "Accept-Encoding: br" https://yonko.tech
      puis https://securityheaders.com et https://www.ssllabs.com/ssltest/ (viser A / A+).
    - HSTS « preload » : ne l'ajouter qu'après plusieurs semaines sans souci de HTTPS sur tous les
      sous-domaines (retour en arrière très lent).
@@ -50,7 +50,7 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
                (Google : include:_spf.google.com ; Zoho : include:zoho.com ou zoho.eu)
                un seul enregistrement SPF par domaine.
        DKIM  : TXT sur <sélecteur>._domainkey, clé générée dans la console du fournisseur.
-       DMARC : TXT sur _dmarc   "v=DMARC1; p=none; rua=mailto:contact@yonkotech.com"
+       DMARC : TXT sur _dmarc   "v=DMARC1; p=none; rua=mailto:contact@yonko.tech"
                puis passer à p=quarantine après 2 à 4 semaines de rapports sans anomalie.
    - Vérifier avec https://mxtoolbox.com (SPF, DKIM, DMARC) et un e-mail de test vers
      https://www.mail-tester.com (viser 9/10 ou plus).
@@ -67,13 +67,13 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
    - Nommer ces services dans /confidentialite (rubrique « Destinataires »).
 
 5. Anti-robot Cloudflare Turnstile (gratuit, sans compte Cloudflare payant)
-   - https://dash.cloudflare.com → Turnstile → « Add widget » : domaine yonkotech.com, mode
+   - https://dash.cloudflare.com → Turnstile → « Add widget » : domaine yonko.tech, mode
      « Managed ». Récupérer la clé du site et la clé secrète.
    - Dans l'hébergeur : NEXT_PUBLIC_TURNSTILE_SITE_KEY (avant le build : elle est lue au build) et
      TURNSTILE_SECRET_KEY. Définir les deux, ou aucune.
    - Redéployer, puis vérifier : un envoi normal passe, et
-       curl -s -X POST https://yonkotech.com/api/contact -H "Content-Type: application/json" \
-         -H "Origin: https://yonkotech.com" -d '{}'
+       curl -s -X POST https://yonko.tech/api/contact -H "Content-Type: application/json" \
+         -H "Origin: https://yonko.tech" -d '{}'
      répond par une erreur (pas de jeton).
    - La CSP autorise challenges.cloudflare.com automatiquement quand la clé est définie.
 
@@ -94,7 +94,7 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
 
 9. Surveillance (monitoring)
    - Disponibilité : UptimeRobot (gratuit) ou Better Stack, contrôle HTTPS toutes les 5 minutes
-     sur https://yonkotech.com et sur https://yonkotech.com/contact, alerte par e-mail / SMS.
+     sur https://yonko.tech et sur https://yonko.tech/contact, alerte par e-mail / SMS.
      Ajouter un contrôle « mot-clé » (ex. « Yonko ») pour détecter une page d'erreur servie en 200.
    - Certificat : moniteur « SSL / expiration du certificat » d'UptimeRobot (alerte 14 jours
      avant). Sur Vercel/Netlify le renouvellement est automatique, l'alerte reste un filet.

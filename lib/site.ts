@@ -7,11 +7,11 @@ export const SITE = {
   name: "Yonko Tech Consulting",
   shortName: "Yonko",
   // Domaine de production : NEXT_PUBLIC_SITE_URL (voir .env.example), sans barre finale.
-  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://yonkotech.com").replace(/\/+$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL || "https://yonko.tech").replace(/\/+$/, ""),
   locale: "fr_FR",
   // Adresse publique : vide tant que la boîte n'existe pas ; le site ne l'affiche (liens, messages, données
   // structurées) que renseignée. Le formulaire de contact reste le canal principal.
-  email: "" as string, // ex. contact@yonkotech.com
+  email: "" as string, // ex. contact@yonko.tech
   description:
     "Agence web à Madagascar : création de site vitrine et SEO, visibilité sur Google Maps, logiciel sur mesure et stratégie de communication pour PME et artisans.",
   logo: "/assets/images/logo-512.png", // version allégée (40 Ko) de logo.png pour les données structurées

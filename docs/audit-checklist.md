@@ -34,6 +34,6 @@ Légende : ✅ en place · 🔧 à configurer à la mise en ligne (procédure da
 npm audit --omit=dev
 npm run build && npx next start -p 3200
 curl -I http://localhost:3200/            # en-têtes de sécurité
-curl -sI -H "Host: www.yonkotech.com" http://localhost:3200/   # 308 vers le domaine canonique
+curl -sI -H "Host: www.yonko.tech" http://localhost:3200/   # 308 vers le domaine canonique
 curl -sI http://localhost:3200/media/hero-computer.webm | grep -i cache-control
 ```

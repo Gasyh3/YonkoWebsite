@@ -18,7 +18,7 @@ RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
 # 2. Build (le build télécharge les polices Google : accès réseau requis).
 FROM ${NODE_IMAGE} AS builder
 WORKDIR /app
-ARG NEXT_PUBLIC_SITE_URL=https://yonkotech.com
+ARG NEXT_PUBLIC_SITE_URL=https://yonko.tech
 ARG NEXT_PUBLIC_TURNSTILE_SITE_KEY=
 ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL} \
     NEXT_PUBLIC_TURNSTILE_SITE_KEY=${NEXT_PUBLIC_TURNSTILE_SITE_KEY} \

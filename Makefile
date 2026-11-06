@@ -7,7 +7,7 @@ SHELL := /bin/bash
 IMAGE ?= yonkotech-web
 TAG ?= latest
 APP_PORT ?= 3000
-NEXT_PUBLIC_SITE_URL ?= https://yonkotech.com
+NEXT_PUBLIC_SITE_URL ?= https://yonko.tech
 NEXT_PUBLIC_TURNSTILE_SITE_KEY ?=
 # --env-file seulement si .env existe (variables lues au démarrage du conteneur).
 ENV_FILE := $(if $(wildcard .env),--env-file .env,)

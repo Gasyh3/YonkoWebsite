@@ -45,7 +45,7 @@ const SECURITY_HEADERS = [
 ];
 
 // Domaine unique : la variante www (ou sans www, selon NEXT_PUBLIC_SITE_URL) redirige en 308 vers l'URL canonique.
-const SITE_URL = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://yonkotech.com");
+const SITE_URL = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://yonko.tech");
 const ALTERNATE_HOST = SITE_URL.hostname.startsWith("www.") ? SITE_URL.hostname.slice(4) : `www.${SITE_URL.hostname}`;
 
 const nextConfig: NextConfig = {

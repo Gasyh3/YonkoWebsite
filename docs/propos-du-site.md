@@ -24,7 +24,7 @@ Ce document rassemble le **fond** du site : qui est l'entreprise, ce qu'elle pro
 | Engagement de réponse | Sous 24h, à chaque demande |
 | Téléphone | Non communiqué pour l'instant |
 | Réseaux sociaux | Aucun pour l'instant |
-| Domaine prévu | yonkotech.com (à confirmer) |
+| Domaine | yonko.tech |
 
 ## 3. Positionnement et promesse
 
@@ -488,7 +488,6 @@ Hors accueil, chaque titre est suivi de « · Yonko Tech Consulting ».
 - **Informations légales** : forme juridique et capital, NIF, STAT, RCS, directeur de la publication, hébergeur, services qui reçoivent les demandes du formulaire.
 - **Plus tard** : premières réalisations (accord du client, résultat mesuré, visuel) et chiffres réels.
 - **Facultatif** : numéro de téléphone (il s'affichera automatiquement), profils de réseaux sociaux, logo en SVG.
-- **À confirmer** : le nom de domaine définitif (yonkotech.com est supposé).
 - **Adresse e-mail publique** : aucune pour l'instant, le site n'en affiche donc pas. Une fois la boîte créée, la renseigner dans `lib/site.ts` (`email`) : elle apparaîtra automatiquement (pied de page, Contact, pages légales, messages d'erreur du formulaire).
 
 ## Où changer les textes

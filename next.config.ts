@@ -49,6 +49,9 @@ const SITE_URL = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://yonkotech.
 const ALTERNATE_HOST = SITE_URL.hostname.startsWith("www.") ? SITE_URL.hostname.slice(4) : `www.${SITE_URL.hostname}`;
 
 const nextConfig: NextConfig = {
+  // Image Docker (Dockerfile, Dokploy) : serveur Node autonome et minimal dans .next/standalone. Activé seulement
+  // pour ce build (BUILD_STANDALONE=1) : « npm start » reste utilisable en local.
+  ...(process.env.BUILD_STANDALONE === "1" ? { output: "standalone" as const } : {}),
   poweredByHeader: false,
   // next/image : AVIF en priorité (plus léger), WebP sinon.
   images: { formats: ["image/avif", "image/webp"] },

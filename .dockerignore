@@ -1,0 +1,26 @@
+# Ce qui n'entre jamais dans le contexte de build Docker : dépendances et builds locaux, secrets, sources vidéo,
+# documentation et outillage (l'image n'a besoin que du code du site, de public/ et des fichiers de config).
+.git
+.gitignore
+node_modules
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
+.env
+.env*.local
+.env.production
+.vercel
+*.log
+.DS_Store
+.claude
+.vscode
+video
+docs
+CLAUDE.md
+README.md
+skills-lock.json
+Dockerfile
+.dockerignore
+docker-compose*.yml
+Makefile

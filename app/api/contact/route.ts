@@ -38,9 +38,13 @@ function rateLimited(ip: string) {
   return recent.length > RATE_MAX;
 }
 
+// Adresse du visiteur derrière le proxy (Traefik sous Dokploy, Vercel…) : X-Real-IP est écrit par le proxy ; à
+// défaut, la DERNIÈRE entrée de X-Forwarded-For (ajoutée par le proxy). La première peut être forgée par le client.
 function clientIp(request: Request) {
-  const forwarded = request.headers.get("x-forwarded-for");
-  return forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+  const realIp = request.headers.get("x-real-ip")?.trim();
+  if (realIp) return realIp;
+  const forwarded = request.headers.get("x-forwarded-for")?.split(",").map((s) => s.trim()).filter(Boolean);
+  return forwarded?.at(-1) || "unknown";
 }
 
 function sameOrigin(request: Request) {

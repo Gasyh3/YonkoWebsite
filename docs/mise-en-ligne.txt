@@ -14,6 +14,8 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
      la redirection www fonctionne).
 
 2. Hébergement, HTTPS et compression
+   - Choix privilégié : un VPS avec Dokploy et l'image Docker du projet. Procédure complète dans
+     docs/deploiement-dokploy.md (HTTPS Let's Encrypt et redirection http → https inclus).
    - Un hébergeur compatible Next.js : Vercel (offre Pro pour un usage commercial, l'offre gratuite
      l'interdit), Netlify, ou un serveur Node derrière nginx.
    - Vercel / Netlify : HTTPS, redirection http → https et compression Brotli sont automatiques.

@@ -1,0 +1,16 @@
+# Lancement de l'image de production en local (make docker-up), ou déploiement Dokploy de type « Compose ».
+# Les valeurs viennent du fichier .env (copie de .env.example, jamais commitée) ; sans .env, valeurs par défaut.
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://yonkotech.com}
+        NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${NEXT_PUBLIC_TURNSTILE_SITE_KEY:-}
+    image: yonkotech-web:latest
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "${APP_PORT:-3000}:3000"

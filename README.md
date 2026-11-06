@@ -1,39 +1,54 @@
-# Yonko Tech Consulting – Site vitrine (Next.js + Tailwind + shadcn/ui)
+# Yonko Tech Consulting : site vitrine
 
-Site vitrine moderne pour la société fictive Yonko Tech Consulting. Le projet est prêt pour expérimenter, personnaliser le design system et ajouter de nouvelles pages/sections.
+Site de Yonko Tech Consulting, agence web et communication basée à Antananarivo (Madagascar) : stratégie de
+communication, site vitrine et SEO, Google Maps et visibilité locale, logiciel sur mesure.
 
-## Description du projet
-- Présentation des services de conseil tech, data, cloud et produits digitaux.
-- Pages principales : accueil, services détaillés, à propos, contact.
-- Composants réutilisables (hero, services, why us, formulaires) basés sur shadcn/ui et Tailwind.
+Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 3.4, GSAP + Lenis pour les animations.
 
-## Stack technique
-- Next.js (App Router) + TypeScript
-- Tailwind CSS + tailwindcss-animate
-- shadcn/ui (Button, Card, Input, Textarea, Navigation Menu, etc.)
-- Sonner pour les toasts
+## Démarrer
 
-## Installation & lancement
+Prérequis : Node.js 22 (et Docker pour l'image de production). Toutes les commandes passent par `make` :
+
 ```bash
-npm install
-npm run dev
-# ensuite ouvrir http://localhost:3000
+make help       # liste des commandes
+make install    # dépendances
+make env        # crée .env depuis .env.example (à compléter)
+make dev        # développement : http://localhost:3000
+make check      # lint + types + audit + build : à lancer avant chaque push
 ```
 
-## Structure du projet
-- `app/` : pages App Router (`layout.tsx`, `page.tsx`, `about`, `services`, `contact`).
-- `components/` : composants partagés (header/footer, sections, UI shadcn).
-- `lib/` : utilitaires (ex : `cn` pour fusion de classes Tailwind).
-- `public/` : assets statiques.
-- Config : `tailwind.config.ts`, `postcss.config.mjs`, `components.json` (config shadcn).
+Avec Docker (image identique à la production) :
 
-## Personnalisation
-- Couleurs : ajuster les variables HSL dans `app/globals.css` et, si besoin, l’`extend.colors` dans `tailwind.config.ts`.
-- Typographie : changer la font importée dans `app/layout.tsx` (Inter par défaut).
-- shadcn/ui : importer de nouveaux composants via la CLI `shadcn` (config prête dans `components.json`), ou créer vos variantes dans `components/ui/`.
+```bash
+make docker-up      # construit et lance sur http://localhost:3000
+make docker-logs    # journaux
+make docker-health  # contrôle de santé
+make docker-down    # arrêt
+```
 
-## Évolutions possibles
-- Connecter un backend ou un service d’email pour les formulaires.
-- Ajouter un blog/ressources, FAQ ou études de cas.
-- Optimisations SEO avancées (metadata, opengraph, sitemap).
-- Internationalisation, dark mode et thèmes multiples.
+Pas de GitHub Actions sur ce dépôt : les vérifications se font en local (`make check`).
+
+## Déploiement
+
+Image Docker déployée avec **Dokploy** : voir [`docs/deploiement-dokploy.md`](docs/deploiement-dokploy.md).
+Les services à configurer à la mise en ligne (domaine, e-mail, formulaire, Turnstile, Search Console…) sont
+listés dans [`docs/mise-en-ligne.txt`](docs/mise-en-ligne.txt).
+
+## Documentation
+
+| Fichier | Contenu |
+|---|---|
+| [`CLAUDE.md`](CLAUDE.md) | Conventions du projet : concept motion, direction artistique, architecture, règles |
+| [`docs/propos-du-site.md`](docs/propos-du-site.md) | Le fond du site : positionnement, ton, textes de chaque page |
+| [`docs/deploiement-dokploy.md`](docs/deploiement-dokploy.md) | Image Docker et déploiement Dokploy |
+| [`docs/mise-en-ligne.txt`](docs/mise-en-ligne.txt) | Étapes de mise en ligne |
+| [`docs/audit-checklist.md`](docs/audit-checklist.md) | Sécurité, performance, SEO, conformité : état des 20 points |
+| [`docs/contenu-a-remplir.txt`](docs/contenu-a-remplir.txt) | Contenus restant à fournir |
+
+## Structure
+
+- `app/` : pages (accueil, expertises, À propos, FAQ, contact, pages légales), API (`/api/contact`, `/api/health`), SEO (sitemap, robots, image de partage).
+- `components/` : en-tête, pied de page, sections de l'accueil, briques de pages, couche motion.
+- `lib/` : données du site (`site.ts`, `expertises-data.ts`, `faq-data.tsx`…) et modules d'animation (`lib/motion/`).
+- `public/` : médias (vidéos du hero, images).
+- `video/` : sources des vidéos du hero (HyperFrames).

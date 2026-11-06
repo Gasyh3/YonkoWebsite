@@ -2391,3 +2391,94 @@ fieldset[aria-invalid="true"] .q-choice {
   font-size: .98rem;
   line-height: 1.45;
 }
+
+/* ---------------------------------------------------------------------------
+   Administration (dossiers de cadrage) : app/admin/*. */
+
+.admin-filter {
+  color: var(--silver);
+}
+
+.admin-filter[aria-current="page"] {
+  color: var(--silver-light);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 6px;
+}
+
+.admin-table {
+  overflow-x: auto;
+}
+
+.admin-table table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+
+.admin-table th {
+  padding: .75rem 1rem .75rem 0;
+  color: var(--silver);
+  font-size: .7rem;
+  font-weight: 400;
+  letter-spacing: .2em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.admin-table td {
+  padding: 1rem 1rem 1rem 0;
+  border-top: 1px dotted var(--fiber-off);
+  vertical-align: top;
+}
+
+.admin-status {
+  display: inline-block;
+  padding: .2rem .7rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 9999px;
+  color: var(--silver-light);
+  font-size: .75rem;
+  white-space: nowrap;
+}
+
+.admin-status[data-status="soumis"] {
+  border-color: var(--gold-3);
+}
+
+.admin-meta,
+.admin-answers {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-meta {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+
+.admin-meta dt,
+.admin-answers dt {
+  color: var(--silver);
+  font-size: .8rem;
+}
+
+.admin-meta dd,
+.admin-answers dd {
+  margin-top: .25rem;
+  color: var(--silver-light);
+  white-space: pre-line;
+}
+
+.admin-answers > div {
+  padding-bottom: 1rem;
+  border-bottom: 1px dotted var(--fiber-off);
+}
+
+@media print {
+  .site-header,
+  .site-footer,
+  [data-fiber-stage] {
+    display: none !important;
+  }
+}

@@ -1,5 +1,9 @@
 import { index, integer, jsonb, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
+import { INTAKE_STATUSES } from "../questionnaire/statuses";
+
+export { INTAKE_STATUSES, type IntakeStatus } from "../questionnaire/statuses";
+
 // Schéma PostgreSQL (Drizzle). Après toute modification : make db-generate (crée la migration SQL dans drizzle/),
 // appliquée automatiquement au démarrage du serveur (instrumentation.ts).
 
@@ -7,8 +11,6 @@ import { index, integer, jsonb, pgEnum, pgTable, text, timestamp, uuid } from "d
 // avec la version du questionnaire, pour qu'il puisse évoluer sans changer la base.
 export type IntakeAnswers = Record<string, string | string[]>;
 
-export const INTAKE_STATUSES = ["invite", "en_cours", "soumis", "devis_envoye", "gagne", "perdu", "archive"] as const;
-export type IntakeStatus = (typeof INTAKE_STATUSES)[number];
 export const intakeStatus = pgEnum("intake_status", INTAKE_STATUSES);
 
 const timestamps = {

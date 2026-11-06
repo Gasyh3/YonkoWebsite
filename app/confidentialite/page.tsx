@@ -36,14 +36,22 @@ export default function PrivacyPage() {
 
         <LegalSection title="Données collectées">
           <p>
-            Uniquement les informations que vous saisissez dans le formulaire de contact : nom, société (facultative),
-            adresse e-mail, sujet et message. Le site ne demande la création d&apos;aucun compte.
+            Uniquement les informations que vous saisissez vous-même :
+          </p>
+          <p>
+            Formulaire de contact : nom, société (facultative), adresse e-mail, sujet et message.
+          </p>
+          <p>
+            Questionnaire de cadrage : adresse e-mail et nom pour recevoir votre lien personnel, puis vos réponses
+            (entreprise, coordonnées, besoin, budget et délais envisagés), la date de votre consentement et la date de
+            votre dernière visite. Le site ne demande la création d&apos;aucun compte.
           </p>
         </LegalSection>
 
         <LegalSection title="Pourquoi">
           <p>
-            Pour répondre à votre demande et, si vous le souhaitez, assurer le suivi de votre projet. Ces données ne
+            Pour répondre à votre demande, préparer une proposition adaptée à votre projet et, si vous le souhaitez,
+            assurer le suivi de ce projet. Ces données ne
             sont ni vendues, ni louées, ni utilisées pour de la prospection sans votre accord.
           </p>
         </LegalSection>
@@ -67,7 +75,8 @@ export default function PrivacyPage() {
         <LegalSection title="Durée de conservation">
           <p>
             Le temps nécessaire au traitement de votre demande et au suivi de la relation, puis trois ans au plus après
-            notre dernier échange.
+            notre dernier échange. Un questionnaire commencé mais jamais envoyé est supprimé automatiquement après 90
+            jours sans activité. Vous pouvez demander la suppression de votre dossier à tout moment.
           </p>
         </LegalSection>
 
@@ -76,6 +85,11 @@ export default function PrivacyPage() {
             Le site n&apos;utilise aucun cookie publicitaire ni outil de mesure d&apos;audience. Il mémorise seulement,
             dans votre navigateur et le temps de la session, que l&apos;animation d&apos;introduction a déjà été vue,
             pour ne pas la rejouer. Cette information ne vous identifie pas.
+          </p>
+          <p>
+            Si vous remplissez le questionnaire de cadrage, un cookie de session strictement nécessaire garde votre
+            accès ouvert sur cet appareil (au plus 14 jours) ; il ne sert à rien d&apos;autre. Le bouton « Fermer la
+            session » le supprime.
           </p>
         </LegalSection>
 

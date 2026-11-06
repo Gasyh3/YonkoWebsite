@@ -40,6 +40,16 @@ export default function ContactPage() {
                 </li>
               ))}
             </ol>
+            <div className="panel mt-12">
+              <p className="text-xs uppercase tracking-[0.24em] text-silver">Projet plus précis ?</p>
+              <p className="mt-3 text-sm">
+                Le questionnaire de cadrage vous guide question par question (15 à 25 minutes, à votre rythme) et nous
+                permet de vous remettre un devis précis.
+              </p>
+              <DottedLink href="/questionnaire" className="mt-4 text-sm text-silver-light">
+                Remplir le questionnaire de cadrage →
+              </DottedLink>
+            </div>
             {emailHref() ? (
               <p className="mt-12 text-sm text-silver">
                 Vous préférez l&apos;e-mail ?{" "}

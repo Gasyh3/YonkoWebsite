@@ -3,8 +3,9 @@
 #
 # Variables lues AU BUILD (arguments) : NEXT_PUBLIC_SITE_URL, NEXT_PUBLIC_TURNSTILE_SITE_KEY. Elles sont inscrites
 # dans le site (URL canoniques, redirection www, CSP, clé Turnstile) : les changer impose de reconstruire l'image.
-# Variables lues AU DÉMARRAGE (environnement) : CONTACT_WEBHOOK_URL, TURNSTILE_SECRET_KEY, RESEND_API_KEY,
-# CONTACT_FROM, CONTACT_TO. Aucune clé n'est copiée dans l'image (.env exclu par .dockerignore).
+# Variables lues AU DÉMARRAGE (environnement) : DATABASE_URL, SMTP_URL, MAIL_FROM, MAIL_REPLY_TO, ADMIN_EMAIL,
+# APP_URL, TURNSTILE_SECRET_KEY, CONTACT_WEBHOOK_URL, RESEND_API_KEY, CONTACT_FROM, CONTACT_TO.
+# Aucune clé n'est copiée dans l'image (.env exclu par .dockerignore).
 
 ARG NODE_IMAGE=node:22-alpine
 
@@ -39,6 +40,8 @@ RUN addgroup -S -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Migrations SQL de la base (appliquées automatiquement au démarrage, voir instrumentation.ts).
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 USER nextjs
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \

@@ -21,7 +21,11 @@ Deux familles, à ne pas confondre :
 |---|---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | Build-time Arguments (« Build Args ») | Au build | Oui (ex. `https://yonko.tech`) |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Build-time Arguments | Au build | Avec Turnstile |
-| `CONTACT_WEBHOOK_URL` | Environment | Au démarrage | Oui, pour recevoir les demandes |
+| `DATABASE_URL` | Environment | Au démarrage | Oui, pour le questionnaire et l'administration (URL interne de la base Dokploy) |
+| `SMTP_URL`, `MAIL_FROM` | Environment | Au démarrage | Oui, pour les e-mails du questionnaire (ex. Resend : `smtps://resend:<clé>@smtp.resend.com:465`, `Yonko Tech Consulting <bonjour@yonko.tech>`) |
+| `ADMIN_EMAIL` | Environment | Au démarrage | Oui : reçoit les notifications, seule adresse admise sur `/admin` |
+| `MAIL_REPLY_TO`, `APP_URL` | Environment | Au démarrage | Facultatif (`APP_URL` par défaut = `NEXT_PUBLIC_SITE_URL`) |
+| `CONTACT_WEBHOOK_URL` | Environment | Au démarrage | Pour recevoir les demandes du formulaire de contact |
 | `TURNSTILE_SECRET_KEY` | Environment | Au démarrage | Avec Turnstile |
 | `RESEND_API_KEY`, `CONTACT_FROM`, `CONTACT_TO` | Environment | Au démarrage | Seulement si envoi par Resend |
 
@@ -34,7 +38,13 @@ Turnstile) : après les avoir changées, il faut **redéployer** (reconstruire),
    ajouter du swap). Le serveur doit accéder à Internet pendant le build (npm et polices Google).
 2. **DNS** : chez le registraire, un enregistrement `A` pour `yonko.tech` **et** pour `www.yonko.tech`
    vers l'IP du serveur.
-3. **Dokploy → Projects → Create Project** (ex. « Yonko »), puis **Create Service → Application**.
+3. **Dokploy → Projects → Create Project** (ex. « Yonko »).
+   - **Base de données** : *Create Service → Database → PostgreSQL* (version 17), nom `yonko-db`. Noter
+     l'**Internal Connection URL** (`postgresql://…@yonko-db:5432/…`) : c'est le `DATABASE_URL`. Ne pas exposer
+     la base sur Internet (pas de port externe). Les tables sont créées automatiquement au premier démarrage.
+   - **Sauvegardes** : onglet *Backups* de la base → destination S3 (Cloudflare R2, Backblaze B2…) créée dans
+     *Settings → Destinations*, planification quotidienne. Tester une restauration une fois.
+   - Puis **Create Service → Application** pour le site.
 4. **Source** : *Provider* GitHub (connecter l'application GitHub de Dokploy si ce n'est pas fait), dépôt
    `YonkoWebsite`, branche de production.
 5. **Build Type** : **Dockerfile**. Docker File : `Dockerfile` ; Docker Context Path : `.` ; Build Stage : vide.
@@ -82,8 +92,13 @@ make docker-image && make docker-run   # même build que Dokploy (docker build +
 
 ## Bon à savoir
 
-- **Une seule instance** : la limite d'envois du formulaire (5 / 10 min par IP) est en mémoire ; avec plusieurs
+- **Une seule instance** : les limites d'envois (formulaire, demandes de lien) sont en mémoire ; avec plusieurs
   réplicas, chacune compte de son côté.
+- **Migrations** : appliquées au démarrage du conteneur (journal : « [db] Migrations à jour. »). En cas d'échec,
+  le site reste en ligne mais le questionnaire renvoie une erreur : vérifier `DATABASE_URL` dans les journaux.
+- **Administration** : `/admin`, connexion par lien à usage unique envoyé à `ADMIN_EMAIL` (sans cookie de
+  session, redirection avant tout rendu : `proxy.ts`). Ne pas activer l'authentification HTTP de Dokploy
+  (*Security*) pour cela : elle protégerait tout le site, pas seulement `/admin`.
 - **IP des visiteurs** : le formulaire lit `X-Real-IP`, renseigné par Traefik ; ne pas exposer le conteneur
   directement sur Internet sans proxy.
 - **Mise à jour de sécurité** : `make audit` en local ; une version de Next.js vulnérable bloque le build

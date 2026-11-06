@@ -16,7 +16,8 @@ export function getDb(): Db | null {
   if (!url) return null;
   if (!globalForDb.yonkoDb) {
     // Une seule connexion partagée (et conservée entre les rechargements à chaud en développement).
-    const client = postgres(url, { max: 5, idle_timeout: 30, connect_timeout: 10 });
+    // onnotice : les messages d'information de PostgreSQL (ex. migrations déjà appliquées) ne polluent pas les journaux.
+    const client = postgres(url, { max: 5, idle_timeout: 30, connect_timeout: 10, onnotice: () => {} });
     globalForDb.yonkoDb = drizzle(client, { schema });
   }
   return globalForDb.yonkoDb;

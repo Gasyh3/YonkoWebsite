@@ -12,7 +12,7 @@ Légende : ✅ en place · 🔧 à configurer à la mise en ligne (procédure da
 | 3 | Anti-spam | ✅ + 🔧 | Champ piège, durée minimale 3 s, origine, 5 envois / 10 min par IP, Cloudflare Turnstile (`components/pages/turnstile.tsx`, vérification serveur). Clés à créer (étape 5). |
 | 4 | Validation / échappement serveur | ✅ | `lib/contact.ts` : mêmes règles client et serveur, caractères de contrôle (CR/LF) retirés des champs d'une ligne. `app/api/contact/route.ts` : corps limité à 20 Ko même sans content-length, JSON strict. Rendu React échappé, e-mail en texte brut. |
 | 5 | Dépendances | ✅ | Next.js 16.4.0, React 19.3.0 : `npm audit --omit=dev` → 0 vulnérabilité. Restent des alertes de l'outillage de développement uniquement (braces sans correctif publié, chaîne Tailwind 3) : risque limité au poste de build. |
-| 6 | Sauvegarde | ➖ + 🔧 | Ni CMS ni base de données : le dépôt GitHub est la sauvegarde du site. Demandes du formulaire : Google Sheets + Gmail (étape 10). |
+| 6 | Sauvegarde | 🔧 | Base PostgreSQL (questionnaire) : sauvegardes Dokploy vers S3 (`docs/deploiement-dokploy.md`, étape 3). Code : dépôt GitHub. Demandes du formulaire de contact : Google Sheets + Gmail. |
 | 7 | Images | ✅ | `next/image` en AVIF puis WebP, `width`/`height`, lazy hors écran ; affiches du hero en WebP ; logo des données structurées allégé (40 Ko). |
 | 8 | Core Web Vitals | ✅ | Mobile 390 px, mesures locales : CLS 0,000, LCP 168–204 ms (vidéo du hero). Polices `next/font` en `display: swap`. À confirmer en ligne (PageSpeed Insights). |
 | 9 | Cache + compression | ✅ + 🔧 | JS/CSS `immutable` 1 an, `/media` et `/assets` 7 jours, gzip actif. Brotli : CDN de l'hébergeur (étape 2). |

@@ -14,7 +14,8 @@ ENV_FILE := $(if $(wildcard .env),--env-file .env,)
 
 .PHONY: help env install dev build start lint typecheck audit check clean \
 	docker-build docker-up docker-down docker-restart docker-logs docker-ps docker-shell \
-	docker-health docker-image docker-run docker-clean
+	docker-health docker-image docker-run docker-clean \
+	services-up services-down services-logs db-generate db-migrate db-studio db-psql
 
 help: ## Affiche cette aide
 	@echo "Yonko Tech Consulting : commandes disponibles"
@@ -29,7 +30,7 @@ env: ## Crée .env à partir de .env.example (ne remplace jamais un .env existan
 install: ## Installe les dépendances (npm ci)
 	npm ci
 
-dev: ## Lance le serveur de développement (http://localhost:3000)
+dev: ## Lance le serveur de développement (http://localhost:3000) ; base et e-mails : make services-up
 	npm run dev
 
 build: ## Construit le site pour la production
@@ -90,3 +91,27 @@ docker-run: ## Lance l'image construite par docker-image, au premier plan
 
 docker-clean: ## Arrête le conteneur et supprime l'image locale
 	docker compose down --rmi local --remove-orphans
+
+## ---- Base de données et e-mails de développement ----
+
+services-up: ## Lance PostgreSQL et Mailpit pour npm run dev (e-mails : http://localhost:8025)
+	docker compose -f docker-compose.dev.yml up -d
+	@echo "PostgreSQL : localhost:5432 · Mailpit : http://localhost:8025 (variables : voir .env.example)"
+
+services-down: ## Arrête PostgreSQL et Mailpit (les données sont conservées)
+	docker compose -f docker-compose.dev.yml down
+
+services-logs: ## Journaux de PostgreSQL et Mailpit
+	docker compose -f docker-compose.dev.yml logs -f
+
+db-generate: ## Crée la migration SQL après une modification de lib/db/schema.ts
+	npx drizzle-kit generate
+
+db-migrate: ## Applique les migrations (fait aussi automatiquement au démarrage du site)
+	npx drizzle-kit migrate
+
+db-studio: ## Explorateur de données dans le navigateur (drizzle-kit studio)
+	npx drizzle-kit studio
+
+db-psql: ## Console SQL sur la base de développement
+	docker compose -f docker-compose.dev.yml exec db psql -U yonko -d yonko

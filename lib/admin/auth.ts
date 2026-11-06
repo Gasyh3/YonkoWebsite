@@ -4,6 +4,7 @@ import { and, eq, gt, isNull } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+import { ADMIN_COOKIE } from "./constants";
 import { getDb } from "@/lib/db";
 import { adminLoginTokens, adminSessions } from "@/lib/db/schema";
 import { renderMail } from "@/lib/mail/templates";
@@ -14,7 +15,7 @@ import { SITE } from "@/lib/site";
 // Administration réservée à ADMIN_EMAIL : lien de connexion à usage unique (15 minutes) envoyé par e-mail, puis
 // session de 7 jours dans un cookie httpOnly. Seules les empreintes des jetons sont stockées.
 
-export const ADMIN_COOKIE = "yk_admin";
+export { ADMIN_COOKIE } from "./constants";
 const LOGIN_VALID_MS = 15 * 60 * 1000;
 const SESSION_VALID_MS = 7 * 24 * 60 * 60 * 1000;
 

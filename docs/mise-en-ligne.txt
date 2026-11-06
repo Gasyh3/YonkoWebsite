@@ -54,8 +54,13 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
                puis passer à p=quarantine après 2 à 4 semaines de rapports sans anomalie.
    - Vérifier avec https://mxtoolbox.com (SPF, DKIM, DMARC) et un e-mail de test vers
      https://www.mail-tester.com (viser 9/10 ou plus).
-   - Si un jour l'envoi passe par Resend (RESEND_API_KEY) : vérifier le domaine dans Resend, il
-     fournit ses propres enregistrements SPF et DKIM.
+   - E-mails automatiques du site (questionnaire, connexion admin) : créer un compte Resend (ou
+     Brevo), y ajouter le domaine yonko.tech et coller dans la zone DNS les enregistrements
+     fournis (SPF / DKIM, souvent sur un sous-domaine « send »). Une fois le domaine « vérifié » :
+       SMTP_URL=smtps://resend:<clé API>@smtp.resend.com:465
+       MAIL_FROM=Yonko Tech Consulting <bonjour@yonko.tech>
+       ADMIN_EMAIL=<votre adresse, qui reçoit les notifications et se connecte à /admin>
+     dans les variables Dokploy. Tester : demande de lien sur /questionnaire, puis connexion /admin.
 
 4. Formulaire de contact (choix retenu : webhook)
    - Créer un scénario dans Make, Zapier ou n8n : « Webhook personnalisé » → « Envoyer un e-mail »
@@ -103,8 +108,9 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
    - Formulaire : activer les notifications d'erreur du scénario Make / Zapier / n8n.
 
 10. Sauvegarde
-   - Pas de base de données ni de CMS : le site entier est dans le dépôt GitHub (code, textes,
-     médias). Garder le dépôt à jour, c'est la sauvegarde du site.
+   - Code, textes et médias : le dépôt GitHub. Garder le dépôt à jour, c'est la sauvegarde du site.
+   - Base PostgreSQL (dossiers du questionnaire) : sauvegardes Dokploy quotidiennes vers un stockage
+     S3 externe (voir docs/deploiement-dokploy.md, étape 3), et un test de restauration.
    - Demandes du formulaire : historique Google Sheets du scénario + boîte Gmail. Export
      trimestriel via Google Takeout (Gmail + Drive) conseillé.
    - Variables d'environnement : en garder une copie dans un gestionnaire de mots de passe.

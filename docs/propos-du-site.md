@@ -350,6 +350,14 @@ Chaque page d'expertise : titre, promesse en or, introduction, bouton « Démarr
 - Mention sous le formulaire : *« Nous répondons sous 24h. En envoyant ce formulaire, vous acceptez le suivi par email pour ce projet. »*
 - Après envoi : *« Merci, votre demande est bien partie. Nous revenons vers vous sous 24h avec une première lecture de votre besoin. »*
 
+### Questionnaire de cadrage (/questionnaire)
+
+- Titre : *Décrivez votre projet, à votre rythme* ; le visiteur indique son e-mail et reçoit un lien personnel.
+- Le questionnaire reprend le document de cadrage interne (entreprise, besoin, ERP, outil interne, site web,
+  hébergement, budget et délais), étapes adaptées aux services cochés, enregistrement automatique, envoi avec
+  consentement, accusé de réception par e-mail. L'annexe de chiffrage n'est visible que dans l'administration.
+- Accès aussi depuis la page Contact (« Projet plus précis ? »).
+
 ### Pages légales
 
 - **Mentions légales (/mentions-legales)** : éditeur (Yonko Tech Consulting, siège à Antananarivo), identifiants légaux, directeur de la publication, hébergeur, propriété intellectuelle, responsabilité, renvoi vers la politique de confidentialité, crédits des polices. Plusieurs informations restent à compléter (section 13).

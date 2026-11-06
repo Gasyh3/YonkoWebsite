@@ -17,6 +17,14 @@ make dev        # développement : http://localhost:3000
 make check      # lint + types + audit + build : à lancer avant chaque push
 ```
 
+Questionnaire de cadrage et administration (PostgreSQL + e-mails) en développement :
+
+```bash
+make services-up    # PostgreSQL + Mailpit (e-mails interceptés : http://localhost:8025)
+make dev            # avec DATABASE_URL, SMTP_URL, ADMIN_EMAIL, APP_URL dans .env.local (voir .env.example)
+make db-generate    # après une modification de lib/db/schema.ts
+```
+
 Avec Docker (image identique à la production) :
 
 ```bash
@@ -47,7 +55,9 @@ listés dans [`docs/mise-en-ligne.txt`](docs/mise-en-ligne.txt).
 
 ## Structure
 
-- `app/` : pages (accueil, expertises, À propos, FAQ, contact, pages légales), API (`/api/contact`, `/api/health`), SEO (sitemap, robots, image de partage).
+- `app/` : pages (accueil, expertises, À propos, FAQ, contact, questionnaire, pages légales, administration), API (`/api/contact`, `/api/questionnaire/*`, `/api/admin/*`, `/api/health`), SEO (sitemap, robots, image de partage).
+- `lib/questionnaire/`, `lib/db/`, `lib/mail/`, `lib/admin/`, `lib/server/` : questionnaire de cadrage, base de données, e-mails, administration, outils serveur.
+- `drizzle/` : migrations SQL de la base.
 - `components/` : en-tête, pied de page, sections de l'accueil, briques de pages, couche motion.
 - `lib/` : données du site (`site.ts`, `expertises-data.ts`, `faq-data.tsx`…) et modules d'animation (`lib/motion/`).
 - `public/` : médias (vidéos du hero, images).

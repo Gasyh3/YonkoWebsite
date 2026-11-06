@@ -7,7 +7,7 @@ import { absoluteUrl } from "@/lib/site";
 export default function robots(): MetadataRoute.Robots {
   const preview = process.env.VERCEL_ENV !== undefined && process.env.VERCEL_ENV !== "production";
   return {
-    rules: preview ? { userAgent: "*", disallow: "/" } : { userAgent: "*", allow: "/", disallow: ["/lab", "/api/"] },
+    rules: preview ? { userAgent: "*", disallow: "/" } : { userAgent: "*", allow: "/", disallow: ["/lab", "/api/", "/admin", "/questionnaire/acces"] },
     sitemap: absoluteUrl("/sitemap.xml"),
   };
 }

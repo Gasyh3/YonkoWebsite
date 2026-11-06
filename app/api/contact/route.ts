@@ -10,6 +10,9 @@ import {
   type ContactPayload,
   type ContactResponse,
 } from "@/lib/contact";
+import { clientIp, readJsonObject, sameOrigin } from "@/lib/server/http";
+import { createRateLimiter } from "@/lib/server/rate-limit";
+import { verifyTurnstile } from "@/lib/server/turnstile";
 import { SITE, orWriteUs } from "@/lib/site";
 
 // Réception du formulaire de contact. Revalide tout côté serveur, filtre les robots (champ piège, durée de
@@ -20,84 +23,9 @@ import { SITE, orWriteUs } from "@/lib/site";
 // Sans configuration : journal serveur en développement, erreur 503 explicite en production.
 
 const MAX_BODY = 20_000; // octets
-const RATE_WINDOW_MS = 10 * 60 * 1000;
-const RATE_MAX = 5;
-
-// Limite de débit en mémoire : suffisante pour un site vitrine sur un serveur ; sur une plateforme à instances
-// multiples, chaque instance compte de son côté (le champ piège et la durée restent les filtres principaux).
-const hits = new Map<string, number[]>();
-
-function rateLimited(ip: string) {
-  const now = Date.now();
-  const recent = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  recent.push(now);
-  hits.set(ip, recent);
-  if (hits.size > 5000) {
-    for (const [key, list] of hits) if (list.every((t) => now - t >= RATE_WINDOW_MS)) hits.delete(key);
-  }
-  return recent.length > RATE_MAX;
-}
-
-// Adresse du visiteur derrière le proxy (Traefik sous Dokploy, Vercel…) : X-Real-IP est écrit par le proxy ; à
-// défaut, la DERNIÈRE entrée de X-Forwarded-For (ajoutée par le proxy). La première peut être forgée par le client.
-function clientIp(request: Request) {
-  const realIp = request.headers.get("x-real-ip")?.trim();
-  if (realIp) return realIp;
-  const forwarded = request.headers.get("x-forwarded-for")?.split(",").map((s) => s.trim()).filter(Boolean);
-  return forwarded?.at(-1) || "unknown";
-}
-
-function sameOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  if (!origin) return true;
-  try {
-    return new URL(origin).host === request.headers.get("host");
-  } catch {
-    return false;
-  }
-}
-
-// Cloudflare Turnstile : vérification du jeton côté serveur (jamais confiée au navigateur). Sans clé secrète, la
-// vérification est désactivée (développement local). Service injoignable = échec : on ne laisse rien passer.
-const TURNSTILE_VERIFY = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-
-async function verifyTurnstile(token: unknown, ip: string) {
-  const secret = process.env.TURNSTILE_SECRET_KEY;
-  if (!secret) return true;
-  if (typeof token !== "string" || token === "" || token.length > 2048) return false;
-  const form = new URLSearchParams({ secret, response: token });
-  if (ip !== "unknown") form.set("remoteip", ip);
-  try {
-    const res = await fetch(TURNSTILE_VERIFY, { method: "POST", body: form, signal: AbortSignal.timeout(8000) });
-    const data = (await res.json()) as { success?: boolean };
-    return data.success === true;
-  } catch (error) {
-    console.error("[contact] Vérification Turnstile impossible :", error);
-    return false;
-  }
-}
+const limiter = createRateLimiter({ windowMs: 10 * 60 * 1000, max: 5 });
 
 const reply = (body: ContactResponse, status = 200) => NextResponse.json(body, { status });
-
-// Lit le corps en s'arrêtant à MAX_BODY octets, que l'en-tête content-length soit présent ou non (transfert
-// « chunked ») : null si la limite est dépassée.
-async function readBody(request: Request): Promise<string | null> {
-  if (!request.body) return "";
-  const reader = request.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let size = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    size += value.byteLength;
-    if (size > MAX_BODY) {
-      await reader.cancel();
-      return null;
-    }
-    chunks.push(value);
-  }
-  return Buffer.concat(chunks).toString("utf8");
-}
 
 function emailText(p: ContactPayload) {
   return [
@@ -141,20 +69,9 @@ async function sendToWebhook(p: ContactPayload, url: string) {
 
 export async function POST(request: Request) {
   if (!sameOrigin(request)) return reply({ ok: false, message: "Origine non autorisée." }, 403);
-  if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY)
-    return reply({ ok: false, message: "Message trop long." }, 413);
-
-  const raw = await readBody(request);
-  if (raw === null) return reply({ ok: false, message: "Message trop long." }, 413);
-
-  let body: Record<string, unknown>;
-  try {
-    const parsed: unknown = JSON.parse(raw);
-    if (!parsed || typeof parsed !== "object") throw new Error("not an object");
-    body = parsed as Record<string, unknown>;
-  } catch {
-    return reply({ ok: false, message: "Requête invalide." }, 400);
-  }
+  const body = await readJsonObject(request, MAX_BODY);
+  if (body === "too-large") return reply({ ok: false, message: "Message trop long." }, 413);
+  if (body === "invalid") return reply({ ok: false, message: "Requête invalide." }, 400);
 
   // Robots : réponse de succès sans rien transmettre (ne pas leur apprendre ce qui les trahit).
   const honeypot = body[HONEYPOT_FIELD];
@@ -163,7 +80,7 @@ export async function POST(request: Request) {
     return reply({ ok: true });
   }
 
-  if (rateLimited(clientIp(request))) {
+  if (limiter.limited(clientIp(request))) {
     return reply(
       { ok: false, message: `Trop de demandes en peu de temps. Réessayez plus tard${orWriteUs()}.` },
       429,

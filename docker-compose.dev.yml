@@ -1,0 +1,30 @@
+# Services de développement pour « npm run dev » (make services-up) : PostgreSQL et Mailpit, qui intercepte tous
+# les e-mails (rien ne part vraiment) et les affiche sur http://localhost:8025.
+# Variables à mettre dans .env.local : voir .env.example (DATABASE_URL et SMTP_URL pointent sur localhost).
+name: yonkotech-dev
+
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: yonko
+      POSTGRES_PASSWORD: yonko
+      POSTGRES_DB: yonko
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata-dev:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yonko -d yonko"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "1025:1025" # SMTP
+      - "8025:8025" # boîte de réception web
+
+volumes:
+  pgdata-dev:

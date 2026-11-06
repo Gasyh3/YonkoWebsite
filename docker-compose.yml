@@ -1,5 +1,6 @@
-# Lancement de l'image de production en local (make docker-up), ou déploiement Dokploy de type « Compose ».
+# Pile de production en local (make docker-up), ou déploiement Dokploy de type « Compose » : le site + PostgreSQL.
 # Les valeurs viennent du fichier .env (copie de .env.example, jamais commitée) ; sans .env, valeurs par défaut.
+# Pour développer avec « npm run dev », voir docker-compose.dev.yml (base + Mailpit seulement).
 services:
   web:
     build:
@@ -12,5 +13,29 @@ services:
     env_file:
       - path: .env
         required: false
+    environment:
+      # Toujours la base du service « db » ci-dessous (le DATABASE_URL de .env sert à « npm run dev »).
+      DATABASE_URL: postgres://${POSTGRES_USER:-yonko}:${POSTGRES_PASSWORD:-yonko}@db:5432/${POSTGRES_DB:-yonko}
+    depends_on:
+      db:
+        condition: service_healthy
     ports:
       - "${APP_PORT:-3000}:3000"
+
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-yonko}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-yonko}
+      POSTGRES_DB: ${POSTGRES_DB:-yonko}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  pgdata:

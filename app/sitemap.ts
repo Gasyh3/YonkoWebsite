@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...expertises.map((item) => entry(`/expertises/${item.slug}`, 0.9)),
     entry("/about", 0.7),
     entry("/contact", 0.8, "yearly"),
+    entry("/questionnaire", 0.7, "yearly"),
     entry("/faqs", 0.6),
     entry("/mentions-legales", 0.2, "yearly"),
     entry("/confidentialite", 0.2, "yearly"),

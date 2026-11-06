@@ -2255,3 +2255,139 @@ html[data-navigating] [data-close-on-navigate] {
 .turnstile:empty {
   display: none;
 }
+
+/* ---------------------------------------------------------------------------
+   Questionnaire de cadrage : components/questionnaire/*. Choix en cases (coche or en dégradé), progression en
+   pointillés (grammaire des fibres), étapes avec nœud. Seuls transform et opacity sont animés. */
+
+.q-choice {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: .85rem;
+  padding: .8rem 1rem;
+  border: 1px solid var(--fiber-off);
+  border-radius: 10px;
+  background: var(--black);
+  color: var(--silver-light);
+  font-size: .95rem;
+  line-height: 1.45;
+  cursor: pointer;
+}
+
+.q-choice:hover,
+.q-choice:has(input:checked) {
+  border-color: color-mix(in srgb, var(--silver) 40%, transparent);
+}
+
+/* Le vrai champ reste dans la page (clavier, lecteurs d'écran) mais invisible ; la case dessinée le représente. */
+.q-choice input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.q-choice__box {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  border: 1px solid var(--silver);
+  border-radius: 4px;
+}
+
+.q-choice__box--radio {
+  border-radius: 9999px;
+}
+
+.q-choice__box::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: inherit;
+  background-image: var(--gold);
+  opacity: 0;
+  transform: scale(.4);
+  transition: opacity var(--dur-micro) var(--ease-in-css), transform var(--dur-micro) var(--ease-in-css);
+}
+
+.q-choice input:checked + .q-choice__box {
+  border-color: var(--gold-3);
+}
+
+.q-choice input:checked + .q-choice__box::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.q-choice input:focus-visible + .q-choice__box {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 3px;
+}
+
+fieldset[aria-invalid="true"] .q-choice {
+  border-color: color-mix(in srgb, var(--gold-3) 60%, transparent);
+}
+
+.q-progress {
+  position: relative;
+  height: 2px;
+  background-image: radial-gradient(circle, var(--fiber-off) 1px, transparent 1.5px);
+  background-size: 7px 2px;
+  overflow: hidden;
+}
+
+.q-progress__on {
+  position: absolute;
+  inset: 0;
+  background-image: var(--gold);
+  transform-origin: left center;
+  transition: transform var(--dur-reveal) var(--ease-in-css);
+}
+
+.q-step {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: 100%;
+  padding: .4rem 0;
+  color: var(--silver);
+  font-size: .9rem;
+  text-align: left;
+}
+
+.q-step:hover,
+.q-step[data-current] {
+  color: var(--silver-light);
+}
+
+.q-step__node {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--silver);
+  border-radius: 9999px;
+}
+
+.q-step[data-current] .q-step__node {
+  border-color: transparent;
+  background-image: var(--gold);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .q-choice__box::after,
+  .q-progress__on {
+    transition: none;
+  }
+}
+
+/* Libellé d'une question : phrase entière, en casse normale (les petites capitales de .form-label restent pour
+   les champs courts). */
+.q-label {
+  display: block;
+  color: var(--silver-light);
+  font-size: .98rem;
+  line-height: 1.45;
+}

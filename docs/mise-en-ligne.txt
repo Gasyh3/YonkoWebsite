@@ -61,6 +61,10 @@ Toutes les variables d'environnement sont décrites dans .env.example (jamais de
        MAIL_FROM=Yonko Tech Consulting <bonjour@yonko.tech>
        ADMIN_EMAIL=<votre adresse, qui reçoit les notifications et se connecte à /admin>
      dans les variables Dokploy. Tester : demande de lien sur /questionnaire, puis connexion /admin.
+   - Dans Resend, laisser le suivi des clics et des ouvertures DÉSACTIVÉ (Domains → Configuration) :
+     les liens envoyés contiennent un jeton d'accès personnel, qui ne doit pas transiter par un
+     service de suivi. Le lien de connexion admin ne sert qu'une fois : un outil qui « pré-ouvre »
+     les liens (antivirus de messagerie d'entreprise) le consommerait ; avec Gmail, aucun souci.
 
 4. Formulaire de contact (choix retenu : webhook)
    - Créer un scénario dans Make, Zapier ou n8n : « Webhook personnalisé » → « Envoyer un e-mail »

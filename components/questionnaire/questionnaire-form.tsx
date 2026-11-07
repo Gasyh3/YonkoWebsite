@@ -55,6 +55,11 @@ export function QuestionnaireForm({ email, initialAnswers, initialSavedAt }: Pro
         setSaveState("error");
         return;
       }
+      if (res.status === 409) {
+        // Déjà envoyé (depuis un autre onglet ou appareil) : la page affiche alors le remerciement.
+        router.refresh();
+        return;
+      }
       const result = (await res.json().catch(() => null)) as { ok: boolean; savedAt?: string } | null;
       if (!res.ok || !result?.ok) throw new Error("save failed");
       setSavedAt(result.savedAt ?? new Date().toISOString());
@@ -63,7 +68,7 @@ export function QuestionnaireForm({ email, initialAnswers, initialSavedAt }: Pro
       dirty.current = true;
       setSaveState("error");
     }
-  }, []);
+  }, [router]);
 
   // Enregistrement automatique, un court instant après la dernière modification.
   useEffect(() => {
